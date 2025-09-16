@@ -3,7 +3,6 @@ import { redirect } from 'next/navigation'
 import Version from '@components/version/version'
 import Link from 'next/link'
 import { LogIn } from 'lucide-react'
-import { config } from './middleware'
 
 const loginUrl = `${process.env.NEXT_PUBLIC_API_URL}/oauth2/login`
 

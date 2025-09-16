@@ -1,10 +1,28 @@
 @import 'tailwindcss';
 
 @theme {
+
+    /* Responsive breakpoints */
+	--breakpoint-100px: 100px;
+	--breakpoint-200px: 200px;
+	--breakpoint-300px: 300px;
+	--breakpoint-432px: 432px;
+	--breakpoint-350px: 350px;
+	--breakpoint-400px: 400px;
+	--breakpoint-450px: 450px;
+	--breakpoint-500px: 500px;
+	--breakpoint-600px: 600px;
+	--breakpoint-700px: 700px;
+	--breakpoint-800px: 800px;
+	--breakpoint-900px: 900px;
+	--breakpoint-1000px: 1000px;
+	--breakpoint-1200px: 1200px;
+
     --breakpoint-xs: 30rem;
     --breakpoint-lg75: 75rem;
     --breakpoint-2xl: 100rem;
     --breakpoint-3xl: 120rem;
+
     --color-login: #fd8738;
     --color-login-950: #0e0e0e;
     --color-login-900: #121212;
@@ -17,6 +35,28 @@
     --color-login-200: #727272;
     --color-login-100: #b0b0b0;
     --color-login-50: #ededed;
+}
+
+@utility link--corner-hover {
+    position: relative;
+
+    &::after {
+        content: ' ';
+        position: absolute;
+        width: .8em;
+        height: .8em;
+        bottom: .4em;
+        right: .4em;
+        border-right: .175em solid transparent;
+        border-bottom: .175em solid transparent;
+        transition: .2s;
+    }
+
+    &:hover::after {
+        border-color: var(--color-login);
+        right: 0;
+        bottom: 0;
+    }
 }
 
 @utility noscroll {

@@ -10,11 +10,10 @@ export default function Version() {
         <Link
             className={
                 'fixed right-4 bottom-4 bg-login-500 text-login-50 px-2 py-1 ' +
-                ' rounded-lg rounded-md text-white tracking-[0.05em] ' +
-                'font-semibold text-lg'
+                'rounded-md text-white tracking-[0.05em] font-semibold text-lg'
             }
             target='_blank'
-            href={`${config.url.GITLAB_URL}/tekkom/web/beehive/queenbee/-/tags/${config.version}`}
+            href={`${config.url.GITLAB}/tekkom/web/beehive/beeformed/-/tags/${config.version}`}
         >
             v{config.version}
         </Link>

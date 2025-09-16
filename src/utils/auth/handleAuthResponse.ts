@@ -19,6 +19,6 @@ export default async function handleAuthResponse() {
     setCookie('user_name', response.user_name)
     setCookie('user_roles', response.user_roles)
 
-    const path = '/d'
+    const path = '/f'
     window.location.href = path
 }
