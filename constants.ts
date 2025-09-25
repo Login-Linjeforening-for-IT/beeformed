@@ -33,6 +33,7 @@ const config = {
         LOGIN: 'https://login.no'
     },
     auth: {
+        LOGIN_URI: `${env.NEXT_PUBLIC_URI}/api/login`,
         REDIRECT_URI: `${env.NEXT_PUBLIC_URI}/api/callback`,
         TOKEN_URI: `${env.NEXT_PUBLIC_URI}/api/token`,
         LOGOUT_URI: `${env.NEXT_PUBLIC_URI}/api/logout`,
