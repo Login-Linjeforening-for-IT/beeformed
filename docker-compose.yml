@@ -4,5 +4,17 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
+            args:
+                - NEXT_PUBLIC_URI: ${NEXT_PUBLIC_URI}
+                - NEXT_PUBLIC_API_URI: ${NEXT_PUBLIC_API_URI}
+                - NEXT_PUBLIC_AUTHENTIK_CLIENT_ID: ${NEXT_PUBLIC_AUTHENTIK_CLIENT_ID}
+                - AUTHENTIK_CLIENT_SECRET: ${AUTHENTIK_CLIENT_SECRET}
+                - NEXT_PUBLIC_AUTHENTIK_URI: ${NEXT_PUBLIC_AUTHENTIK_URI}
         ports:
             - '3000:3000'
+        environment:
+            - NEXT_PUBLIC_URI: ${NEXT_PUBLIC_URI}
+            - NEXT_PUBLIC_API_URI: ${NEXT_PUBLIC_API_URI}
+            - NEXT_PUBLIC_AUTHENTIK_CLIENT_ID: ${NEXT_PUBLIC_AUTHENTIK_CLIENT_ID}
+            - AUTHENTIK_CLIENT_SECRET: ${AUTHENTIK_CLIENT_SECRET}
+            - NEXT_PUBLIC_AUTHENTIK_URI: ${NEXT_PUBLIC_AUTHENTIK_URI}
