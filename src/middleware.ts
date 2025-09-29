@@ -11,7 +11,13 @@ export async function middleware(req: NextRequest) {
 
     if (!pathIsAllowedWhileUnauthorized(req.nextUrl.pathname)) {
         if (!tokenCookie) {
-            return NextResponse.redirect(new URL('/', req.url))
+            const response = NextResponse.redirect(new URL('/', req.url))
+            response.cookies.set('redirect_after_login', req.nextUrl.pathname, {
+                path: '/',
+                sameSite: 'lax',
+                maxAge: 60 * 10
+            })
+            return response
         }
 
         const token = tokenCookie.value
@@ -43,7 +49,8 @@ function pathIsAllowedWhileUnauthorized(path: string) {
         path.startsWith('/api/callback') ||
         path.startsWith('/api/token') ||
         path.startsWith('/api/logout') ||
-        path.startsWith('/_next/webpack-hmr')
+        path.startsWith('/_next/webpack-hmr') ||
+        path === '/sw.js'
     ) {
         return true
     }

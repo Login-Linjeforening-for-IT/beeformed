@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import 'uibee/styles'
 import './globals.css'
 import { cookies } from 'next/headers'
 import TopBar from '@components/navbar/topbar'

@@ -1,15 +1,21 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Navigation from './navigation'
 import MobileNavigation from './mobileNavigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { User } from 'lucide-react'
+import { LogOut, User } from 'lucide-react'
+import { getCookie } from 'uibee/utils'
 
 
 export default function TopBar() {
+    const [token, setToken] = useState<string | null>(null)
     const [isOpen, setIsOpen] = useState(false)
+
+    useEffect(() => {
+        setToken(getCookie('access_token'))
+    }, [])
     function toggle() {
         setIsOpen(!isOpen)
     }
@@ -33,10 +39,15 @@ export default function TopBar() {
                 </div>
                 <Navigation />
                 <nav className="flex w-[calc(100vw-8rem)] justify-end h-12 mr-4 800px:w-fit 800px:mr-0 items-center">
-                    <div className='h-full flex items-center'>
-                        <Link href="profile">
+                    <div className='h-full flex items-center gap-2'>
+                        <Link href="/profile">
                             <User className='w-8 h-8'/>
                         </Link>
+                        {token &&
+                            <Link href="/api/logout" onClick={(e) => {e.preventDefault(); window.location.href='/api/logout'}}>
+                                <LogOut className='w-8 h-8'/>
+                            </Link>
+                        }
                     </div>
                 </nav>
                 {/* Hamburger button for mobile */}

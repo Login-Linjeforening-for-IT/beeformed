@@ -11,7 +11,8 @@ export async function GET(request: NextRequest) {
         'refresh_token_expires',
         'user_id',
         'user_name',
-        'user_roles'
+        'user_roles',
+        'redirect_after_login'
     ]
 
     cookiesToRemove.forEach(cookieName => {
