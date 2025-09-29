@@ -1,4 +1,4 @@
-async function getWrapper({ path, options = {}, custom }: GetWrapperProps) {
+/* async function getWrapper({ path, options = {}, custom }: GetWrapperProps) {
     const Cookies = await cookies()
     const access_token = Cookies.get('access_token')?.value || ''
     const bot_access_token = Cookies.get('bot_access_token')?.value || ''
@@ -136,4 +136,4 @@ async function patchWrapper({ path, data = {}, options = {}, custom }: PatchWrap
             'Unknown error! Please contact TekKom'
         )
     }
-}
+} */
