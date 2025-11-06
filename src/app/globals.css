@@ -74,16 +74,13 @@
 }
 
 :root {
-    --w-sidebar: 13rem;
-    --h-navbar: 2.8rem;
-    --h-pageInfo: 5rem;
     transition:
         background 0.4s,
         color 0.4s;
 }
 
 .dark {
-    --background: #0e0e0e;
+    --background: #181818;
     --foreground: #ededed;
 
     --color-login: #fd8738;
