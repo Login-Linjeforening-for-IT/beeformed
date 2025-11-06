@@ -4,17 +4,36 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
-            args:
-                - NEXT_PUBLIC_URI: ${NEXT_PUBLIC_URI}
-                - NEXT_PUBLIC_API_URI: ${NEXT_PUBLIC_API_URI}
-                - NEXT_PUBLIC_AUTHENTIK_CLIENT_ID: ${NEXT_PUBLIC_AUTHENTIK_CLIENT_ID}
-                - AUTHENTIK_CLIENT_SECRET: ${AUTHENTIK_CLIENT_SECRET}
-                - NEXT_PUBLIC_AUTHENTIK_URI: ${NEXT_PUBLIC_AUTHENTIK_URI}
         ports:
             - '3000:3000'
+        env_file:
+            - .env
+    beeformed-api:
+        container_name: beeformed-api
+        build:
+            context: ./api
+            dockerfile: Dockerfile
+        ports:
+            - '8080:8080'
+        env_file:
+            - .env
+        depends_on:
+            - postgres
+    postgres:
+        image: postgres:18
+        container_name: beeformed-database
+        restart: always
         environment:
-            - NEXT_PUBLIC_URI: ${NEXT_PUBLIC_URI}
-            - NEXT_PUBLIC_API_URI: ${NEXT_PUBLIC_API_URI}
-            - NEXT_PUBLIC_AUTHENTIK_CLIENT_ID: ${NEXT_PUBLIC_AUTHENTIK_CLIENT_ID}
-            - AUTHENTIK_CLIENT_SECRET: ${AUTHENTIK_CLIENT_SECRET}
-            - NEXT_PUBLIC_AUTHENTIK_URI: ${NEXT_PUBLIC_AUTHENTIK_URI}
+            POSTGRES_USER: ${DB_USER:-beeformed}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRES_DB: ${DB:-beeformed}
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+            - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U beeformed -d beeformed"]
+            interval: 5s
+            retries: 5
+
+volumes:
+    postgres_data:
