@@ -14,7 +14,7 @@ export default async function Home() {
     return (
         <LoginPage
             title='BeeFormed'
-            redirectURI={config.auth.LOGIN_URI}
+            redirectURL={config.authInternal.LOGIN_URL}
             version={config.version}
         />
     )

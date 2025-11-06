@@ -1,23 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server'
+import config from '@config'
+import { authLogout } from 'uibee/utils'
 
-export async function GET(request: NextRequest) {
-    const response = NextResponse.redirect(new URL('/', request.url))
-
-    // Remove all authentication cookies
-    const cookiesToRemove = [
-        'access_token',
-        'access_token_expires',
-        'refresh_token',
-        'refresh_token_expires',
-        'user_id',
-        'user_name',
-        'user_roles',
-        'redirect_after_login'
-    ]
-
-    cookiesToRemove.forEach(cookieName => {
-        response.cookies.delete(cookieName)
+export async function GET() {
+    return await authLogout({
+        frontendURL: config.authInternal.BASE_URL
     })
-
-    return response
 }

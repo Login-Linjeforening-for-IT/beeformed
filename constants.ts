@@ -1,50 +1,26 @@
 import packageInfo from './package.json'
 
-const isServer = typeof window === 'undefined'
-const requiredEnvironmentVariables = [
-    'NEXT_PUBLIC_URI',
-    'NEXT_PUBLIC_API_URI',
-    'NEXT_PUBLIC_AUTHENTIK_URI',
-    'NEXT_PUBLIC_AUTHENTIK_CLIENT_ID',
-    'AUTHENTIK_CLIENT_SECRET',
-]
-
-const missingVariables = requiredEnvironmentVariables.filter(
-    (key) => !process.env[key]
-)
-
-if (isServer && missingVariables.length > 0) {
-    throw new Error(
-        'Missing essential environment variables:\n' +
-            missingVariables
-                .map((key) => `${key}: ${process.env[key] || 'undefined'}`)
-                .join('\n')
-    )
-}
-
-const env = Object.fromEntries(
-    requiredEnvironmentVariables.map((key) => [key, process.env[key]])
-)
+const { env } = process
 
 const config = {
     url: {
-        API: process.env.NEXT_PUBLIC_API_URI,
+        API_URL: env.API_URL || 'http://localhost:8080/api/',
         GITLAB: 'https://gitlab.login.no',
         LOGIN: 'https://login.no'
     },
-    auth: {
-        LOGIN_URI: `${env.NEXT_PUBLIC_URI}/api/login`,
-        REDIRECT_URI: `${env.NEXT_PUBLIC_URI}/api/callback`,
-        TOKEN_URI: `${env.NEXT_PUBLIC_URI}/api/token`,
-        LOGOUT_URI: `${env.NEXT_PUBLIC_URI}/api/logout`,
+    authInternal: {
+        BASE_URL: env.NEXT_PUBLIC_BASE_URL,
+        LOGIN_URL: `${env.NEXT_PUBLIC_BASE_URL}/api/login`,
+        REDIRECT_URL: `${env.NEXT_PUBLIC_BASE_URL}/api/callback`,
+        TOKEN_URL: `${env.NEXT_PUBLIC_BASE_URL}/api/token`,
+        LOGOUT_URL: `${env.NEXT_PUBLIC_BASE_URL}/api/logout`,
     },
-    authentik: {
-        CLIENT_ID: env.NEXT_PUBLIC_AUTHENTIK_CLIENT_ID,
-        CLIENT_SECRET: env.AUTHENTIK_CLIENT_SECRET,
-        AUTH_URI: `${env.NEXT_PUBLIC_AUTHENTIK_URI}/application/o/authorize/`,
-        TOKEN_URI: `${env.NEXT_PUBLIC_AUTHENTIK_URI}/application/o/token/`,
-        USERINFO_URI: `${env.NEXT_PUBLIC_AUTHENTIK_URI}/application/o/userinfo/`,
-
+    authService: {
+        CLIENT_ID: env.AUTH_CLIENT_ID,
+        CLIENT_SECRET: env.AUTH_CLIENT_SECRET,
+        AUTH_URL: `${env.AUTH_URL}/application/o/authorize/`,
+        TOKEN_URL: `${env.AUTH_URL}/application/o/token/`,
+        USERINFO_URL: `${env.AUTH_URL}/application/o/userinfo/`,
     },
     version: packageInfo.version,
 }
