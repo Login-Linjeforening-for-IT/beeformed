@@ -13,6 +13,8 @@ CREATE TABLE forms (
     title TEXT NOT NULL,
     description TEXT,
     is_active BOOLEAN DEFAULT TRUE,
+    anonymous_submissions BOOLEAN DEFAULT FALSE,
+    limit INTEGER,
     published_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -55,10 +57,12 @@ CREATE TABLE form_permissions (
     id SERIAL PRIMARY KEY,
     form_id INTEGER REFERENCES forms(id) ON DELETE CASCADE,
     user_id TEXT REFERENCES users(user_id) ON DELETE CASCADE,
+    group TEXT,
     permission_type TEXT NOT NULL,
     granted_by TEXT REFERENCES users(user_id),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(form_id, user_id)
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(form_id, user_id, group)
 );
 
 -- Indexes for performance
