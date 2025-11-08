@@ -2,7 +2,7 @@
 INSERT INTO form_permissions (
     form_id,
     user_id,
-    group,
+    "group",
     permission_type,
     granted_by
 )

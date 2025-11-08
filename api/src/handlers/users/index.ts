@@ -1,2 +1,2 @@
-export { default as createUser } from './post'
-export { default as deleteUser } from './delete'
+export { default as createUser } from './post.ts'
+export { default as deleteUser } from './delete.ts'

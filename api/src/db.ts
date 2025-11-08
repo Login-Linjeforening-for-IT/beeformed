@@ -41,6 +41,21 @@ export default async function run(query: string, params?: SQLParamType[]): Promi
     }
 }
 
+export async function runInTransaction(callback: (client: pg.PoolClient) => Promise<any>) {
+    const client = await pool.connect()
+    try {
+        await client.query('BEGIN')
+        const result = await callback(client)
+        await client.query('COMMIT')
+        return result
+    } catch (error) {
+        await client.query('ROLLBACK')
+        throw error
+    } finally {
+        client.release()
+    }
+}
+
 function sleep(ms: number) {
     return new Promise(res => setTimeout(res, ms))
 }

@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import run from '../db'
-import { loadSQL } from './sql'
+import run from '../db.ts'
+import { loadSQL } from './sql.ts'
 
 export async function createEntity(
     req: FastifyRequest,

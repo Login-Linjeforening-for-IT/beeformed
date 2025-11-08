@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 
-import { createEntity } from '../../utils/crud'
+import { createEntity } from '../../utils/crud.ts'
 
 export default async function createUser(req: FastifyRequest, res: FastifyReply) {
     await createEntity(

@@ -3,6 +3,7 @@ import {
     createUser,
     deleteUser
 } from './handlers/users/index.ts'
+import { createForm, getForm } from './handlers/forms/index.ts'
 import type { FastifyInstance } from 'fastify'
 
 export default async function apiRoutes(fastify: FastifyInstance) {
@@ -12,4 +13,8 @@ export default async function apiRoutes(fastify: FastifyInstance) {
     // Users
     fastify.post('/users', createUser)
     fastify.delete('/users/:id', deleteUser)
+
+    // Forms
+    fastify.post('/forms', createForm)
+    fastify.get('/forms/:id', getForm)
 }

@@ -5,7 +5,7 @@ INSERT INTO forms (
     description,
     is_active,
     anonymous_submissions,
-    limit,
+    "limit",
     published_at,
     expires_at
 )
@@ -15,6 +15,8 @@ VALUES (
     $3,
     $4,
     $5,
-    $6
+    $6,
+    $7,
+    $8
 )
 RETURNING *;
