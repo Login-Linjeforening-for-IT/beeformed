@@ -29,6 +29,69 @@ export async function createEntity(
     }
 }
 
+export async function readEntity(
+    req: FastifyRequest,
+    res: FastifyReply,
+    sqlPath: string,
+    idParam: string = 'id'
+) {
+    try {
+        const id = (req.params as any)[idParam]
+
+        if (!id) {
+            return res.status(400).send({ error: 'ID is required' })
+        }
+
+        const sql = await loadSQL(sqlPath)
+        const result = await run(sql, [id])
+
+        if (result.rows.length === 0) {
+            return res.status(404).send({ error: 'Entity not found' })
+        }
+
+        res.send(result.rows[0])
+    } catch (error) {
+        console.error('Error reading entity:', error)
+        res.status(500).send({ error: 'Internal server error' })
+    }
+}
+
+export async function updateEntity(
+    req: FastifyRequest,
+    res: FastifyReply,
+    sqlPath: string,
+    requiredFields: string[],
+    paramMapper: (body: any, id: any) => SQLParamType[]
+) {
+    try {
+        const id = (req.params as any).id
+        const body = req.body as any
+
+        if (!id) {
+            return res.status(400).send({ error: 'ID is required' })
+        }
+
+        for (const field of requiredFields) {
+            if (!body[field]) {
+                return res.status(400).send({ error: `${field} is required` })
+            }
+        }
+
+        const sql = await loadSQL(sqlPath)
+        const params = paramMapper(body, id)
+        const result = await run(sql, params)
+
+        if (result.rows.length === 0) {
+            return res.status(404).send({ error: 'Entity not found' })
+        }
+
+        res.send(result.rows[0])
+    } catch (error) {
+        console.error('Error updating entity:', error)
+        res.status(500).send({ error: 'Internal server error' })
+    }
+}
+
 export async function deleteEntity(
     req: FastifyRequest,
     res: FastifyReply,
