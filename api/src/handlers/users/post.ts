@@ -8,6 +8,10 @@ export default async function createUser(req: FastifyRequest, res: FastifyReply)
         res,
         'users/post.sql',
         ['user_id', 'email'],
-        (body) => [body.user_id, body.email, body.name || null]
+        (params, body) => [
+            body.user_id,
+            body.email,
+            body.name || null
+        ]
     )
 }

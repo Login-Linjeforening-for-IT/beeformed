@@ -30,7 +30,6 @@ export default async function tokenWrapper( req: FastifyRequest, res: FastifyRep
         }
 
         const userInfo = await userInfoRes.json()
-        console.log('User info retrieved:', userInfo)
 
         return {
             valid: true,

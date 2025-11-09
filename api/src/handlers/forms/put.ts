@@ -7,7 +7,7 @@ export default async function updateForm(req: FastifyRequest, res: FastifyReply)
         res,
         'forms/put.sql',
         ['user_id', 'title'],
-        (body: any, id: any) => [
+        (id: any, body: any) => [
             id,
             body.user_id,
             body.title,

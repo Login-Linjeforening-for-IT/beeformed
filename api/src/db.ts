@@ -25,19 +25,11 @@ const pool = new Pool({
 })
 
 export default async function run(query: string, params?: SQLParamType[]): Promise<pg.QueryResult> {
-    while (true) {
-        try {
-            const client = await pool.connect()
-            try {
-                return await client.query(query, params ?? [])
-            } finally {
-                client.release()
-            }
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        } catch (error) {
-            console.log(`Pool currently unavailable, retrying in ${config.CACHE_TTL / 1000}s...`)
-            await sleep(config.CACHE_TTL)
-        }
+    const client = await pool.connect()
+    try {
+        return await client.query(query, params ?? [])
+    } finally {
+        client.release()
     }
 }
 
@@ -54,8 +46,4 @@ export async function runInTransaction(callback: (client: pg.PoolClient) => Prom
     } finally {
         client.release()
     }
-}
-
-function sleep(ms: number) {
-    return new Promise(res => setTimeout(res, ms))
 }
