@@ -3,6 +3,7 @@ import 'uibee/styles'
 import './globals.css'
 import { cookies } from 'next/headers'
 import Navbar from '@components/navbar/navbar'
+import { Toaster } from 'sonner'
 
 export const metadata: Metadata = {
     title: 'BeeFormed',
@@ -22,6 +23,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
                 <main className='flex-1 flex overflow-hidden pt-22 w-full bg-login-800'>
                     {children}
                 </main>
+                <Toaster />
             </body>
         </html>
     )
