@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 dotenv.config({path: '../.env'})
 
 const requiredEnvironmentVariables = [
+    'AUTH_URL',
     'DB',
     'DB_USER',
     'DB_HOST',
@@ -28,6 +29,7 @@ const env = Object.fromEntries(
 )
 
 const config = {
+    USERINFO_URL: `${env.AUTH_URL}/application/o/userinfo/`,
     DB: env.DB,
     DB_USER: env.DB_USER,
     DB_HOST: env.DB_HOST,
