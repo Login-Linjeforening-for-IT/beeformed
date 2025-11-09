@@ -8,7 +8,6 @@ const {
     DB_PASSWORD,
     DB_PORT,
     DB_MAX_CONN,
-    DB_IDLE_TIMEOUT_MS,
     DB_TIMEOUT_MS
 } = config
 const { Pool } = pg
@@ -19,7 +18,6 @@ const pool = new Pool({
     password: DB_PASSWORD,
     port: Number(DB_PORT) || 5432,
     max: Number(DB_MAX_CONN) || 20,
-    idleTimeoutMillis: Number(DB_IDLE_TIMEOUT_MS) || 5000,
     connectionTimeoutMillis: Number(DB_TIMEOUT_MS) || 3000,
     keepAlive: true
 })
@@ -33,6 +31,7 @@ export default async function run(query: string, params?: SQLParamType[]): Promi
     }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function runInTransaction(callback: (client: pg.PoolClient) => Promise<any>) {
     const client = await pool.connect()
     try {

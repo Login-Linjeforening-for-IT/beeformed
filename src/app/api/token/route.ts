@@ -1,5 +1,4 @@
 import config from '@config'
-import { createUser } from '@utils/api'
 import { NextRequest } from 'next/server'
 import { authToken } from 'uibee/utils'
 

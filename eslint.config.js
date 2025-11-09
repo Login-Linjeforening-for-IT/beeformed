@@ -8,6 +8,9 @@ export default [
     eslint.configs.recommended,
     ...tseslint.configs.recommended,
     {
+        ignores: ['.next/**', 'node_modules/**'],
+    },
+    {
         plugins: {
             '@stylistic': stylistic,
             '@next/next': pluginNext,

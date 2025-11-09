@@ -3,7 +3,17 @@ import config from '#constants'
 
 const { USERINFO_URL } = config
 
-export default async function checkToken( req: FastifyRequest, res: FastifyReply ): Promise<{ valid: boolean, userInfo?: any, error?: string }> {
+type CheckTokenResponse = {
+    valid: boolean
+    userInfo?: {
+        sub: string
+        name: string
+        email: string
+    }
+    error?: string
+}
+
+export default async function checkToken( req: FastifyRequest, res: FastifyReply ): Promise<CheckTokenResponse> {
     const authHeader = req.headers['authorization']
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {

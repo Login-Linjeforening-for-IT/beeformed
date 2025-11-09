@@ -11,7 +11,9 @@ interface BulkOperation {
         label: string
         placeholder?: string
         required: boolean
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         options?: any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         validation?: any
         field_order: number
     }>
@@ -27,7 +29,9 @@ export default async function bulkFormFields(req: FastifyRequest, res: FastifyRe
     try {
         const results = await runInTransaction(async (client) => {
             const results = {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 created: [] as any[],
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 updated: [] as any[],
                 deleted: [] as number[]
             }

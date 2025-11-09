@@ -31,7 +31,9 @@ declare global {
         label: string
         placeholder?: string
         required: boolean
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         options?: any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         validation?: any
         field_order: number
         created_at: Date

@@ -16,6 +16,7 @@ export async function createEntity({
     sqlParams: SQLParamType[]
 }) {
     try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const body = req.body as any
 
         for (const field of requiredFields) {
@@ -36,7 +37,6 @@ export async function createEntity({
 }
 
 export async function readEntity({
-    req,
     res,
     sqlPath,
     sqlParams,
@@ -77,9 +77,12 @@ export async function updateEntity({
     sqlParams: SQLParamType[]
 }) {
     try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const body = req.body as any
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         for (const key in req.params as any) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             if (!(req.params as any)[key]) {
                 return res.status(400).send({ error: 'ID is required' })
             }
@@ -107,7 +110,6 @@ export async function updateEntity({
 }
 
 export async function deleteEntity({
-    req,
     res,
     sqlPath,
     sqlParams

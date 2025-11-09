@@ -13,18 +13,18 @@ export default function Navbar() {
     }, [])
 
     return (
-            <NavBar
-                token={token}
-                disableLanguageToggle={true}
-                lang={undefined}
-                theme={'dark'} 
+        <NavBar
+            token={token}
+            disableLanguageToggle={true}
+            lang={undefined}
+            theme={'dark'}
+        >
+            <NavItem
+                href={config.url.LOGIN}
+                external
             >
-                <NavItem
-                    href={config.url.LOGIN}
-                    external
-                >
-                    Login
-                </NavItem>
-            </NavBar>
+                Login
+            </NavItem>
+        </NavBar>
     )
 }

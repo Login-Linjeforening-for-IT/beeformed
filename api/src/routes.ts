@@ -9,10 +9,10 @@ import {
     deleteUser
 } from './handlers/users/index.ts'
 
-import { 
+import {
     createForm,
     getForm,
-    updateForm, 
+    updateForm,
     deleteForm
 } from './handlers/forms/index.ts'
 

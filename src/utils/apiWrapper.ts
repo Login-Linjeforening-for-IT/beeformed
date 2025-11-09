@@ -8,6 +8,7 @@ const baseUrl = config.url.API_URL
 type ApiRequestProps = {
     method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
     path: string
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data?: any
     options?: RequestInit
 }
@@ -44,6 +45,7 @@ async function apiRequest({ method, path, data, options = {} }: ApiRequestProps)
         }
 
         return await response.json()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
         console.log(error)
         return { error: error.message || 'Unknown error' }
@@ -55,6 +57,7 @@ async function getWrapper({ path, options = {} }: { path: string; options?: Requ
     return apiRequest({ method: 'GET', path, options })
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function postWrapper({ path, data }: { path: string; data: any }) {
     return apiRequest({ method: 'POST', path, data })
 }
@@ -63,7 +66,7 @@ async function deleteWrapper({ path, options }: { path: string; options?: Reques
     return apiRequest({ method: 'DELETE', path, options })
 }
 
-async function patchWrapper({ path, data = {}, options = {} }: { path: string; data?: any; options?: RequestInit }) {
+async function patchWrapper({ path, data = {}, options = {} }: { path: string; data?: unknown; options?: RequestInit }) {
     return apiRequest({ method: 'PATCH', path, data, options })
 }
 

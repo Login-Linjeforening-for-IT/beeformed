@@ -14,13 +14,13 @@ interface ButtonProps {
 }
 
 export default function Button({ children, onAction, errorMessage, successMessage, successRedirectUrl, className = '' }: ButtonProps) {
-  const [loading, setLoading] = useState(false)
-  const router = useRouter()
+    const [loading, setLoading] = useState(false)
+    const router = useRouter()
 
-  async function handleClick() {
+    async function handleClick() {
         setLoading(true)
         try {
-            const result = await onAction() 
+            const result = await onAction()
             if (!result.error) {
                 toast.success(successMessage)
                 if (successRedirectUrl) {
@@ -29,20 +29,21 @@ export default function Button({ children, onAction, errorMessage, successMessag
             } else {
                 toast.error(errorMessage)
             }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
-                toast.error('An unexpected error occurred')
+            toast.error('An unexpected error occurred')
         } finally {
-                setLoading(false)
+            setLoading(false)
         }
-  }
+    }
 
-  return (
-    <button
-        onClick={handleClick}
-        disabled={loading}
-        className={className}
-    >
-        {children}
-    </button>
-  )
+    return (
+        <button
+            onClick={handleClick}
+            disabled={loading}
+            className={className}
+        >
+            {children}
+        </button>
+    )
 }
