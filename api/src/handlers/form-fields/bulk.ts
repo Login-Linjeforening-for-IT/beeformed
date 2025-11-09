@@ -4,7 +4,7 @@ import { loadSQL } from '../../utils/sql.ts'
 
 interface BulkOperation {
     operation: 'create' | 'update' | 'delete'
-    id?: number // for update and delete
+    id?: number
     data?: Partial<{
         form_id: number
         field_type: string
@@ -14,7 +14,7 @@ interface BulkOperation {
         options?: any
         validation?: any
         field_order: number
-    }> // for create and update
+    }>
 }
 
 export default async function bulkFormFields(req: FastifyRequest, res: FastifyReply) {
@@ -31,9 +31,6 @@ export default async function bulkFormFields(req: FastifyRequest, res: FastifyRe
                 updated: [] as any[],
                 deleted: [] as number[]
             }
-
-            // Process operations in order: deletes first, then updates, then creates
-            // This helps avoid conflicts with field_order
 
             // Handle deletes
             for (const op of operations.filter(op => op.operation === 'delete')) {

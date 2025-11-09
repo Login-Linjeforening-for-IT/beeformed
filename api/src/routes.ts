@@ -44,9 +44,9 @@ export default async function apiRoutes(fastify: FastifyInstance) {
     // Form Permissions
     fastify.get('/forms/:id/permissions', getFormPermission)
     fastify.post('/forms/:id/permissions', createFormPermission)
-    fastify.put('/forms/:id/permissions', updateFormPermission)
-    fastify.delete('/forms/:id/permissions', deleteFormPermission)
+    fastify.put('/forms/:id/permissions/:permissionId', updateFormPermission)
+    fastify.delete('/forms/:id/permissions/:permissionId', deleteFormPermission)
 
     // Form Fields
-    fastify.patch('/forms/:id/fields/bulk', bulkFormFields)
+    fastify.patch('/forms/:id/fields', bulkFormFields)
 }

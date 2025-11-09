@@ -5,13 +5,14 @@ export default async function updateFormPermission(req: FastifyRequest, res: Fas
     return updateEntity(
         req,
         res,
-        'form_permissions',
+        'form-permissions/put.sql',
         ['granted_by'],
         (body: any, id: any) => [
             id,
-            body.user_id,
-            body.group,
+            body.user_id || null,
+            body.group || null,
             body.granted_by 
-        ]
+        ],
+        'permissionId'
     )
 }

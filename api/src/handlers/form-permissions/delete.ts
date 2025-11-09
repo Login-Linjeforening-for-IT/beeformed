@@ -5,6 +5,7 @@ export default async function deleteFormPermission(req: FastifyRequest, res: Fas
     await deleteEntity(
         req,
         res,
-        'form-permissions/delete.sql'
+        'form-permissions/delete.sql',
+        'permissionId'
     )
 }

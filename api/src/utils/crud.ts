@@ -7,7 +7,7 @@ export async function createEntity(
     res: FastifyReply,
     sqlPath: string,
     requiredFields: string[],
-    paramMapper: (body: any) => SQLParamType[]
+    paramMapper: (params: any, body: any) => SQLParamType[]
 ) {
     try {
         const body = req.body as any
@@ -19,7 +19,7 @@ export async function createEntity(
         }
 
         const sql = await loadSQL(sqlPath)
-        const params = paramMapper(body)
+        const params = paramMapper(req.params, body)
         const result = await run(sql, params)
 
         res.status(201).send(result.rows[0])
