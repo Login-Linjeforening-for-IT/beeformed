@@ -58,7 +58,6 @@ CREATE TABLE form_permissions (
     form_id INTEGER REFERENCES forms(id) ON DELETE CASCADE,
     user_id TEXT REFERENCES users(user_id) ON DELETE CASCADE,
     "group" TEXT,
-    permission_type TEXT NOT NULL,
     granted_by TEXT REFERENCES users(user_id),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

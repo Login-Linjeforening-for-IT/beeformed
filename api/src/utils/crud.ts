@@ -61,10 +61,11 @@ export async function updateEntity(
     res: FastifyReply,
     sqlPath: string,
     requiredFields: string[],
-    paramMapper: (body: any, id: any) => SQLParamType[]
+    paramMapper: (id: any, body: any) => SQLParamType[],
+    idParam: string = 'id'
 ) {
     try {
-        const id = (req.params as any).id
+        const id = (req.params as any)[idParam]
         const body = req.body as any
 
         if (!id) {
@@ -78,7 +79,7 @@ export async function updateEntity(
         }
 
         const sql = await loadSQL(sqlPath)
-        const params = paramMapper(body, id)
+        const params = paramMapper(id, body)
         const result = await run(sql, params)
 
         if (result.rows.length === 0) {
