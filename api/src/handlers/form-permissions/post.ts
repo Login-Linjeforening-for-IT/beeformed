@@ -2,16 +2,18 @@ import type { FastifyReply, FastifyRequest } from 'fastify'
 import { createEntity } from '../../utils/crud.ts'
 
 export default async function createFormPermission(req: FastifyRequest, res: FastifyReply) {
-    await createEntity(
+    const body = req.body as any
+    const params = req.params as any
+    await createEntity({
         req,
         res,
-        'form-permissions/post.sql',
-        ['granted_by'],
-        (params, body) => [
+        sqlPath: 'form-permissions/post.sql',
+        requiredFields: ['granted_by'],
+        sqlParams: [
             params.id,
             body.user_id || null,
             body.group || null,
-            body.granted_by
+            req.user!.id
         ]
-    )
+    })
 }

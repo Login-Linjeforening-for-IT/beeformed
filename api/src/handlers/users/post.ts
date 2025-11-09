@@ -3,15 +3,16 @@ import type { FastifyReply, FastifyRequest } from 'fastify'
 import { createEntity } from '../../utils/crud.ts'
 
 export default async function createUser(req: FastifyRequest, res: FastifyReply) {
-    await createEntity(
+    const body = req.body as any
+    await createEntity({
         req,
         res,
-        'users/post.sql',
-        ['user_id', 'email'],
-        (params, body) => [
+        sqlPath: 'users/post.sql',
+        requiredFields: ['user_id', 'email'],
+        sqlParams: [
             body.user_id,
             body.email,
             body.name || null
         ]
-    )
+    })
 }

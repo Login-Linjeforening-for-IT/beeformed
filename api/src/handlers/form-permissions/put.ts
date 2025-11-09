@@ -2,17 +2,18 @@ import type { FastifyReply, FastifyRequest } from 'fastify'
 import { updateEntity } from '../../utils/crud.ts'
 
 export default async function updateFormPermission(req: FastifyRequest, res: FastifyReply) {
-    return updateEntity(
+    const body = req.body as any
+    const params = req.params as any
+    return updateEntity({
         req,
         res,
-        'form-permissions/put.sql',
-        ['granted_by'],
-        (id: any, body: any) => [
-            id,
+        sqlPath: 'form-permissions/put.sql',
+        requiredFields: ['granted_by'],
+        sqlParams: [
+            params.id,
             body.user_id || null,
             body.group || null,
-            body.granted_by 
-        ],
-        'permissionId'
-    )
+            req.user!.id, 
+        ]
+    })
 }

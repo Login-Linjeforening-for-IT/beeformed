@@ -2,9 +2,11 @@ import type { FastifyReply, FastifyRequest } from 'fastify'
 import { readEntity } from '../../utils/crud.ts'
 
 export default async function getFormPermissions(req: FastifyRequest, res: FastifyReply) {
-    await readEntity(
+    const params = req.params as any
+    await readEntity({
         req,
         res,
-        'form-permissions/get.sql'
-    )
+        sqlPath: 'form-permissions/get.sql',
+        sqlParams: [params.id]
+    })
 }

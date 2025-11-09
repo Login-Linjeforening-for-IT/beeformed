@@ -3,7 +3,7 @@ import config from '#constants'
 
 const { USERINFO_URL } = config
 
-export default async function tokenWrapper( req: FastifyRequest, res: FastifyReply ): Promise<{ valid: boolean, id?: string, error?: string }> {
+export default async function checkToken( req: FastifyRequest, res: FastifyReply ): Promise<{ valid: boolean, userInfo?: any, error?: string }> {
     const authHeader = req.headers['authorization']
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -33,7 +33,7 @@ export default async function tokenWrapper( req: FastifyRequest, res: FastifyRep
 
         return {
             valid: true,
-            id: userInfo.id
+            userInfo: userInfo
         }
     } catch (err) {
         res.log.error(err)
