@@ -13,7 +13,7 @@ export default async function Home() {
 
     return (
         <LoginPage
-            title='BeeFormed'
+            title='Nettskjema'
             redirectURL={config.authInternal.LOGIN_URL}
             version={config.version}
         />
