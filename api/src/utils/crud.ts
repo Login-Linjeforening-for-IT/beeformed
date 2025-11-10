@@ -3,7 +3,6 @@ import run from '../db.ts'
 import { loadSQL } from './sql.ts'
 
 export async function createEntity({
-    req,
     res,
     sqlPath,
     requiredFields,
@@ -13,20 +12,17 @@ export async function createEntity({
     res: FastifyReply
     sqlPath: string
     requiredFields: string[]
-    sqlParams: SQLParamType[]
+    sqlParams: Record<string, SQLParamType>
 }) {
     try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const body = req.body as any
-
         for (const field of requiredFields) {
-            if (!body[field]) {
+            if (!(field in sqlParams)) {
                 return res.status(400).send({ error: `${field} is required` })
             }
         }
 
         const sql = await loadSQL(sqlPath)
-        const params = sqlParams
+        const params = Object.values(sqlParams)
         const result = await run(sql, params)
 
         res.status(201).send(result.rows[0])

@@ -10,12 +10,12 @@ export default async function createFormPermission(req: FastifyRequest, res: Fas
         req,
         res,
         sqlPath: 'form-permissions/post.sql',
-        requiredFields: ['granted_by'],
-        sqlParams: [
-            params.id,
-            body.user_id || null,
-            body.group || null,
-            req.user!.id
-        ]
+        requiredFields: ['form_id', 'granted_by'],
+        sqlParams: {
+            form_id: params.id,
+            user_id: body.user_id || null,
+            group: body.group || null,
+            granted_by: req.user!.id
+        }
     })
 }

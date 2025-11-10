@@ -12,10 +12,12 @@ export default async function Home() {
     }
 
     return (
-        <LoginPage
-            title='Nettskjema'
-            redirectURL={config.authInternal.LOGIN_URL}
-            version={config.version}
-        />
+        <div className='w-full min-h-full flex items-center justify-center'>
+            <LoginPage
+                title='Nettskjema'
+                redirectURL={config.authInternal.LOGIN_URL}
+                version={config.version}
+            />
+        </div>
     )
 }

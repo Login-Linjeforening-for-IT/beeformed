@@ -4,10 +4,8 @@ import { authToken } from 'uibee/utils'
 
 export async function GET(request: NextRequest) {
     const url = new URL(request.url)
-    const userID = url.searchParams.get('id')
-    const username = url.searchParams.get('name')
-    const userEmail = url.searchParams.get('email')
     const access_token = url.searchParams.get('access_token')
+    const id = url.searchParams.get('id')
 
     fetch(`${config.url.API_URL}users`, {
         method: 'POST',
@@ -16,9 +14,7 @@ export async function GET(request: NextRequest) {
             'Authorization': `Bearer ${access_token}`
         },
         body: JSON.stringify({
-            user_id: userID,
-            name: username,
-            email: userEmail
+            user_id: id,
         })
     })
 
