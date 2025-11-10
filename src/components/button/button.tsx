@@ -41,7 +41,7 @@ export default function Button({ children, onAction, errorMessage, successMessag
         <button
             onClick={handleClick}
             disabled={loading}
-            className={className}
+            className={`cursor-pointer ${loading ? 'opacity-80 cursor-not-allowed' : ''} ${className}`}
         >
             {children}
         </button>
