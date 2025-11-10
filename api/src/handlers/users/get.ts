@@ -3,9 +3,11 @@ import { readEntity } from '../../utils/crud.ts'
 
 export default async function getUser(req: FastifyRequest, res: FastifyReply) {
     await readEntity({
-        req,
         res,
         sqlPath: 'users/get.sql',
-        sqlParams: [req.user!.id]
+        requiredFields: ['id'],
+        sqlParams: {
+            id: req.user!.id
+        }
     })
 }

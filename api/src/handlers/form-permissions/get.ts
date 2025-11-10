@@ -5,9 +5,11 @@ export default async function getFormPermissions(req: FastifyRequest, res: Fasti
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const params = req.params as any
     await readEntity({
-        req,
         res,
         sqlPath: 'form-permissions/get.sql',
-        sqlParams: [params.id]
+        requiredFields: ['id'],
+        sqlParams: {
+            id: params.id
+        }
     })
 }

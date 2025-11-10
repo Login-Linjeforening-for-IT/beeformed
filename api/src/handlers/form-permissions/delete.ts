@@ -5,9 +5,11 @@ export default async function deleteFormPermission(req: FastifyRequest, res: Fas
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const params = req.params as any
     await deleteEntity({
-        req,
         res,
         sqlPath: 'form-permissions/delete.sql',
-        sqlParams: [params.id]
+        requiredFields: ['id'],
+        sqlParams: {
+            id: params.id
+        }
     })
 }

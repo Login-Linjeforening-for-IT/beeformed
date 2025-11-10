@@ -5,9 +5,11 @@ export default async function getFormFields(req: FastifyRequest, res: FastifyRep
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const params = req.params as any
     await readEntity({
-        req,
         res,
         sqlPath: 'form-fields/get.sql',
-        sqlParams: [params.id]
+        requiredFields: ['id'],
+        sqlParams: {
+            id: params.id
+        }
     })
 }

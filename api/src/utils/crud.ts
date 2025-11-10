@@ -1,4 +1,4 @@
-import type { FastifyReply, FastifyRequest } from 'fastify'
+import type { FastifyReply } from 'fastify'
 import run from '../db.ts'
 import { loadSQL } from './sql.ts'
 
@@ -8,22 +8,20 @@ export async function createEntity({
     requiredFields,
     sqlParams
 }: {
-    req: FastifyRequest
     res: FastifyReply
     sqlPath: string
-    requiredFields: string[]
+    requiredFields?: string[]
     sqlParams: Record<string, SQLParamType>
 }) {
     try {
-        for (const field of requiredFields) {
+        for (const field of requiredFields || []) {
             if (!(field in sqlParams)) {
                 return res.status(400).send({ error: `${field} is required` })
             }
         }
 
         const sql = await loadSQL(sqlPath)
-        const params = Object.values(sqlParams)
-        const result = await run(sql, params)
+        const result = await run(sql, Object.values(sqlParams))
 
         res.status(201).send(result.rows[0])
     } catch (error) {
@@ -35,16 +33,23 @@ export async function createEntity({
 export async function readEntity({
     res,
     sqlPath,
-    sqlParams,
+    requiredFields,
+    sqlParams
 }: {
-    req: FastifyRequest
     res: FastifyReply
     sqlPath: string
-    sqlParams: SQLParamType[]
+    requiredFields?: string[]
+    sqlParams: Record<string, SQLParamType>
 }) {
     try {
+        for (const field of requiredFields || []) {
+            if (!(field in sqlParams)) {
+                return res.status(400).send({ error: `${field} is required` })
+            }
+        }
+
         const sql = await loadSQL(sqlPath)
-        const result = await run(sql, sqlParams)
+        const result = await run(sql, Object.values(sqlParams))
 
         if (result.rows.length === 0) {
             return res.status(404).send({ error: 'Entity not found' })
@@ -60,39 +65,25 @@ export async function readEntity({
 }
 
 export async function updateEntity({
-    req,
     res,
     sqlPath,
     requiredFields,
     sqlParams
 }: {
-    req: FastifyRequest
     res: FastifyReply
     sqlPath: string
-    requiredFields: string[]
-    sqlParams: SQLParamType[]
+    requiredFields?: string[]
+    sqlParams: Record<string, SQLParamType>
 }) {
     try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const body = req.body as any
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        for (const key in req.params as any) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            if (!(req.params as any)[key]) {
-                return res.status(400).send({ error: 'ID is required' })
-            }
-        }
-
-        for (const field of requiredFields) {
-            if (!body[field]) {
+        for (const field of requiredFields || []) {
+            if (!(field in sqlParams)) {
                 return res.status(400).send({ error: `${field} is required` })
             }
         }
 
         const sql = await loadSQL(sqlPath)
-        const params = sqlParams
-        const result = await run(sql, params)
+        const result = await run(sql, Object.values(sqlParams))
 
         if (result.rows.length === 0) {
             return res.status(404).send({ error: 'Entity not found' })
@@ -108,16 +99,23 @@ export async function updateEntity({
 export async function deleteEntity({
     res,
     sqlPath,
+    requiredFields,
     sqlParams
 }: {
-    req: FastifyRequest
     res: FastifyReply
     sqlPath: string
-    sqlParams: SQLParamType[]
+    requiredFields?: string[]
+    sqlParams: Record<string, SQLParamType>
 }) {
     try {
+        for (const field of requiredFields || []) {
+            if (!(field in sqlParams)) {
+                return res.status(400).send({ error: `${field} is required` })
+            }
+        }
+
         const sql = await loadSQL(sqlPath)
-        await run(sql, sqlParams)
+        await run(sql, Object.values(sqlParams))
 
         res.status(204).send()
     } catch (error) {
