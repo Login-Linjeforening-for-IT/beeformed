@@ -87,7 +87,7 @@ export function FormPopup() {
     }
 
     return (
-        <div className='fixed inset-0 bg-black opacity-80 flex items-center justify-center z-50'>
+        <div className='fixed inset-0 bg-black/80 flex items-center justify-center z-50'>
             <div className='bg-login-700 rounded-lg p-8 w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto'>
                 <div className='flex justify-between items-center mb-4'>
                     <h2 className='text-xl font-semibold text-login-50'>Create New Form</h2>
