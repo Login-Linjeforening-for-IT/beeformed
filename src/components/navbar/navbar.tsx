@@ -20,7 +20,7 @@ export default function Navbar() {
             theme={'dark'}
         >
             <NavItem
-                href={config.url.LOGIN}
+                href={config.url.LOGIN_URL}
                 external
             >
                 Login

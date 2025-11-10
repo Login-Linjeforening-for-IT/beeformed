@@ -1,0 +1,332 @@
+@font-face {
+  font-family: 'logfont';
+  src:  url('logfont.ttf?5nfjtk') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="logfont-"], [class*=" logfont-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'logfont' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.logfont-circle:before {
+  content: "\e900";
+}
+.logfont-rect:before {
+  content: "\e901";
+}
+.logfont-login:before {
+  content: "\e910";
+}
+.logfont-login-text:before {
+  content: "\e90c";
+}
+.logfont-styret-corners:before {
+  content: "\e920";
+}
+.logfont-styret:before {
+  content: "\e91d";
+}
+.logfont-styret-filled:before {
+  content: "\e952";
+}
+.logfont-evntkom-corners:before {
+  content: "\e90f";
+}
+.logfont-evntkom:before {
+  content: "\e907";
+}
+.logfont-evntkom-filled:before {
+  content: "\e954";
+}
+.logfont-bedkom-corners:before {
+  content: "\e911";
+}
+.logfont-bedkom:before {
+  content: "\e90e";
+}
+.logfont-bedkom-filled:before {
+  content: "\e953";
+}
+.logfont-tekkom-corners:before {
+  content: "\e93d";
+}
+.logfont-tekkom:before {
+  content: "\e939";
+}
+.logfont-ctfkom-corners:before {
+  content: "\e958";
+}
+.logfont-ctfkom:before {
+  content: "\e906";
+}
+.logfont-ctfkom-filled:before {
+  content: "\e955";
+}
+.logfont-satkom-corners:before {
+  content: "\e904";
+}
+.logfont-satkom:before {
+  content: "\e903";
+}
+.logfont-satkom-filled:before {
+  content: "\e95d";
+}
+.logfont-pr-corners:before {
+  content: "\e959";
+}
+.logfont-pr:before {
+  content: "\e905";
+}
+.logfont-pr-filled:before {
+  content: "\e95e";
+}
+.logfont-ntnu:before {
+  content: "\e94c";
+}
+.logfont-sit:before {
+  content: "\e94d";
+}
+.logfont-sit-text:before {
+  content: "\e94e";
+}
+.logfont-ntnui-gjvik:before {
+  content: "\e94f";
+}
+.logfont-ntnui-simple:before {
+  content: "\e950";
+}
+.logfont-huset:before {
+  content: "\e94a";
+}
+.logfont-huset-text:before {
+  content: "\e94b";
+}
+.logfont-gjvik-kommune:before {
+  content: "\e914";
+}
+.logfont-peppes:before {
+  content: "\e913";
+}
+.logfont-pizzabakeren:before {
+  content: "\e90d";
+}
+.logfont-chaplin:before {
+  content: "\e949";
+}
+.logfont-discord:before {
+  content: "\e908";
+}
+.logfont-instagram:before {
+  content: "\e926";
+}
+.logfont-facebook:before {
+  content: "\e902";
+}
+.logfont-linkedin:before {
+  content: "\e92a";
+}
+.logfont-gitlab:before {
+  content: "\e90a";
+}
+.logfont-wikijs:before {
+  content: "\e95f";
+}
+.logfont-snapchat:before {
+  content: "\e93b";
+}
+.logfont-twitter:before {
+  content: "\e93f";
+}
+.logfont-youtube:before {
+  content: "\e947";
+}
+.logfont-microsoft:before {
+  content: "\e92d";
+}
+.logfont-windows:before {
+  content: "\e95a";
+}
+.logfont-android:before {
+  content: "\e915";
+}
+.logfont-apple:before {
+  content: "\e95b";
+}
+.logfont-ubuntu:before {
+  content: "\e940";
+}
+.logfont-archlinux:before {
+  content: "\e916";
+}
+.logfont-manjaro:before {
+  content: "\e92c";
+}
+.logfont-debian:before {
+  content: "\e91b";
+}
+.logfont-linux:before {
+  content: "\e92b";
+}
+.logfont-tux:before {
+  content: "\eabd";
+}
+.logfont-bitcoin:before {
+  content: "\e917";
+}
+.logfont-raspberrypi:before {
+  content: "\e937";
+}
+.logfont-arduino:before {
+  content: "\e95c";
+}
+.logfont-cisco:before {
+  content: "\e918";
+}
+.logfont-codepen:before {
+  content: "\e909";
+}
+.logfont-postgresql:before {
+  content: "\e933";
+}
+.logfont-digitalocean:before {
+  content: "\e91c";
+}
+.logfont-kubernetes:before {
+  content: "\e929";
+}
+.logfont-docker:before {
+  content: "\e91e";
+}
+.logfont-python:before {
+  content: "\e936";
+}
+.logfont-html5:before {
+  content: "\e925";
+}
+.logfont-css3:before {
+  content: "\e91a";
+}
+.logfont-cpp:before {
+  content: "\e919";
+}
+.logfont-go:before {
+  content: "\e924";
+}
+.logfont-rust:before {
+  content: "\e93a";
+}
+.logfont-java:before {
+  content: "\e927";
+}
+.logfont-firefox:before {
+  content: "\e92e";
+}
+.logfont-tor:before {
+  content: "\e93e";
+}
+.logfont-duckduckgo:before {
+  content: "\e91f";
+}
+.logfont-mysql:before {
+  content: "\e92f";
+}
+.logfont-nintendoswitch:before {
+  content: "\e930";
+}
+.logfont-javascript:before {
+  content: "\e928";
+}
+.logfont-react:before {
+  content: "\e938";
+}
+.logfont-node-dot-js:before {
+  content: "\e931";
+}
+.logfont-npm:before {
+  content: "\e932";
+}
+.logfont-webpack:before {
+  content: "\e946";
+}
+.logfont-powershell:before {
+  content: "\e935";
+}
+.logfont-postman:before {
+  content: "\e934";
+}
+.logfont-redmine:before {
+  content: "\e912";
+}
+.logfont-stackoverflow:before {
+  content: "\e93c";
+}
+.logfont-udemy:before {
+  content: "\e941";
+}
+.logfont-untappd:before {
+  content: "\e942";
+}
+.logfont-vim:before {
+  content: "\e943";
+}
+.logfont-visualstudio:before {
+  content: "\e944";
+}
+.logfont-vscode:before {
+  content: "\e945";
+}
+.logfont-figma:before {
+  content: "\e921";
+}
+.logfont-redhat:before {
+  content: "\e948";
+}
+.logfont-zoom:before {
+  content: "\e956";
+}
+.logfont-1password:before {
+  content: "\e90b";
+}
+.logfont-github:before {
+  content: "\e923";
+}
+.logfont-git:before {
+  content: "\e922";
+}
+.logfont-git-text:before {
+  content: "\f1d3";
+}
+.logfont-git-text2:before {
+  content: "\f1d2";
+}
+.logfont-database:before {
+  content: "\e964";
+}
+.logfont-pacman:before {
+  content: "\e951";
+}
+.logfont-usb:before {
+  content: "\f287";
+}
+.logfont-pizza:before {
+  content: "\e957";
+}
+.logfont-tree:before {
+  content: "\e9bc";
+}
+.logfont-trophy:before {
+  content: "\e99e";
+}

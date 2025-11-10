@@ -5,8 +5,16 @@ const { env } = process
 const config = {
     url: {
         API_URL: env.API_URL || 'http://localhost:8080/api/',
-        GITLAB: 'https://gitlab.login.no',
-        LOGIN: 'https://login.no'
+        CDN_URL: 'https://cdn.login.no',
+        GITLAB_URL: 'https://gitlab.login.no',
+        LOGIN_URL: 'https://login.no',
+        MAIL_URL: 'kontakt@login.no',
+        LINKEDIN_URL: 'https://www.linkedin.com/company/linjeforeningen-login/about',
+        WIKI_URL: 'https://wiki.login.no',
+        FACEBOOK_URL: 'https://facebook.com/LogNTNU',
+        INSTAGRAM_URL: 'https://www.instagram.com/login_linjeforening/',
+        DISCORD_URL: 'https://discord.gg/login-ntnu'
+
     },
     authInternal: {
         BASE_URL: env.NEXT_PUBLIC_BASE_URL,
