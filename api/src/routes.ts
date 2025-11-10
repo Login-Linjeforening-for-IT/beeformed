@@ -11,6 +11,7 @@ import {
 
 import {
     createForm,
+    getForms,
     getForm,
     updateForm,
     deleteForm
@@ -40,6 +41,7 @@ export default async function apiRoutes(fastify: FastifyInstance) {
 
     // Forms
     fastify.post('/forms', { preHandler: authMiddleware }, createForm)
+    fastify.get('/forms', { preHandler: authMiddleware }, getForms)
     fastify.get('/forms/:id', { preHandler: authMiddleware }, getForm)
     fastify.put('/forms/:id', { preHandler: authMiddleware }, updateForm)
     fastify.delete('/forms/:id', { preHandler: authMiddleware }, deleteForm)

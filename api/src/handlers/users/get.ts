@@ -8,6 +8,7 @@ export default async function getUser(req: FastifyRequest, res: FastifyReply) {
         requiredFields: ['id'],
         sqlParams: {
             id: req.user!.id
-        }
+        },
+        singleResult: true
     })
 }

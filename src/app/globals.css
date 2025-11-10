@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@plugin "@tailwindcss/typography";
 
 @theme {
     --color-login: #fd8738;
@@ -12,7 +13,27 @@
     --color-login-300: #5e5e5e;
     --color-login-200: #727272;
     --color-login-100: #b0b0b0;
+    --color-login-75: #e4e4e4;
     --color-login-50: #ededed;
+}
+
+@utility prose-login {
+  --tw-prose-body: var(--color-login-75);
+  --tw-prose-headings: var(--color-login-50);
+  --tw-prose-lead: var(--color-login-100);
+  --tw-prose-links: var(--color-login);
+  --tw-prose-bold: var(--color-login-50);
+  --tw-prose-counters: var(--color-login-50);
+  --tw-prose-bullets: var(--color-login-50);
+  --tw-prose-hr: var(--color-login-50);
+  --tw-prose-quotes: var(--color-login-75);
+  --tw-prose-quote-borders: var(--color-login);
+  --tw-prose-captions: var(--color-login-75);
+  --tw-prose-code: var(--color-login-75);
+  --tw-prose-pre-code: var(--color-login-75);
+  --tw-prose-pre-bg: rgb(0 0 0 / 50%);
+  --tw-prose-th-borders: var(--color-login-50);
+  --tw-prose-td-borders: var(--color-login-100);
 }
 
 .dark {

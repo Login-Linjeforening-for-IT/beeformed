@@ -34,12 +34,14 @@ export async function readEntity({
     res,
     sqlPath,
     requiredFields,
-    sqlParams
+    sqlParams,
+    singleResult
 }: {
     res: FastifyReply
     sqlPath: string
     requiredFields?: string[]
     sqlParams: Record<string, SQLParamType>
+    singleResult?: boolean
 }) {
     try {
         for (const field of requiredFields || []) {
@@ -55,7 +57,7 @@ export async function readEntity({
             return res.status(404).send({ error: 'Entity not found' })
         }
 
-        const entity = result.rows[0]
+        const entity = singleResult ? result.rows[0] : result.rows
 
         res.send(entity)
     } catch (error) {
