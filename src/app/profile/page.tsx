@@ -1,5 +1,5 @@
 import { PageContainer } from '@components/container/page'
-import { getUser, deleteUser, getForms } from '@utils/api'
+import { getUser, deleteUser, getForms, getSharedForms } from '@utils/api'
 import Button from '@components/button/button'
 import { FormPopup } from '@components/form/popup'
 import Table from '@components/table/table'
@@ -7,8 +7,7 @@ import Table from '@components/table/table'
 export default async function Page() {
     const user = await getUser()
     const forms = await getForms()
-
-    console.log('Forms:', forms)
+    const sharedForms = await getSharedForms()
 
     return (
         <PageContainer title='Profile'>
@@ -34,9 +33,11 @@ export default async function Page() {
                     <p>No user data available</p>
                 </div>
             )}
+            {forms && forms.length > 0 &&
             <div className='pt-20'>
-                <h1 className='text-2xl font-semibold'>
+                <h1 className='text-2xl font-semibold flex items-center gap-2'>
                     My Forms
+                    <FormPopup />
                 </h1>
                 <Table
                     data={forms}
@@ -46,8 +47,22 @@ export default async function Page() {
                         { key: 'created_at', label: 'Created At' }
                     ]}
                 />
-                <FormPopup />
             </div>
+            }
+            {sharedForms && sharedForms.length > 0 &&
+            <div className='pt-20'>
+                <h1 className='text-2xl font-semibold'>
+                    Shared Forms
+                </h1>
+                <Table
+                    data={sharedForms}
+                    columns={[
+                        { key: 'id', label: 'Form ID' },
+                        { key: 'title', label: 'Title' },
+                        { key: 'created_at', label: 'Created At' }
+                    ]}
+                />
+            </div>}
         </PageContainer>
     )
 }

@@ -24,6 +24,10 @@ export async function getForms() {
     return getWrapper({ path: 'forms' })
 }
 
+export async function getSharedForms() {
+    return getWrapper({ path: 'forms/shared' })
+}
+
 export async function getForm(formId: string) {
     return getWrapper({ path: `forms/${formId}` })
 }

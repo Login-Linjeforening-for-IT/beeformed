@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { X } from 'lucide-react'
+import { Plus, X } from 'lucide-react'
 import { toast } from 'sonner'
 import { postForm } from '@utils/api'
 import { Input, SwitchInput, Textarea } from 'uibee/components'
@@ -77,11 +77,9 @@ export function FormPopup() {
         return (
             <button
                 onClick={openPopup}
-                className='px-4 py-2 bg-login text-login-900 rounded-md hover:bg-orange-400
-                    transition-colors focus:outline-none focus:ring-2 focus:ring-login
-                    focus:ring-offset-2 font-medium cursor-pointer w-fit'
+                className='cursor-pointer'
             >
-                Create New Form
+                <Plus className=''/>
             </button>
         )
     }

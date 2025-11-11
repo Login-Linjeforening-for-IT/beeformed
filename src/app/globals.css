@@ -80,6 +80,10 @@ body {
         color 0.4s;
 }
 
+button {
+    font-size: 1rem;
+}
+
 
 @utility page-container {
     display: grid;
