@@ -5,8 +5,10 @@ import { Plus, X } from 'lucide-react'
 import { toast } from 'sonner'
 import { postForm } from '@utils/api'
 import { Input, SwitchInput, Textarea } from 'uibee/components'
+import { useRouter } from 'next/navigation'
 
 export function FormPopup() {
+    const router = useRouter()
     const [isOpen, setIsOpen] = useState(false)
     const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState({
@@ -63,6 +65,7 @@ export function FormPopup() {
                     published_at: '',
                     expires_at: ''
                 })
+                router.refresh()
             } else {
                 toast.error('Failed to create form')
             }

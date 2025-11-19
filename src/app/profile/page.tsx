@@ -7,9 +7,18 @@ import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
 export default async function Page() {
+    const filter = {
+        limit: 5,
+        offset: 0,
+        sortBy: 'created_at',
+        sortOrder: 'desc'
+    }
+
     const user = await getUser()
-    const forms = await getForms()
-    const sharedForms = await getSharedForms()
+    const forms = await getForms(filter)
+    const formsData = forms.data || []
+    const sharedForms = await getSharedForms(filter)
+    const sharedFormsData = sharedForms.data || []
 
     return (
         <PageContainer title='Profile'>
@@ -21,10 +30,10 @@ export default async function Page() {
                         <p>Created {new Date(user.created_at).toLocaleString('no-NO')}</p>
                     </div>
                     <Button
+                        href='/api/logout'
                         onAction={deleteUser}
                         errorMessage='Failed to delete user'
                         successMessage='User deleted successfully'
-                        successRedirectUrl='/api/logout'
                         className='mb-4 px-4 py-2 bg-red-800 rounded w-fit'
                     >
                         Delete User
@@ -35,7 +44,7 @@ export default async function Page() {
                     <p>No user data available</p>
                 </div>
             )}
-            {forms && forms.length > 0 &&
+            {formsData && formsData.length > 0 &&
             <div className='pt-20'>
                 <div className='flex justify-between'>
                     <h1 className='text-2xl font-semibold flex items-center gap-2'>
@@ -48,7 +57,7 @@ export default async function Page() {
                     </Link>
                 </div>
                 <Table
-                    data={forms}
+                    data={formsData}
                     columns={[
                         { key: 'id', label: 'Form ID' },
                         { key: 'title', label: 'Title' },
@@ -57,7 +66,7 @@ export default async function Page() {
                 />
             </div>
             }
-            {sharedForms && sharedForms.length > 0 &&
+            {sharedFormsData && sharedFormsData.length > 0 &&
             <div className='pt-20'>
                 <div className='flex justify-between'>
                     <h1 className='text-2xl font-semibold'>
@@ -69,7 +78,7 @@ export default async function Page() {
                     </Link>
                 </div>
                 <Table
-                    data={sharedForms}
+                    data={sharedFormsData}
                     columns={[
                         { key: 'id', label: 'Form ID' },
                         { key: 'title', label: 'Title' },

@@ -11,7 +11,7 @@ export async function createEntity({
     res: FastifyReply
     sqlPath: string
     requiredFields?: string[]
-    sqlParams: Record<string, SQLParamType>
+    sqlParams: Record<string, SQLParamType> | SQLParamType[]
 }) {
     try {
         for (const field of requiredFields || []) {
@@ -21,7 +21,8 @@ export async function createEntity({
         }
 
         const sql = await loadSQL(sqlPath)
-        const result = await run(sql, Object.values(sqlParams))
+        const params = Array.isArray(sqlParams) ? sqlParams : Object.values(sqlParams)
+        const result = await run(sql, params)
 
         res.status(201).send(result.rows[0])
     } catch (error) {
@@ -33,15 +34,19 @@ export async function createEntity({
 export async function readEntity({
     res,
     sqlPath,
+    sql,
     requiredFields,
     sqlParams,
-    singleResult
+    singleResult,
+    metadata
 }: {
     res: FastifyReply
-    sqlPath: string
+    sqlPath?: string
+    sql?: string
     requiredFields?: string[]
-    sqlParams: Record<string, SQLParamType>
+    sqlParams: Record<string, SQLParamType> | SQLParamType[]
     singleResult?: boolean
+    metadata?: Record<string, unknown> | ((data: unknown[]) => Record<string, unknown>)
 }) {
     try {
         for (const field of requiredFields || []) {
@@ -50,8 +55,17 @@ export async function readEntity({
             }
         }
 
-        const sql = await loadSQL(sqlPath)
-        const result = await run(sql, Object.values(sqlParams))
+        let query: string
+        if (sql) {
+            query = sql
+        } else if (sqlPath) {
+            query = await loadSQL(sqlPath)
+        } else {
+            return res.status(500).send({ error: 'sql or sqlPath must be provided' })
+        }
+
+        const params = Array.isArray(sqlParams) ? sqlParams : Object.values(sqlParams)
+        const result = await run(query, params)
 
         if (result.rows.length === 0) {
             return res.status(404).send({ error: 'Entity not found' })
@@ -59,7 +73,18 @@ export async function readEntity({
 
         const entity = singleResult ? result.rows[0] : result.rows
 
-        res.send(entity)
+        let metadataObj: Record<string, unknown> = {}
+        if (typeof metadata === 'function') {
+            metadataObj = metadata(entity as unknown[])
+        } else if (metadata) {
+            metadataObj = metadata
+        }
+
+        if (Object.keys(metadataObj).length > 0) {
+            res.send({ data: entity, ...metadataObj })
+        } else {
+            res.send(entity)
+        }
     } catch (error) {
         console.error('Error reading entity:', error)
         res.status(500).send({ error: 'Internal server error' })
@@ -75,7 +100,7 @@ export async function updateEntity({
     res: FastifyReply
     sqlPath: string
     requiredFields?: string[]
-    sqlParams: Record<string, SQLParamType>
+    sqlParams: Record<string, SQLParamType> | SQLParamType[]
 }) {
     try {
         for (const field of requiredFields || []) {
@@ -85,7 +110,8 @@ export async function updateEntity({
         }
 
         const sql = await loadSQL(sqlPath)
-        const result = await run(sql, Object.values(sqlParams))
+        const params = Array.isArray(sqlParams) ? sqlParams : Object.values(sqlParams)
+        const result = await run(sql, params)
 
         if (result.rows.length === 0) {
             return res.status(404).send({ error: 'Entity not found' })
@@ -107,7 +133,7 @@ export async function deleteEntity({
     res: FastifyReply
     sqlPath: string
     requiredFields?: string[]
-    sqlParams: Record<string, SQLParamType>
+    sqlParams: Record<string, SQLParamType> | SQLParamType[]
 }) {
     try {
         for (const field of requiredFields || []) {
@@ -117,7 +143,8 @@ export async function deleteEntity({
         }
 
         const sql = await loadSQL(sqlPath)
-        await run(sql, Object.values(sqlParams))
+        const params = Array.isArray(sqlParams) ? sqlParams : Object.values(sqlParams)
+        await run(sql, params)
 
         res.status(204).send()
     } catch (error) {
