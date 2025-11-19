@@ -6,28 +6,35 @@ import { toast } from 'sonner'
 
 interface ButtonProps {
     children: React.ReactNode
-    onAction: () => Promise<{ error?: string }>
-    errorMessage: string
-    successMessage: string
-    successRedirectUrl?: string
+    onAction?: () => Promise<{ error?: string }>
+    errorMessage?: string
+    successMessage?: string
+    href?: string
+    leadingIcon?: React.ReactNode
     className?: string
 }
 
-export default function Button({ children, onAction, errorMessage, successMessage, successRedirectUrl, className = '' }: ButtonProps) {
+export default function Button({ children, onAction, errorMessage, successMessage, href, leadingIcon, className = '' }: ButtonProps) {
     const [loading, setLoading] = useState(false)
     const router = useRouter()
 
-    async function handleClick() {
+    async function handleAction() {
         setLoading(true)
         try {
-            const result = await onAction()
-            if (!result.error) {
-                toast.success(successMessage)
-                if (successRedirectUrl) {
-                    router.push(successRedirectUrl)
+            if (onAction) {
+                const result = await onAction()
+                if (!result.error) {
+                    if (successMessage) toast.success(successMessage)
+                    if (href) {
+                        router.push(href)
+                    }
+                } else {
+                    if (errorMessage) toast.error(errorMessage)
                 }
             } else {
-                toast.error(errorMessage)
+                if (href) {
+                    router.push(href)
+                }
             }
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
@@ -37,13 +44,34 @@ export default function Button({ children, onAction, errorMessage, successMessag
         }
     }
 
+    if (href) {
+        return (
+            <a
+                href={href}
+                onClick={(e) => {
+                    e.preventDefault()
+                    handleAction()
+                }}
+                className={`flex flex-row gap-2 items-center cursor-pointer
+                    ${loading ? 'opacity-80 cursor-not-allowed pointer-events-none' : ''}
+                    ${className}`
+                }
+            >
+                {leadingIcon} {children}
+            </a>
+        )
+    }
+
     return (
         <button
-            onClick={handleClick}
+            onClick={handleAction}
             disabled={loading}
-            className={`cursor-pointer ${loading ? 'opacity-80 cursor-not-allowed' : ''} ${className}`}
+            className={`flex flex-row gap-2 items-center cursor-pointer
+                ${loading ? 'opacity-80 cursor-not-allowed' : ''}
+                ${className}`
+            }
         >
-            {children}
+            {leadingIcon} {children}
         </button>
     )
 }
