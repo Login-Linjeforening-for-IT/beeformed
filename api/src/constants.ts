@@ -8,7 +8,13 @@ const requiredEnvironmentVariables = [
     'DB_USER',
     'DB_HOST',
     'DB_PASSWORD',
-    'DB_PORT'
+    'DB_PORT',
+    'SMTP_HOST',
+    'SMTP_PORT',
+    'SMTP_SECURE',
+    'SMTP_USER',
+    'SMTP_PASSWORD',
+    'SMTP_FROM'
 ]
 
 const missingVariables = requiredEnvironmentVariables.filter(
@@ -38,7 +44,13 @@ const config = {
     DB_MAX_CONN: 20,
     DB_IDLE_TIMEOUT_MS: 5000,
     DB_TIMEOUT_MS: 3000,
-    CACHE_TTL: 1000
+    CACHE_TTL: 1000,
+    SMTP_HOST: env.SMTP_HOST,
+    SMTP_PORT: Number(env.SMTP_PORT) || 465,
+    SMTP_SECURE: env.SMTP_SECURE === 'true',
+    SMTP_USER: env.SMTP_USER,
+    SMTP_PASSWORD: env.SMTP_PASSWORD,
+    SMTP_FROM: env.SMTP_FROM,
 }
 
 export default config
