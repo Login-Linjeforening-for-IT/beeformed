@@ -20,6 +20,21 @@ export default function Navbar() {
             theme={'dark'}
         >
             <NavItem
+                href='/profile'
+            >
+                Profile
+            </NavItem>
+            <NavItem
+                href='/forms'
+            >
+                Forms
+            </NavItem>
+            <NavItem
+                href='/submissions'
+            >
+                Submissions
+            </NavItem>
+            <NavItem
                 href={config.url.LOGIN_URL}
                 external
             >

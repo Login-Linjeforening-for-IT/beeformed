@@ -4,6 +4,8 @@ import Table from '@components/table/table'
 import Pagination from '@components/pagination/pagination'
 import SearchInput from '@components/search/search'
 import { FormPopup } from '@components/form/popup'
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 
 type PageProps = {
     params: Promise<{ slug?: string[] | string }>
@@ -41,6 +43,12 @@ export default async function Page({ params, searchParams }: PageProps) {
 
     return (
         <PageContainer title={type === 'shared' ? 'Shared Forms' : 'My Forms'}>
+            <div>
+                <Link href={type === 'shared' ? '/forms' : '/forms/shared'} className='flex items-center gap-1 hover:gap-2 text-xl w-fit'>
+                    {type === 'shared' ? 'View My Forms' : 'View Shared Forms'}
+                    <ArrowRight className='inline-block h-full' />
+                </Link>
+            </div>
             {formsData && formsData.length > 0 &&
                 <div className='pt-20 pb-4 flex flex-col h-full'>
                     <div className='flex justify-between mb-4'>
