@@ -51,7 +51,7 @@ export default async function Page() {
                         My Forms
                         <FormPopup />
                     </h1>
-                    <Link className='text-lg font-semibold flex items-center gap-2' href='/profile/forms'>
+                    <Link className='text-lg font-semibold flex items-center gap-2' href='/forms'>
                         See all
                         <ArrowRight size={20} />
                     </Link>
@@ -72,7 +72,7 @@ export default async function Page() {
                     <h1 className='text-2xl font-semibold'>
                         Shared Forms
                     </h1>
-                    <Link className='text-lg font-semibold flex items-center gap-2' href='/profile/forms/shared'>
+                    <Link className='text-lg font-semibold flex items-center gap-2' href='/forms/shared'>
                         See all
                         <ArrowRight size={20} />
                     </Link>

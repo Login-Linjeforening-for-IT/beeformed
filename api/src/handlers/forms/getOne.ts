@@ -6,7 +6,7 @@ export default async function getOneForm(req: FastifyRequest, res: FastifyReply)
     const params = req.params as any
     await readEntity({
         res,
-        sqlPath: 'forms/getOne.sql',
+        sqlPath: 'forms/get.sql',
         requiredFields: ['id'],
         sqlParams: {
             id: params.id
