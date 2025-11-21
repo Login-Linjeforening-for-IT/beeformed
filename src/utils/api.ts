@@ -4,6 +4,7 @@ import {
     getWrapper,
     deleteWrapper,
     postWrapper,
+    putWrapper,
 } from './apiWrapper'
 
 type FilterProps = {
@@ -60,8 +61,8 @@ export async function postForm(data: PostFormProps) {
     return postWrapper({ path: 'forms', data })
 }
 
-export async function putForm(formId: string, data: PutFormProps) {
-    return postWrapper({ path: `forms/${formId}`, data })
+export async function putForm(formId: number, data: PutFormProps) {
+    return putWrapper({ path: `forms/${formId}`, data })
 }
 
 export async function deleteForm(formId: string) {

@@ -37,7 +37,7 @@ export default function Table({ data, columns, currentOrderBy, currentSort, onDe
     }
 
     const handleEdit = (row: Record<string, unknown>) => {
-        router.push(`/forms/edit/${row.id}`)
+        router.push(`/form/${row.id}`)
         setOpenMenuIndex(null)
     }
 

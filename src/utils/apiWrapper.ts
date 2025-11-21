@@ -62,6 +62,10 @@ async function postWrapper({ path, data }: { path: string; data: any }) {
     return apiRequest({ method: 'POST', path, data })
 }
 
+async function putWrapper({ path, data }: { path: string; data: unknown }) {
+    return apiRequest({ method: 'PUT', path, data })
+}
+
 async function deleteWrapper({ path, options }: { path: string; options?: RequestInit }) {
     return apiRequest({ method: 'DELETE', path, options })
 }
@@ -70,4 +74,4 @@ async function patchWrapper({ path, data = {}, options = {} }: { path: string; d
     return apiRequest({ method: 'PATCH', path, data, options })
 }
 
-export { apiRequest, getWrapper, postWrapper, deleteWrapper, patchWrapper }
+export { apiRequest, getWrapper, postWrapper, putWrapper, deleteWrapper, patchWrapper }

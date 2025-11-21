@@ -1,0 +1,44 @@
+'use server'
+
+import { putForm } from '@utils/api'
+import {
+    getRequiredString,
+    getOptionalString,
+    getOptionalNumber,
+    getRequiredNumber,
+    getBoolean,
+    getRequiredDateTime
+} from '@utils/validate'
+
+type FormState =
+    | null
+    | string
+
+type PutFormState = FormState | PutFormProps
+
+
+
+function extractFormProps(formData: FormData): PutFormProps {
+    return {
+        title:                  getRequiredString(formData, 'title'),
+        description:            getOptionalString(formData, 'description'),
+        is_active:              getBoolean(formData, 'is_active'),
+        anonymous_submissions:  getBoolean(formData, 'anonymous_submissions'),
+        limit:                  getOptionalNumber(formData, 'limit'),
+        published_at:           getRequiredDateTime(formData, 'published_at'),
+        expires_at:             getRequiredDateTime(formData, 'expires_at')
+    }
+}
+
+export async function updateForm(_: PutFormState, formData: FormData): Promise<PutFormState> {
+    try {
+        const props = extractFormProps(formData)
+
+        const id = getRequiredNumber(formData, 'id')
+
+        const response = await putForm(id, props)
+        return response
+    } catch (error) {
+        return error instanceof Error ? error.message : 'Unknown error'
+    }
+}
