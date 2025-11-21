@@ -16,9 +16,9 @@ export default async function Page() {
 
     const user = await getUser()
     const forms = await getForms(filter)
-    const formsData = forms.data || []
+    const formsData = 'error' in forms ? [] : forms.data
     const sharedForms = await getSharedForms(filter)
-    const sharedFormsData = sharedForms.data || []
+    const sharedFormsData = 'error' in sharedForms ? [] : sharedForms.data
 
     return (
         <PageContainer title='Profile'>

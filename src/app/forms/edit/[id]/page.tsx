@@ -7,7 +7,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
     const form = await getForm(id)
 
-    if (form.error || !form) {
+    if ('error' in form) {
         notFound()
     }
 

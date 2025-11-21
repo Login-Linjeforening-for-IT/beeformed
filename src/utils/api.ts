@@ -14,6 +14,10 @@ type FilterProps = {
     sort?: 'asc' | 'desc'
 }
 
+type ErrorResponse = {
+    error: string
+}
+
 // User
 export async function getUser() {
     return getWrapper({ path: 'users' })
@@ -24,7 +28,7 @@ export async function deleteUser() {
 }
 
 // Forms
-export async function getForms({search, offset, limit, orderBy, sort}: FilterProps = {}) {
+export async function getForms({search, offset, limit, orderBy, sort}: FilterProps = {}): Promise<GetFormsProps | ErrorResponse> {
     const queryParts = new URLSearchParams()
     if (search)     queryParts.append('search', String(search))
     if (limit)      queryParts.append('limit', String(limit))
@@ -36,7 +40,7 @@ export async function getForms({search, offset, limit, orderBy, sort}: FilterPro
     return result
 }
 
-export async function getSharedForms({search, offset, limit, orderBy, sort}: FilterProps = {}) {
+export async function getSharedForms({search, offset, limit, orderBy, sort}: FilterProps = {}): Promise<GetFormsProps | ErrorResponse> {
     const queryParts = new URLSearchParams()
     if (search)     queryParts.append('search', String(search))
     if (limit)      queryParts.append('limit', String(limit))
@@ -48,7 +52,7 @@ export async function getSharedForms({search, offset, limit, orderBy, sort}: Fil
     return result
 }
 
-export async function getForm(formId: string) {
+export async function getForm(formId: string): Promise<GetFormProps | ErrorResponse> {
     return getWrapper({ path: `forms/${formId}` })
 }
 

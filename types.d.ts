@@ -9,6 +9,17 @@ type Form = {
 
 }
 
+type GetFormProps = Form & {
+    id: string
+    created_at: string,
+    updated_at: string
+}
+
+type GetFormsProps = {
+    data: GetFormProps[],
+    total: number
+}
+
 type PostFormProps = Form
 
 type PutFormProps = Form

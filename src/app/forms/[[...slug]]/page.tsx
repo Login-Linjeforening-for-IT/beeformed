@@ -6,6 +6,7 @@ import SearchInput from '@components/search/search'
 import { FormPopup } from '@components/form/popup'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
+import { notFound } from 'next/navigation'
 
 type PageProps = {
     params: Promise<{ slug?: string[] | string }>
@@ -38,7 +39,11 @@ export default async function Page({ params, searchParams }: PageProps) {
 
     const forms = type === 'shared' ? await getSharedForms(filter) : await getForms(filter)
 
-    const formsData = forms.data || []
+    if ('error' in forms) {
+        notFound()
+    }
+
+    const formsData = forms.data
     const totalItems = forms.total
 
     return (
