@@ -5,6 +5,7 @@ import {
     deleteWrapper,
     postWrapper,
     putWrapper,
+    patchWrapper,
 } from './apiWrapper'
 
 type FilterProps = {
@@ -69,3 +70,11 @@ export async function deleteForm(formId: string) {
     return deleteWrapper({ path: `forms/${formId}` })
 }
 
+// Fields
+export async function getFields(formId: string): Promise<GetFieldsProps | ErrorResponse> {
+    return getWrapper({ path: `forms/${formId}/fields` })
+}
+
+export async function patchFields(formId: string, data: PatchFieldsProps) {
+    return patchWrapper({ path: `forms/${formId}/fields`, data })
+}

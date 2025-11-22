@@ -1,25 +1,56 @@
-type Form = {
-    title: string,
-    description: string | null,
-    is_active: boolean,
-    anonymous_submissions: boolean,
-    limit: number | null,
-    published_at: string | null,
-    expires_at: string | null
+declare global {
+    // Form
+    type Form = {
+        title: string,
+        description: string | null,
+        is_active: boolean,
+        anonymous_submissions: boolean,
+        limit: number | null,
+        published_at: string | null,
+        expires_at: string | null
 
+    }
+
+    type GetFormProps = Form & {
+        id: string
+        created_at: string,
+        updated_at: string
+    }
+
+    type GetFormsProps = {
+        data: GetFormProps[],
+        total: number
+    }
+
+    type PostFormProps = Form
+
+    type PutFormProps = Form
+
+    // Feilds
+    type FieldProps = {
+        form_id: string,
+        field_type: string,
+        label: string,
+        required: boolean,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        options: Record<string, any> | null,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        validation: Record<string, any> | null,
+        field_order: number,
+    }
+
+    type GetFieldProps = FieldProps & {
+        id: string,
+        created_at: string,
+    }
+
+    type GetFieldsProps = GetFieldProps[]
+
+    type PatchFieldsProps = {
+        operation: 'create' | 'update' | 'delete'
+        id?: number
+        data: FieldProps
+    }[]
 }
 
-type GetFormProps = Form & {
-    id: string
-    created_at: string,
-    updated_at: string
-}
-
-type GetFormsProps = {
-    data: GetFormProps[],
-    total: number
-}
-
-type PostFormProps = Form
-
-type PutFormProps = Form
+export { }

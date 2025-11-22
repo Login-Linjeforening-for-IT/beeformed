@@ -26,6 +26,7 @@ import {
 } from './handlers/form-permissions/index.ts'
 
 import {
+    getFormFields,
     bulkFormFields
 } from './handlers/form-fields/index.ts'
 
@@ -55,5 +56,6 @@ export default async function apiRoutes(fastify: FastifyInstance) {
     fastify.delete('/forms/:formId/permissions/:id', { preHandler: authMiddleware }, deleteFormPermission)
 
     // Form Fields
+    fastify.get('/forms/:id/fields', { preHandler: authMiddleware }, getFormFields)
     fastify.patch('/forms/:id/fields', { preHandler: authMiddleware }, bulkFormFields)
 }

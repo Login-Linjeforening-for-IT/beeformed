@@ -3,7 +3,6 @@ INSERT INTO form_fields (
     form_id,
     field_type,
     label,
-    placeholder,
     required,
     options,
     validation,
@@ -16,7 +15,6 @@ VALUES (
     $4,
     $5,
     $6,
-    $7,
-    $8
+    $7
 )
 RETURNING *;
