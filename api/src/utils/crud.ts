@@ -67,11 +67,7 @@ export async function readEntity({
         const params = Array.isArray(sqlParams) ? sqlParams : Object.values(sqlParams)
         const result = await run(query, params)
 
-        if (result.rows.length === 0) {
-            return res.status(404).send({ error: 'Entity not found' })
-        }
-
-        const entity = singleResult ? result.rows[0] : result.rows
+        const entity = singleResult ? (result.rows.length > 0 ? result.rows[0] : null) : result.rows
 
         let metadataObj: Record<string, unknown> = {}
         if (typeof metadata === 'function') {

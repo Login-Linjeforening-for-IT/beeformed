@@ -1,24 +1,24 @@
 declare global {
     // Form
     type Form = {
-        title: string,
-        description: string | null,
-        is_active: boolean,
-        anonymous_submissions: boolean,
-        limit: number | null,
-        published_at: string | null,
+        title: string
+        description: string | null
+        is_active: boolean
+        anonymous_submissions: boolean
+        limit: number | null
+        published_at: string | null
         expires_at: string | null
 
     }
 
     type GetFormProps = Form & {
         id: string
-        created_at: string,
+        created_at: string
         updated_at: string
     }
 
     type GetFormsProps = {
-        data: GetFormProps[],
+        data: GetFormProps[]
         total: number
     }
 
@@ -28,20 +28,20 @@ declare global {
 
     // Feilds
     type FieldProps = {
-        form_id: string,
-        field_type: string,
-        label: string,
-        required: boolean,
+        form_id: string
+        field_type: string
+        label: string
+        required: boolean
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        options: Record<string, any> | null,
+        options: Record<string, any> | null
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        validation: Record<string, any> | null,
-        field_order: number,
+        validation: Record<string, any> | null
+        field_order: number
     }
 
     type GetFieldProps = FieldProps & {
-        id: string,
-        created_at: string,
+        id: string
+        created_at: string
     }
 
     type GetFieldsProps = GetFieldProps[]
@@ -51,6 +51,27 @@ declare global {
         id?: number
         data: FieldProps
     }[]
+
+    // Permissions
+    type PermissionProps = {
+        group: string | null
+        user_email: string | null
+    }
+
+    type GetPermissionProps = PermissionProps & {
+        id: string
+        form_id: string
+        granted_by_email: string
+        created_at: string
+        updated_at: string
+    }
+
+    type GetPermissionsProps = {
+        data: GetPermissionProps[]
+        total: number
+    }
+
+    type PostPermissionProps = PermissionProps
 }
 
 export { }

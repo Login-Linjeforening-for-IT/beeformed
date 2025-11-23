@@ -16,9 +16,10 @@ type TableProps = {
     currentOrderBy?: string
     currentSort?: 'asc' | 'desc'
     onDelete?: (row: Record<string, unknown>) => void
+    disableEdit?: boolean
 }
 
-export default function Table({ data, columns, currentOrderBy, currentSort, onDelete }: TableProps) {
+export default function Table({ data, columns, currentOrderBy, currentSort, onDelete, disableEdit }: TableProps) {
     const router = useRouter()
     const searchParams = useSearchParams()
     const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null)
@@ -98,13 +99,15 @@ export default function Table({ data, columns, currentOrderBy, currentSort, onDe
                                 {openMenuIndex === index && (
                                     <div className='absolute right-0 mt-1 w-32 bg-login-500
                                         border border-login-600 rounded-lg shadow-lg z-10'>
-                                        <button
-                                            onClick={() => handleEdit(row)}
-                                            className='flex items-center w-full px-3 py-2 text-sm hover:bg-login-600 cursor-pointer'
-                                        >
-                                            <Edit className='w-4 h-4 mr-2' />
-                                            Edit
-                                        </button>
+                                        {!disableEdit && (
+                                            <button
+                                                onClick={() => handleEdit(row)}
+                                                className='flex items-center w-full px-3 py-2 text-sm hover:bg-login-600 cursor-pointer'
+                                            >
+                                                <Edit className='w-4 h-4 mr-2' />
+                                                Edit
+                                            </button>
+                                        )}
                                         {onDelete && (
                                             <button
                                                 onClick={() => handleDelete(row)}

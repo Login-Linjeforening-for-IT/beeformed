@@ -1,16 +1,21 @@
 import { PageContainer } from '@components/container/page'
 import EditFormPage from '@components/form/edit/form'
 import EditFieldsPage from '@components/form/edit/fields'
-import { getFields, getForm } from '@utils/api'
+import { getFields, getForm, getPermissions } from '@utils/api'
 import { notFound } from 'next/navigation'
 import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import EditPermissionsPage from '@components/form/edit/permissions'
 
 export default async function Page({ params }: { params: Promise<{ id: string, slug?: string[] | string }> }) {
     const { id, slug } = await params
     const type = Array.isArray(slug) ? slug[0] : slug || 'fields'
 
-    const data = type === 'settings' ? await getForm(id) : await getFields(id)
+    const data = type === 'settings' ?
+        await getForm(id) :
+        type === 'permissions' ?
+            await getPermissions(id) :
+            await getFields(id)
 
     if ('error' in data) {
         notFound()
@@ -33,11 +38,16 @@ export default async function Page({ params }: { params: Promise<{ id: string, s
                         <EditFormPage
                             form={data as GetFormProps}
                         />
-                        :
-                        <EditFieldsPage
-                            fields={data as GetFieldsProps}
-                            formId={id}
-                        />
+                        : type === 'permissions' ?
+                            <EditPermissionsPage
+                                permissions={data as GetPermissionsProps}
+                                formId={id}
+                            />
+                            :
+                            <EditFieldsPage
+                                fields={data as GetFieldsProps}
+                                formId={id}
+                            />
                     }
                 </div>
             </div>

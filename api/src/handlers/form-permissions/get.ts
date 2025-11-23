@@ -10,6 +10,7 @@ export default async function getFormPermissions(req: FastifyRequest, res: Fasti
         requiredFields: ['id'],
         sqlParams: {
             id: params.id
-        }
+        },
+        metadata: (data: unknown[]) => ({ total: data.length })
     })
 }

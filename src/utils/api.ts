@@ -78,3 +78,16 @@ export async function getFields(formId: string): Promise<GetFieldsProps | ErrorR
 export async function patchFields(formId: string, data: PatchFieldsProps) {
     return patchWrapper({ path: `forms/${formId}/fields`, data })
 }
+
+// Permissions
+export async function getPermissions(formId: string): Promise<GetPermissionsProps | ErrorResponse> {
+    return getWrapper({ path: `forms/${formId}/permissions` })
+}
+
+export async function postPermission(formId: string, data: PostPermissionProps) {
+    return postWrapper({ path: `forms/${formId}/permissions`, data })
+}
+
+export async function deletePermission(formId: string, permissionId: string) {
+    return deleteWrapper({ path: `forms/${formId}/permissions/${permissionId}` })
+}

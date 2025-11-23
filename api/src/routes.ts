@@ -21,7 +21,6 @@ import {
 import {
     createFormPermission,
     getFormPermission,
-    updateFormPermission,
     deleteFormPermission
 } from './handlers/form-permissions/index.ts'
 
@@ -52,7 +51,6 @@ export default async function apiRoutes(fastify: FastifyInstance) {
     // Form Permissions
     fastify.get('/forms/:id/permissions', { preHandler: authMiddleware }, getFormPermission)
     fastify.post('/forms/:id/permissions', { preHandler: authMiddleware }, createFormPermission)
-    fastify.put('/forms/:formId/permissions/:id', { preHandler: authMiddleware }, updateFormPermission)
     fastify.delete('/forms/:formId/permissions/:id', { preHandler: authMiddleware }, deleteFormPermission)
 
     // Form Fields
