@@ -1,13 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Plus, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import { toast } from 'sonner'
 import { postForm } from '@utils/api'
 import { Input, SwitchInput, Textarea } from 'uibee/components'
 import { useRouter } from 'next/navigation'
 
-export function FormPopup() {
+export function FormPopup({children}: {children: React.ReactNode}) {
     const router = useRouter()
     const [isOpen, setIsOpen] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -76,110 +76,112 @@ export function FormPopup() {
         }
     }
 
-    if (!isOpen) {
-        return (
+    return (
+        <>
             <button
                 onClick={openPopup}
                 className='cursor-pointer'
             >
-                <Plus className=''/>
+                {children}
             </button>
-        )
-    }
-
-    return (
-        <div className='fixed inset-0 bg-black/80 flex items-center justify-center z-50'>
-            <div className='bg-login-700 rounded-lg p-8 w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto'>
-                <div className='flex justify-between items-center mb-4'>
-                    <h2 className='text-xl font-semibold text-login-50'>Create New Form</h2>
-                    <button
-                        onClick={closePopup}
-                        className='text-login-300 hover:text-login-100 transition-colors'
+            {isOpen && (
+                <div className='fixed inset-0 bg-black/80 flex items-center justify-center z-50' onClick={() => setIsOpen(false)}>
+                    <div
+                        className='bg-login-700 rounded-lg p-8 w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto'
+                        onClick={(e) => e.stopPropagation()}
                     >
-                        <X size={24} />
-                    </button>
-                </div>
+                        <div className='flex justify-between items-center mb-4'>
+                            <h2 className='text-xl font-semibold text-login-50'>Create New Form</h2>
+                            <button
+                                onClick={closePopup}
+                                className='text-login-300 hover:text-login-100 transition-colors'
+                            >
+                                <X size={24} />
+                            </button>
+                        </div>
 
-                <form onSubmit={handleSubmit} className='space-y-4'>
-                    <Input
-                        name='title'
-                        type='text'
-                        label='Title'
-                        value={formData.title}
-                        setValue={(value) => setFormData(prev => ({ ...prev, title: value as string }))}
-                        required
-                    />
+                        <form onSubmit={handleSubmit} className='space-y-4'>
+                            <Input
+                                name='title'
+                                type='text'
+                                label='Title'
+                                value={formData.title}
+                                setValue={(value) => setFormData(prev => ({ ...prev, title: value as string }))}
+                                required
+                            />
 
-                    <Textarea
-                        name='description'
-                        label='Description'
-                        value={formData.description}
-                        setValue={(value) => setFormData(prev => ({ ...prev, description: value as string }))}
-                        rows={5}
-                    />
+                            <Textarea
+                                name='description'
+                                label='Description'
+                                value={formData.description}
+                                setValue={(value) => setFormData(prev => ({ ...prev, description: value as string }))}
+                                rows={5}
+                            />
 
-                    <SwitchInput
-                        name='is_active'
-                        label='Active'
-                        value={formData.is_active}
-                        setValue={(value) => setFormData(prev => ({ ...prev, is_active: value }))}
-                    />
+                            <SwitchInput
+                                name='is_active'
+                                label='Active'
+                                value={formData.is_active}
+                                setValue={(value) => setFormData(prev => ({ ...prev, is_active: value }))}
+                            />
 
-                    <SwitchInput
-                        name='anonymous_submissions'
-                        label='Allow anonymous submissions'
-                        value={formData.anonymous_submissions}
-                        setValue={(value) => setFormData(prev => ({ ...prev, anonymous_submissions: value }))}
-                    />
+                            <SwitchInput
+                                name='anonymous_submissions'
+                                label='Allow anonymous submissions'
+                                value={formData.anonymous_submissions}
+                                setValue={(value) => setFormData(prev => ({ ...prev, anonymous_submissions: value }))}
+                            />
 
-                    <Input
-                        name='limit'
-                        type='number'
-                        label='Submission limit'
-                        value={formData.limit}
-                        setValue={(value) => setFormData(prev => ({ ...prev, limit: value as string }))}
-                    />
+                            <Input
+                                name='limit'
+                                type='number'
+                                label='Submission limit'
+                                value={formData.limit}
+                                setValue={(value) => setFormData(prev => ({ ...prev, limit: value as string }))}
+                            />
 
-                    <Input
-                        name='published_at'
-                        type='datetime-local'
-                        label='Publish date'
-                        value={formData.published_at}
-                        setValue={(value) => setFormData(prev => ({ ...prev, published_at: value as string }))}
-                    />
+                            <Input
+                                name='published_at'
+                                type='datetime-local'
+                                label='Publish date'
+                                value={formData.published_at}
+                                setValue={(value) => setFormData(prev => ({ ...prev, published_at: value as string }))}
+                            />
 
-                    <Input
-                        name='expires_at'
-                        type='datetime-local'
-                        label='Expiration date'
-                        value={formData.expires_at}
-                        setValue={(value) => setFormData(prev => ({ ...prev, expires_at: value as string }))}
-                    />
+                            <Input
+                                name='expires_at'
+                                type='datetime-local'
+                                label='Expiration date'
+                                value={formData.expires_at}
+                                setValue={(value) => setFormData(prev => ({ ...prev, expires_at: value as string }))}
+                            />
 
-                    <div className='flex space-x-3 pt-4'>
-                        <button
-                            type='button'
-                            onClick={closePopup}
-                            className='flex-1 px-4 py-2 bg-login-500 rounded-md
-                                hover:bg-login-500 transition-colors focus:outline-none
-                                focus:ring-2 focus:ring-login focus:ring-offset-2
-                                focus:ring-offset-login-700 cursor-pointer'
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type='submit'
-                            disabled={loading || !formData.title.trim()}
-                            className='flex-1 px-4 py-2 bg-login text-login-900 rounded-md
-                                hover:bg-orange-400 disabled:opacity-50 disabled:cursor-not-allowed
-                                transition-colors focus:outline-none focus:ring-2 focus:ring-login
-                                focus:ring-offset-2 focus:ring-offset-login-700 font-medium cursor-pointer'
-                        >
-                            {loading ? 'Creating...' : 'Create Form'}
-                        </button>
+                            <div className='flex space-x-3 pt-4'>
+                                <button
+                                    type='button'
+                                    onClick={closePopup}
+                                    className='flex-1 px-4 py-2 bg-login-500 rounded-md
+                                        hover:bg-login-500 transition-colors focus:outline-none
+                                        focus:ring-2 focus:ring-login focus:ring-offset-2
+                                        focus:ring-offset-login-700 cursor-pointer'
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type='submit'
+                                    disabled={loading || !formData.title.trim()}
+                                    className='flex-1 px-4 py-2 bg-login text-login-900 rounded-md
+                                        hover:bg-orange-400 disabled:opacity-50 disabled:cursor-not-allowed
+                                        transition-colors focus:outline-none focus:ring-2 focus:ring-login
+                                        focus:ring-offset-2 focus:ring-offset-login-700 font-medium cursor-pointer'
+                                >
+                                    {loading ? 'Creating...' : 'Create Form'}
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                </form>
-            </div>
-        </div>
+                </div>
+            )}
+        </>
     )
 }

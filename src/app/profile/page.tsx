@@ -1,30 +1,49 @@
 import { PageContainer } from '@components/container/page'
-import { getUser, deleteUser, getForms, getSharedForms } from '@utils/api'
+import { getUser, deleteUser } from '@utils/api'
 import Button from '@components/button/button'
-import { FormPopup } from '@components/form/popup'
-import Table from '@components/table/table'
-import { ArrowRight } from 'lucide-react'
+import { FilePlusIcon, Files, FileText } from 'lucide-react'
 import Link from 'next/link'
+import { FormPopup } from '@components/form/popup'
 
 export default async function Page() {
-    const filter = {
-        limit: 5,
-        offset: 0,
-        sortBy: 'created_at',
-        sortOrder: 'desc'
-    }
 
     const user = await getUser()
-    const forms = await getForms(filter)
-    const formsData = 'error' in forms ? [] : forms.data
-    const sharedForms = await getSharedForms(filter)
-    const sharedFormsData = 'error' in sharedForms ? [] : sharedForms.data
 
     return (
         <PageContainer title='Profile'>
+            <div className='flex flex-row gap-6'>
+                <div
+                    className={`size-50 bg-login-500 shadow-lg rounded-lg p-8
+                        flex flex-col items-center justify-center hover:bg-login-600
+                        transition-colors cursor-pointer`}
+                >
+                    <FormPopup>
+                        <FilePlusIcon size={56} className='text-white' />
+                    </FormPopup>
+                    <p className='text-login-50 text-sm mt-2'>Create Form</p>
+                </div>
+                <Link
+                    href='/forms'
+                    className={`size-50 bg-login-500 shadow-lg rounded-lg p-8
+                        flex flex-col items-center justify-center hover:bg-login-600
+                        transition-colors`}
+                >
+                    <Files size={56} className='text-white' />
+                    <p className='text-login-50 text-sm mt-2'>My Forms</p>
+                </Link>
+                <Link
+                    href='/submissions'
+                    className={`size-50 bg-login-500 shadow-lg rounded-lg p-8
+                        flex flex-col items-center justify-center hover:bg-login-600
+                        transition-colors`}
+                >
+                    <FileText size={56} className='text-white' />
+                    <p className='text-login-50 text-sm mt-2'>Submissions</p>
+                </Link>
+            </div>
             {user && !user.error ? (
                 <>
-                    <div className='highlighted-section'>
+                    <div className='highlighted-section mt-20'>
                         <p>{user.name}</p>
                         <p>{user.email}</p>
                         <p>Created {new Date(user.created_at).toLocaleString('no-NO')}</p>
@@ -44,48 +63,6 @@ export default async function Page() {
                     <p>No user data available</p>
                 </div>
             )}
-            {formsData && formsData.length > 0 &&
-            <div className='pt-20'>
-                <div className='flex justify-between'>
-                    <h1 className='text-2xl font-semibold flex items-center gap-2'>
-                        My Forms
-                        <FormPopup />
-                    </h1>
-                    <Link className='text-lg font-semibold flex items-center gap-2' href='/forms'>
-                        See all
-                        <ArrowRight size={20} />
-                    </Link>
-                </div>
-                <Table
-                    data={formsData}
-                    columns={[
-                        { key: 'id', label: 'Form ID' },
-                        { key: 'title', label: 'Title' },
-                        { key: 'created_at', label: 'Created At' }
-                    ]}
-                />
-            </div>
-            }
-            {sharedFormsData && sharedFormsData.length > 0 &&
-            <div className='pt-20'>
-                <div className='flex justify-between'>
-                    <h1 className='text-2xl font-semibold'>
-                        Shared Forms
-                    </h1>
-                    <Link className='text-lg font-semibold flex items-center gap-2' href='/forms/shared'>
-                        See all
-                        <ArrowRight size={20} />
-                    </Link>
-                </div>
-                <Table
-                    data={sharedFormsData}
-                    columns={[
-                        { key: 'id', label: 'Form ID' },
-                        { key: 'title', label: 'Title' },
-                        { key: 'created_at', label: 'Created At' }
-                    ]}
-                />
-            </div>}
         </PageContainer>
     )
 }
