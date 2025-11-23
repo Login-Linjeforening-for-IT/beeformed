@@ -5,7 +5,6 @@ import Pagination from '@components/pagination/pagination'
 import SearchInput from '@components/search/search'
 import { FormPopup } from '@components/form/popup'
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
 import { notFound } from 'next/navigation'
 
 type PageProps = {
@@ -18,7 +17,7 @@ export default async function Page({ params, searchParams }: PageProps) {
     const filters = await searchParams
 
     const slugs = param.slug
-    const type = slugs && (Array.isArray(slugs) ? slugs[0] : slugs)
+    const type = slugs && (Array.isArray(slugs) ? slugs[0] : slugs) || 'forms'
 
     const search = typeof filters.q === 'string' ? filters.q : ''
     const page = typeof filters.page === 'string' ? Number(filters.page) : 1
@@ -47,11 +46,27 @@ export default async function Page({ params, searchParams }: PageProps) {
     const totalItems = forms.total
 
     return (
-        <PageContainer title={type === 'shared' ? 'Shared Forms' : 'My Forms'}>
-            <div>
-                <Link href={type === 'shared' ? '/forms' : '/forms/shared'} className='flex items-center gap-1 hover:gap-2 text-xl w-fit'>
-                    {type === 'shared' ? 'View My Forms' : 'View Shared Forms'}
-                    <ArrowRight className='inline-block h-full' />
+        <PageContainer title='Forms'>
+            <div className='flex space-x-4 mb-4'>
+                <Link
+                    href='/forms'
+                    className={`px-4 py-2 rounded transition-colors ${
+                        type === 'forms'
+                            ? 'bg-login text-white'
+                            : 'bg-login-700 text-login-100 hover:bg-login-600'
+                    }`}
+                >
+                    My Forms
+                </Link>
+                <Link
+                    href='/forms/shared'
+                    className={`px-4 py-2 rounded transition-colors ${
+                        type === 'shared'
+                            ? 'bg-login text-white'
+                            : 'bg-login-700 text-login-100 hover:bg-login-600'
+                    }`}
+                >
+                    Shared Forms
                 </Link>
             </div>
             {formsData && formsData.length > 0 &&
