@@ -73,7 +73,7 @@ export default function EditPermissionsPage({ permissions, formId }: { permissio
 
     return (
         <div className='space-y-6'>
-            <div className='bg-login-700 rounded-lg p-6 w-full max-w-2xl'>
+            <div className='bg-login-700 rounded-lg w-full max-w-2xl'>
                 <h2 className='text-xl font-semibold text-login-50 mb-6'>Add Permission</h2>
 
                 <form onSubmit={handleSubmit} className='space-y-4'>
