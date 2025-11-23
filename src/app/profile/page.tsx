@@ -12,16 +12,13 @@ export default async function Page() {
     return (
         <PageContainer title='Profile'>
             <div className='flex flex-row gap-6'>
-                <div
-                    className={`size-50 bg-login-500 shadow-lg rounded-lg p-8
+                <FormPopup buttonClassName={`size-50 bg-login-500 shadow-lg rounded-lg p-8
                         flex flex-col items-center justify-center hover:bg-login-600
                         transition-colors cursor-pointer`}
                 >
-                    <FormPopup>
-                        <FilePlusIcon size={56} className='text-white' />
-                    </FormPopup>
+                    <FilePlusIcon size={56} className='text-white' />
                     <p className='text-login-50 text-sm mt-2'>Create Form</p>
-                </div>
+                </FormPopup>
                 <Link
                     href='/forms'
                     className={`size-50 bg-login-500 shadow-lg rounded-lg p-8

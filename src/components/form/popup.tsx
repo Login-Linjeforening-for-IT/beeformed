@@ -1,13 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { X } from 'lucide-react'
+import { Plus, X } from 'lucide-react'
 import { toast } from 'sonner'
 import { postForm } from '@utils/api'
 import { Input, SwitchInput, Textarea } from 'uibee/components'
 import { useRouter } from 'next/navigation'
 
-export function FormPopup({children}: {children: React.ReactNode}) {
+export function FormPopup({children, buttonClassName}: {children?: React.ReactNode, buttonClassName?: string}) {
     const router = useRouter()
     const [isOpen, setIsOpen] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -80,9 +80,9 @@ export function FormPopup({children}: {children: React.ReactNode}) {
         <>
             <button
                 onClick={openPopup}
-                className='cursor-pointer'
+                className={`cursor-pointer ${buttonClassName}`}
             >
-                {children}
+                {children || <Plus />}
             </button>
             {isOpen && (
                 <div className='fixed inset-0 bg-black/80 flex items-center justify-center z-50' onClick={() => setIsOpen(false)}>
