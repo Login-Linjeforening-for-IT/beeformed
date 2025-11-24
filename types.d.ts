@@ -26,14 +26,28 @@ declare global {
 
     type PutFormProps = Form
 
+    type GetPublicFormProps = Form & {
+        creator_email: string
+        creator_name: string
+        fields: {
+            id: string
+            field_type: string
+            label: string
+            required: boolean
+            options: string[] | null
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            validation: Record<string, any> | null
+            field_order: number
+        }[]
+    }
+
     // Feilds
     type FieldProps = {
         form_id: string
         field_type: string
         label: string
         required: boolean
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        options: Record<string, any> | null
+        options: string[] | null
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         validation: Record<string, any> | null
         field_order: number

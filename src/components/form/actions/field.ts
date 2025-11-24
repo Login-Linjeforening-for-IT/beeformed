@@ -22,7 +22,7 @@ function extractFieldProps(formData: FormData, index: number): FieldProps {
         label:          getRequiredString(formData, `field_${index}_label`),
         required:       getBoolean(formData, `field_${index}_required`),
         options:        getOptionalString(formData, `field_${index}_options`)
-            ? JSON.parse(getRequiredString(formData, `field_${index}_options`))
+            ? getRequiredString(formData, `field_${index}_options`).split('\n').map(s => s.trim()).filter(Boolean)
             : null,
         validation:     getOptionalString(formData, `field_${index}_validation`)
             ? JSON.parse(getRequiredString(formData, `field_${index}_validation`))

@@ -10,8 +10,7 @@ interface BulkOperation {
         field_type: string
         label: string
         required: boolean
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        options?: any
+        options?: string[]
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         validation?: any
         field_order: number
@@ -65,7 +64,7 @@ export default async function bulkFormFields(req: FastifyRequest, res: FastifyRe
                     op.data.field_type,
                     op.data.label,
                     op.data.required,
-                    op.data.options ? JSON.stringify(op.data.options) : null,
+                    op.data.options || null,
                     op.data.validation ? JSON.stringify(op.data.validation) : null,
                     op.data.field_order
                 ]
@@ -92,7 +91,7 @@ export default async function bulkFormFields(req: FastifyRequest, res: FastifyRe
                     op.data.field_type,
                     op.data.label,
                     op.data.required,
-                    op.data.options ? JSON.stringify(op.data.options) : null,
+                    op.data.options || null,
                     op.data.validation ? JSON.stringify(op.data.validation) : null,
                     op.data.field_order
                 ]

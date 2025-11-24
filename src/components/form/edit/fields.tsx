@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react'
 import { toast } from 'sonner'
 import { updateFields } from '../actions/field'
-import { Input, SwitchInput, Textarea, Select } from 'uibee/components'
+import { Input, SwitchInput, Select } from 'uibee/components'
 import { GripVertical, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
@@ -119,7 +119,15 @@ export default function EditFieldsPage({ fields, formId }: { fields: GetFieldsPr
     }
 
     return (
-        <form onSubmit={handleSubmit} className='w-full'>
+        <form
+            onSubmit={handleSubmit}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter' && (e.target as HTMLElement).tagName !== 'TEXTAREA') {
+                    e.preventDefault()
+                }
+            }}
+            className='w-full'
+        >
             <input type='hidden' name='formId' value={formId} />
             {fieldsData.map((field, index) => {
                 if ((field as { deleted?: boolean }).deleted) {
@@ -136,7 +144,7 @@ export default function EditFieldsPage({ fields, formId }: { fields: GetFieldsPr
                         key={index}
                         onDragOver={(e) => handleDragOver(e, index)}
                         onDrop={handleDrop}
-                        className={`p-4 border border-login-500 rounded-xl bg-login-700 ${
+                        className={`p-4 border border-login-500 rounded-xl bg-login-700 space-y-8 ${
                             draggedIndex === index ? 'opacity-50' : ''
                         }`}
                     >
@@ -198,17 +206,20 @@ export default function EditFieldsPage({ fields, formId }: { fields: GetFieldsPr
                         </div>
 
                         {(field.field_type === 'select' || field.field_type === 'checkbox' || field.field_type === 'radio') && (
-                            <Textarea
-                                name={`field_${index}_options`}
-                                label='Options (one per line)'
-                                // @ts-ignore
-                                value={field.options || ''}
-                                setValue={(value) =>
-                                    // @ts-ignore
-                                    setFieldsData(prev => prev.map((f, i) => i === index ? { ...f, options: value } : f))
-                                }
-                                rows={3}
-                            />
+                            <div>
+                                <label className='block text-sm font-medium text-login-50 mb-2'>Options (one per line)</label>
+                                <textarea
+                                    name={`field_${index}_options`}
+                                    value={Array.isArray(field.options) ? field.options.join('\n') : ''}
+                                    onChange={(e) => {
+                                        const choices = e.target.value.split('\n').map((s: string) => s.trim())
+                                        setFieldsData(prev => prev.map((f, i) => i === index ? { ...f, options: choices } : f))
+                                    }}
+                                    rows={3}
+                                    className='w-full px-3 py-2 border border-login-500 rounded-md bg-login-700
+                                        text-login-50 focus:outline-none focus:ring-2 focus:login-50 focus:border-transparent'
+                                />
+                            </div>
                         )}
 
                         <input type='hidden' name={`field_${index}_field_order`} value={field.field_order} />

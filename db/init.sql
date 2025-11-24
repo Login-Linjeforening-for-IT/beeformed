@@ -28,7 +28,7 @@ CREATE TABLE form_fields (
     field_type TEXT NOT NULL,
     label TEXT NOT NULL,
     required BOOLEAN DEFAULT FALSE,
-    options JSONB, -- For select/radio/checkbox options: {"choices": ["option1", "option2"]}
+    options TEXT[], -- For select/radio/checkbox options: ["option1", "option2"]
     validation JSONB, -- Validation rules: {"min_length": 5, "max_length": 100, "pattern": "regex"}
     field_order INTEGER NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
