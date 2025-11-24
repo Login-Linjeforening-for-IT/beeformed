@@ -26,7 +26,8 @@ CREATE TABLE form_fields (
     id SERIAL PRIMARY KEY,
     form_id INTEGER REFERENCES forms(id) ON DELETE CASCADE,
     field_type TEXT NOT NULL,
-    label TEXT NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT,
     required BOOLEAN DEFAULT FALSE,
     options TEXT[], -- For select/radio/checkbox options: ["option1", "option2"]
     validation JSONB, -- Validation rules: {"min_length": 5, "max_length": 100, "pattern": "regex"}

@@ -19,7 +19,8 @@ function extractFieldProps(formData: FormData, index: number): FieldProps {
     return {
         form_id: getRequiredString(formData, 'formId'),
         field_type:     getRequiredString(formData, `field_${index}_field_type`),
-        label:          getRequiredString(formData, `field_${index}_label`),
+        title:          getRequiredString(formData, `field_${index}_title`),
+        description:    getOptionalString(formData, `field_${index}_description`),
         required:       getBoolean(formData, `field_${index}_required`),
         options:        getOptionalString(formData, `field_${index}_options`)
             ? getRequiredString(formData, `field_${index}_options`).split('\n').map(s => s.trim()).filter(Boolean)

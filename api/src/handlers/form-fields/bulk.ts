@@ -8,7 +8,8 @@ interface BulkOperation {
     data?: Partial<{
         form_id: number
         field_type: string
-        label: string
+        title: string
+        description?: string
         required: boolean
         options?: string[]
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -51,7 +52,7 @@ export default async function bulkFormFields(req: FastifyRequest, res: FastifyRe
                     throw new Error('Update operation requires id and data')
                 }
 
-                const requiredFields = ['field_type', 'label', 'required', 'field_order']
+                const requiredFields = ['field_type', 'title', 'required', 'field_order']
                 for (const field of requiredFields) {
                     if (!(field in op.data)) {
                         throw new Error(`${field} is required for update`)
@@ -62,7 +63,8 @@ export default async function bulkFormFields(req: FastifyRequest, res: FastifyRe
                 const params = [
                     op.id,
                     op.data.field_type,
-                    op.data.label,
+                    op.data.title,
+                    op.data.description || null,
                     op.data.required,
                     op.data.options || null,
                     op.data.validation ? JSON.stringify(op.data.validation) : null,
@@ -78,7 +80,7 @@ export default async function bulkFormFields(req: FastifyRequest, res: FastifyRe
                     throw new Error('Create operation requires data')
                 }
 
-                const requiredFields = ['form_id', 'field_type', 'label', 'required', 'field_order']
+                const requiredFields = ['form_id', 'field_type', 'title', 'required', 'field_order']
                 for (const field of requiredFields) {
                     if (!(field in op.data)) {
                         throw new Error(`${field} is required for create`)
@@ -89,7 +91,8 @@ export default async function bulkFormFields(req: FastifyRequest, res: FastifyRe
                 const params = [
                     op.data.form_id,
                     op.data.field_type,
-                    op.data.label,
+                    op.data.title,
+                    op.data.description || null,
                     op.data.required,
                     op.data.options || null,
                     op.data.validation ? JSON.stringify(op.data.validation) : null,

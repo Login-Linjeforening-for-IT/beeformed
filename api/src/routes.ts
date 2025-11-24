@@ -14,6 +14,7 @@ import {
     getForms,
     getSharedForms,
     getForm,
+    getPublicForm,
     updateForm,
     deleteForm
 } from './handlers/forms/index.ts'
@@ -45,6 +46,7 @@ export default async function apiRoutes(fastify: FastifyInstance) {
     fastify.get('/forms', { preHandler: authMiddleware }, getForms)
     fastify.get('/forms/shared', { preHandler: authMiddleware }, getSharedForms)
     fastify.get('/forms/:id', { preHandler: authMiddleware }, getForm)
+    fastify.get('/forms/:id/public', getPublicForm)
     fastify.put('/forms/:id', { preHandler: authMiddleware }, updateForm)
     fastify.delete('/forms/:id', { preHandler: authMiddleware }, deleteForm)
 

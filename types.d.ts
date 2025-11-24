@@ -32,7 +32,8 @@ declare global {
         fields: {
             id: string
             field_type: string
-            label: string
+            title: string
+            description: string | null
             required: boolean
             options: string[] | null
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,7 +46,8 @@ declare global {
     type FieldProps = {
         form_id: string
         field_type: string
-        label: string
+        title: string
+        description: string | null
         required: boolean
         options: string[] | null
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

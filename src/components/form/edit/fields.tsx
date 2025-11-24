@@ -57,7 +57,8 @@ export default function EditFieldsPage({ fields, formId }: { fields: GetFieldsPr
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const newField: any = {
             id: null,
-            label: '',
+            title: '',
+            description: '',
             field_type: 'text',
             required: false,
             options: null,
@@ -72,7 +73,8 @@ export default function EditFieldsPage({ fields, formId }: { fields: GetFieldsPr
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const newField: any = {
             id: null,
-            label: '',
+            title: '',
+            description: '',
             field_type: 'text',
             required: false,
             options: null,
@@ -83,7 +85,6 @@ export default function EditFieldsPage({ fields, formId }: { fields: GetFieldsPr
         setFieldsData(prev => {
             const newFields = [...prev]
             newFields.splice(position, 0, newField)
-            // Update field_order for all
             newFields.forEach((field, i) => {
                 field.field_order = i + 1
             })
@@ -176,12 +177,12 @@ export default function EditFieldsPage({ fields, formId }: { fields: GetFieldsPr
                         />
                         <div className='grid grid-cols-4 gap-4'>
                             <Input
-                                name={`field_${index}_label`}
+                                name={`field_${index}_title`}
                                 type='text'
-                                label='Label'
-                                value={field.label}
+                                label='Title'
+                                value={field.title}
                                 setValue={(value) =>
-                                    setFieldsData(prev => prev.map((f, i) => i === index ? { ...f, label: value as string } : f))}
+                                    setFieldsData(prev => prev.map((f, i) => i === index ? { ...f, title: value as string } : f))}
                                 required
                                 className='col-span-2'
                             />
@@ -204,6 +205,17 @@ export default function EditFieldsPage({ fields, formId }: { fields: GetFieldsPr
                                 setValue={(value) => setFieldsData(prev => prev.map((f, i) => i === index ? { ...f, required: value } : f))}
                             />
                         </div>
+
+
+                        <Input
+                            name={`field_${index}_description`}
+                            type='text'
+                            label='Description'
+                            value={field.description || ''}
+                            setValue={(value) =>
+                                setFieldsData(prev => prev.map((f, i) => i === index ? { ...f, description: value as string } : f))}
+                            className='col-span-2'
+                        />
 
                         {(field.field_type === 'select' || field.field_type === 'checkbox' || field.field_type === 'radio') && (
                             <div>

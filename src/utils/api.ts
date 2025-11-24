@@ -58,6 +58,10 @@ export async function getForm(formId: string): Promise<GetFormProps | ErrorRespo
     return getWrapper({ path: `forms/${formId}` })
 }
 
+export async function getPublicForm(formId: string): Promise<GetPublicFormProps | ErrorResponse> {
+    return getWrapper({ path: `forms/${formId}/public` })
+}
+
 export async function postForm(data: PostFormProps) {
     return postWrapper({ path: 'forms', data })
 }
@@ -90,4 +94,8 @@ export async function postPermission(formId: string, data: PostPermissionProps) 
 
 export async function deletePermission(formId: string, permissionId: string) {
     return deleteWrapper({ path: `forms/${formId}/permissions/${permissionId}` })
+}
+
+export async function submitForm(formId: string, data: { fields: { field_id: number; value: string }[] }) {
+    return postWrapper({ path: `forms/${formId}/submit`, data })
 }
