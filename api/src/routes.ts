@@ -1,6 +1,8 @@
 import type { FastifyInstance } from 'fastify'
 
 import getIndex from './handlers/index/getIndex.ts'
+import getPing from './handlers/ping/get.ts'
+
 import authMiddleware from './utils/authMiddleware.ts'
 
 import {
@@ -35,6 +37,9 @@ import {
 export default async function apiRoutes(fastify: FastifyInstance) {
     // index
     fastify.get('/', getIndex)
+
+    // ping
+    fastify.get('/ping', getPing)
 
     // Users
     fastify.post('/users', { preHandler: authMiddleware }, createUser)
