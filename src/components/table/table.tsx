@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ChevronUp, ChevronDown, MoreHorizontal, Edit, Trash2 } from 'lucide-react'
+import { ChevronUp, ChevronDown, MoreHorizontal, Edit, Trash2, Eye } from 'lucide-react'
 
 type Column = {
     key: string
@@ -17,9 +17,20 @@ type TableProps = {
     currentSort?: 'asc' | 'desc'
     onDelete?: (row: Record<string, unknown>) => void
     disableEdit?: boolean
+    viewBaseHref?: string
+    viewHrefKey?: string
 }
 
-export default function Table({ data, columns, currentOrderBy, currentSort, onDelete, disableEdit }: TableProps) {
+export default function Table({
+    data,
+    columns,
+    currentOrderBy,
+    currentSort,
+    onDelete,
+    disableEdit,
+    viewBaseHref,
+    viewHrefKey = 'id'
+}: TableProps) {
     const router = useRouter()
     const searchParams = useSearchParams()
     const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null)
@@ -44,6 +55,11 @@ export default function Table({ data, columns, currentOrderBy, currentSort, onDe
 
     const handleDelete = (row: Record<string, unknown>) => {
         if (onDelete) onDelete(row)
+        setOpenMenuIndex(null)
+    }
+
+    const handleView = (row: Record<string, unknown>) => {
+        if (viewBaseHref) router.push(`${viewBaseHref}${row[viewHrefKey]}`)
         setOpenMenuIndex(null)
     }
 
@@ -106,6 +122,15 @@ export default function Table({ data, columns, currentOrderBy, currentSort, onDe
                                             >
                                                 <Edit className='w-4 h-4 mr-2' />
                                                 Edit
+                                            </button>
+                                        )}
+                                        {viewBaseHref && (
+                                            <button
+                                                onClick={() => handleView(row)}
+                                                className='flex items-center w-full px-3 py-2 text-sm hover:bg-login-600 cursor-pointer'
+                                            >
+                                                <Eye className='w-4 h-4 mr-2' />
+                                                View
                                             </button>
                                         )}
                                         {onDelete && (

@@ -88,6 +88,28 @@ declare global {
     }
 
     type PostPermissionProps = PermissionProps
+
+    // Submissions
+    type SubmissionProps = {
+        field_id: number
+        value: string
+    }
+
+    type Submission = {
+        id: number
+        form_id: number
+        form_title: string
+        user_email: string | null
+        user_name: string | null
+        submitted_at: string
+        data: SubmissionProps[]
+    }
+
+    type GetSubmissionsProps = Submission[]
+
+    type PostSubmissionProps = {
+        fields: { field_id: number; value: string }[]
+    }
 }
 
 export { }

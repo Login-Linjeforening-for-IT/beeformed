@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { submitForm } from '@utils/api'
+import { postSubmission } from '@utils/api'
 import CustomInput from '../inputs/input'
 import CustomTextarea from '../inputs/textarea'
 import CustomSelect from '../inputs/select'
@@ -29,12 +29,25 @@ interface FormData {
     fields: FormField[]
 }
 
-export default function FormRenderer({ form }: { form: FormData }) {
+
+
+export default function FormRenderer({ form, submission }: { form: FormData; submission?: Submission }) {
     const [loading, setLoading] = useState(false)
-    const [formData, setFormData] = useState<Record<string, string>>({})
+    const [formData, setFormData] = useState<Record<string, string>>(() => {
+        if (submission) {
+            const data: Record<string, string> = {}
+            submission.data.forEach(field => {
+                data[field.field_id.toString()] = field.value
+            })
+            return data
+        }
+        return {}
+    })
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        if (submission) return
+
         setLoading(true)
 
         try {
@@ -43,13 +56,12 @@ export default function FormRenderer({ form }: { form: FormData }) {
                 value: formData[field.id] || ''
             }))
 
-            const result = await submitForm(form.id, { fields })
+            const result = await postSubmission(form.id, { fields })
 
-            if ('error' in result) {
-                toast.error(result.error)
+            if (!result || 'error' in result) {
+                toast.error(result?.error || 'An error occurred while submitting the form')
             } else {
                 toast.success('Form submitted successfully!')
-                // Reset form
                 setFormData({})
             }
         } catch {
@@ -62,8 +74,11 @@ export default function FormRenderer({ form }: { form: FormData }) {
     const renderField = (field: FormField) => {
         const value = formData[field.id] || ''
         const setValue = (newValue: string | number) => {
+            if (submission) return
             setFormData(prev => ({ ...prev, [field.id]: String(newValue) }))
         }
+
+        const disabled = !!submission
 
         switch (field.field_type) {
             case 'text':
@@ -76,6 +91,7 @@ export default function FormRenderer({ form }: { form: FormData }) {
                         value={value}
                         onChange={(e) => setValue(e.target.value)}
                         required={field.required}
+                        disabled={disabled}
                     />
                 )
             case 'textarea':
@@ -88,6 +104,7 @@ export default function FormRenderer({ form }: { form: FormData }) {
                         onChange={(e) => setValue(e.target.value)}
                         required={field.required}
                         rows={4}
+                        disabled={disabled}
                     />
                 )
             case 'number':
@@ -100,6 +117,7 @@ export default function FormRenderer({ form }: { form: FormData }) {
                         value={value}
                         onChange={(e) => setValue(e.target.value)}
                         required={field.required}
+                        disabled={disabled}
                     />
                 )
             case 'select': {
@@ -118,6 +136,7 @@ export default function FormRenderer({ form }: { form: FormData }) {
                         options={selectOptions}
                         required={field.required}
                         searchable={choices.length > 5}
+                        disabled={disabled}
                     />
                 )
             }
@@ -133,6 +152,7 @@ export default function FormRenderer({ form }: { form: FormData }) {
                         currentValue={value}
                         onChange={(e) => setValue((e.target as HTMLInputElement).value)}
                         required={field.required}
+                        disabled={disabled}
                     />
                 )
             }
@@ -155,6 +175,7 @@ export default function FormRenderer({ form }: { form: FormData }) {
                                 setValue(newSelected.join(','))
                             }}
                             required={field.required}
+                            disabled={disabled}
                         />
                     )
                 } else {
@@ -165,6 +186,7 @@ export default function FormRenderer({ form }: { form: FormData }) {
                             description={field.description || undefined}
                             value={value === 'true'}
                             onChange={(checked) => setValue(checked ? 'true' : 'false')}
+                            disabled={disabled}
                         />
                     )
                 }
@@ -179,6 +201,7 @@ export default function FormRenderer({ form }: { form: FormData }) {
                         value={value}
                         onChange={(e) => setValue(e.target.value)}
                         required={field.required}
+                        disabled={disabled}
                     />
                 )
             }
@@ -192,6 +215,7 @@ export default function FormRenderer({ form }: { form: FormData }) {
                         value={value}
                         onChange={(e) => setValue(e.target.value)}
                         required={field.required}
+                        disabled={disabled}
                     />
                 )
             }
@@ -205,6 +229,7 @@ export default function FormRenderer({ form }: { form: FormData }) {
                         value={value}
                         onChange={(e) => setValue(e.target.value)}
                         required={field.required}
+                        disabled={disabled}
                     />
                 )
             }
@@ -218,6 +243,7 @@ export default function FormRenderer({ form }: { form: FormData }) {
                         value={value}
                         onChange={(e) => setValue(e.target.value)}
                         required={field.required}
+                        disabled={disabled}
                     />
                 )
             }
@@ -234,18 +260,20 @@ export default function FormRenderer({ form }: { form: FormData }) {
                     </div>
                 ))}
 
-            <div className='max-w-2xl'>
-                <button
-                    type='submit'
-                    disabled={loading}
-                    className='w-full px-4 py-3 bg-login text-login-900 rounded-md
-                        hover:bg-orange-400 disabled:opacity-50 disabled:cursor-not-allowed
-                        transition-colors focus:outline-none focus:ring-2 focus:ring-login
-                        focus:ring-offset-2 focus:ring-offset-login-700 font-medium cursor-pointer'
-                >
-                    {loading ? 'Submitting...' : 'Submit Form'}
-                </button>
-            </div>
+            {!submission && (
+                <div className='max-w-2xl'>
+                    <button
+                        type='submit'
+                        disabled={loading}
+                        className='w-full px-4 py-3 bg-login text-login-900 rounded-md
+                            hover:bg-orange-400 disabled:opacity-50 disabled:cursor-not-allowed
+                            transition-colors focus:outline-none focus:ring-2 focus:ring-login
+                            focus:ring-offset-2 focus:ring-offset-login-700 font-medium cursor-pointer'
+                    >
+                        {loading ? 'Submitting...' : 'Submit Form'}
+                    </button>
+                </div>
+            )}
         </form>
     )
 }

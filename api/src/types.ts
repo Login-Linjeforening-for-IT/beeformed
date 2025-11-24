@@ -48,4 +48,12 @@ declare global {
         created_at: Date
         updated_at: Date
     }
+
+    interface Submission {
+        id: number
+        form_id: number
+        user_id?: string
+        submitted_at: Date
+        data?: { field_id: number; value: string }[]
+    }
 }

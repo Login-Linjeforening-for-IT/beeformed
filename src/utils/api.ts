@@ -96,6 +96,19 @@ export async function deletePermission(formId: string, permissionId: string) {
     return deleteWrapper({ path: `forms/${formId}/permissions/${permissionId}` })
 }
 
-export async function submitForm(formId: string, data: { fields: { field_id: number; value: string }[] }) {
-    return postWrapper({ path: `forms/${formId}/submit`, data })
+// Submissions
+export async function getSubmissions(formId: string): Promise<GetSubmissionsProps | ErrorResponse> {
+    return getWrapper({ path: `forms/${formId}/submissions` })
+}
+
+export async function postSubmission(formId: string, data: PostSubmissionProps) {
+    return postWrapper({ path: `forms/${formId}/submissions`, data })
+}
+
+export async function getSubmission(submissionId: string): Promise<Submission | ErrorResponse> {
+    return getWrapper({ path: `submissions/${submissionId}` })
+}
+
+export async function getUserSubmissions(): Promise<GetSubmissionsProps | ErrorResponse> {
+    return getWrapper({ path: 'submissions' })
 }

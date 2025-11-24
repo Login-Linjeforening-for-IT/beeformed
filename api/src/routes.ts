@@ -32,6 +32,13 @@ import {
     bulkFormFields
 } from './handlers/form-fields/index.ts'
 
+import {
+    createSubmission,
+    getSubmission,
+    getSubmissionsByForm,
+    getSubmissionsByUser
+} from './handlers/submissions/index.ts'
+
 
 
 export default async function apiRoutes(fastify: FastifyInstance) {
@@ -63,4 +70,10 @@ export default async function apiRoutes(fastify: FastifyInstance) {
     // Form Fields
     fastify.get('/forms/:id/fields', { preHandler: authMiddleware }, getFormFields)
     fastify.patch('/forms/:id/fields', { preHandler: authMiddleware }, bulkFormFields)
+
+    // Submissions
+    fastify.get('/forms/:id/submissions', { preHandler: authMiddleware }, getSubmissionsByForm)
+    fastify.post('/forms/:id/submissions', { preHandler: authMiddleware }, createSubmission)
+    fastify.get('/submissions/:id', { preHandler: authMiddleware }, getSubmission)
+    fastify.get('/submissions', { preHandler: authMiddleware }, getSubmissionsByUser)
 }

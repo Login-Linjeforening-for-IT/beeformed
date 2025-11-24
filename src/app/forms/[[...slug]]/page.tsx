@@ -38,7 +38,7 @@ export default async function Page({ params, searchParams }: PageProps) {
 
     const forms = type === 'shared' ? await getSharedForms(filter) : await getForms(filter)
 
-    if ('error' in forms) {
+    if (!forms || 'error' in forms) {
         notFound()
     }
 

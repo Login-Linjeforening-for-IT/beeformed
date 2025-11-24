@@ -1,0 +1,1 @@
+INSERT INTO submission_data (submission_id, field_id, value) VALUES ($1, $2, $3)

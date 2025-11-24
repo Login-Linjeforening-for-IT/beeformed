@@ -8,9 +8,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
     const form = await getPublicForm(slug)
 
-    console.log('Public form data:', form)
-
-    if ('error' in form) {
+    if (!form || 'error' in form) {
         notFound()
     }
 

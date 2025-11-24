@@ -31,7 +31,7 @@ export default function EditPermissionsPage({ permissions, formId }: { permissio
                 group: formData.group || null
             })
 
-            if ('error' in result) {
+            if (!result || 'error' in result) {
                 toast.error('Failed to add permission')
             } else {
                 toast.success('Permission added successfully!')
@@ -48,7 +48,7 @@ export default function EditPermissionsPage({ permissions, formId }: { permissio
     function handleDeletePermission(formId: string, permissionId: string) {
         deletePermission(formId, permissionId)
             .then((result) => {
-                if ('error' in result) {
+                if (!result || 'error' in result) {
                     toast.error('Failed to delete permission')
                 } else {
                     toast.success('Permission deleted successfully!')

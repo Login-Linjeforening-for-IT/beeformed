@@ -71,3 +71,8 @@ export function getRequiredJSON(formData: FormData, key: string): object {
         throw new Error(`${key} must be valid JSON`)
     }
 }
+
+export function validateData(data: unknown): boolean {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return data !== null && data !== undefined && !('error' in (data as any))
+}

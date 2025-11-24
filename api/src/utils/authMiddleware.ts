@@ -13,8 +13,8 @@ declare module 'fastify' {
 
 export default async function authMiddleware(req: FastifyRequest, res: FastifyReply) {
     const tokenResult = await checkToken(req, res)
-    if (!tokenResult.valid || !tokenResult.userInfo) {
-        return res.status(401).send({ error: tokenResult.error })
+    if (!tokenResult.valid || !tokenResult.userInfo || !tokenResult.userInfo.sub) {
+        return res.status(401).send({ error: tokenResult.error || 'Invalid user information' })
     }
 
     req.user = {
