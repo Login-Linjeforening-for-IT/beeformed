@@ -1,10 +1,12 @@
 import config from '#constants'
 import nodemailer from 'nodemailer'
+import { createEmailTemplate, type EmailContent } from './emailTemplate.ts'
 
 type MailOptions = {
     to: string
     subject: string
     text: string
+    html?: string
 }
 
 const transporter = nodemailer.createTransport({
@@ -17,9 +19,9 @@ const transporter = nodemailer.createTransport({
     },
 })
 
-export default async function sendMail({ to, subject, text }: MailOptions): Promise<string> {
+export default async function sendMail({ to, subject, text, html }: MailOptions): Promise<string> {
     const from = config.SMTP_FROM
-    const mailOptions = { to, subject, text }
+    const mailOptions = { to, subject, text, html }
     try {
         const info = await transporter.sendMail({
             from,
@@ -30,4 +32,14 @@ export default async function sendMail({ to, subject, text }: MailOptions): Prom
         console.error('Error sending email:', error)
         throw error
     }
+}
+
+export async function sendTemplatedMail(to: string, content: EmailContent): Promise<string> {
+    const template = createEmailTemplate(content)
+    return sendMail({
+        to,
+        subject: template.subject,
+        text: template.text,
+        html: template.html
+    })
 }

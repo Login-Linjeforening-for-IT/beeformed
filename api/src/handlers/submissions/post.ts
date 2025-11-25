@@ -1,6 +1,7 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import run from '../../db.ts'
 import { loadSQL } from '../../utils/sql.ts'
+import { sendTemplatedMail } from '../../utils/sendSMTP.ts'
 
 export default async function createSubmission(req: FastifyRequest, res: FastifyReply) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -28,6 +29,20 @@ export default async function createSubmission(req: FastifyRequest, res: Fastify
         const dataSql = await loadSQL('submissions/postData.sql')
         for (const { field_id, value } of body.fields || []) {
             await run(dataSql, [submissionId, field_id, value])
+        }
+
+        try {
+            if (req.user?.email) {
+                await sendTemplatedMail(req.user.email, {
+                    title: `Skjema bekreftelse - ${form.title}`,
+                    header: 'Skjema bekreftelse',
+                    content:
+                        `Din påmelding til "${form.title}" er levert.\n` +
+                        `\nAnsvarlig for skjemaet: <a href="mailto:${form.creator_email}">${form.creator_email}</a> \n`
+                })
+            }
+        } catch (emailError) {
+            console.error('Error sending confirmation email:', emailError)
         }
 
         res.status(201).send({ id: submissionId })
