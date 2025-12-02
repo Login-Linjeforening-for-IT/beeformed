@@ -22,11 +22,11 @@ type ErrorResponse = {
 
 // User
 export async function getUser() {
-    return getWrapper({ path: 'users' })
+    return await getWrapper({ path: 'users' })
 }
 
 export async function deleteUser() {
-    return deleteWrapper({ path: 'users' })
+    return await deleteWrapper({ path: 'users' })
 }
 
 // Forms
@@ -55,60 +55,60 @@ export async function getSharedForms({search, offset, limit, orderBy, sort}: Fil
 }
 
 export async function getForm(formId: string): Promise<GetFormProps | ErrorResponse> {
-    return getWrapper({ path: `forms/${formId}` })
+    return await getWrapper({ path: `forms/${formId}` })
 }
 
 export async function getPublicForm(formId: string): Promise<GetPublicFormProps | ErrorResponse> {
-    return getWrapper({ path: `forms/${formId}/public` })
+    return await getWrapper({ path: `forms/${formId}/public` })
 }
 
 export async function postForm(data: PostFormProps) {
-    return postWrapper({ path: 'forms', data })
+    return await postWrapper({ path: 'forms', data })
 }
 
 export async function putForm(formId: number, data: PutFormProps) {
-    return putWrapper({ path: `forms/${formId}`, data })
+    return await putWrapper({ path: `forms/${formId}`, data })
 }
 
 export async function deleteForm(formId: string) {
-    return deleteWrapper({ path: `forms/${formId}` })
+    return await deleteWrapper({ path: `forms/${formId}` })
 }
 
 // Fields
 export async function getFields(formId: string): Promise<GetFieldsProps | ErrorResponse> {
-    return getWrapper({ path: `forms/${formId}/fields` })
+    return await getWrapper({ path: `forms/${formId}/fields` })
 }
 
 export async function patchFields(formId: string, data: PatchFieldsProps) {
-    return patchWrapper({ path: `forms/${formId}/fields`, data })
+    return await patchWrapper({ path: `forms/${formId}/fields`, data })
 }
 
 // Permissions
 export async function getPermissions(formId: string): Promise<GetPermissionsProps | ErrorResponse> {
-    return getWrapper({ path: `forms/${formId}/permissions` })
+    return await getWrapper({ path: `forms/${formId}/permissions` })
 }
 
 export async function postPermission(formId: string, data: PostPermissionProps) {
-    return postWrapper({ path: `forms/${formId}/permissions`, data })
+    return await postWrapper({ path: `forms/${formId}/permissions`, data })
 }
 
 export async function deletePermission(formId: string, permissionId: string) {
-    return deleteWrapper({ path: `forms/${formId}/permissions/${permissionId}` })
+    return await deleteWrapper({ path: `forms/${formId}/permissions/${permissionId}` })
 }
 
 // Submissions
 export async function getSubmissions(formId: string): Promise<GetSubmissionsProps | ErrorResponse> {
-    return getWrapper({ path: `forms/${formId}/submissions` })
+    return await getWrapper({ path: `forms/${formId}/submissions` })
 }
 
 export async function postSubmission(formId: string, data: PostSubmissionProps) {
-    return postWrapper({ path: `forms/${formId}/submissions`, data })
+    return await postWrapper({ path: `forms/${formId}/submissions`, data })
 }
 
 export async function getSubmission(submissionId: string): Promise<Submission | ErrorResponse> {
-    return getWrapper({ path: `submissions/${submissionId}` })
+    return await getWrapper({ path: `submissions/${submissionId}` })
 }
 
 export async function getUserSubmissions(): Promise<GetSubmissionsProps | ErrorResponse> {
-    return getWrapper({ path: 'submissions' })
+    return await getWrapper({ path: 'submissions' })
 }
