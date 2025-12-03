@@ -7,16 +7,33 @@ import Link from 'next/link'
 import EditPermissionsPage from '@components/form/pages/permissions'
 import SubmissionsPage from '@components/form/pages/submissions'
 
-export default async function Page({ params }: { params: Promise<{ id: string, slug?: string[] | string }> }) {
+type PageProps = {
+    params: Promise<{ id: string, slug?: string[] | string }>
+    searchParams: Promise<{ [key: string]: string | undefined }>
+}
+
+export default async function Page({ params, searchParams }: PageProps) {
     const { id, slug } = await params
+    const filters = await searchParams
     const type = Array.isArray(slug) ? slug[0] : slug || 'fields'
+
+    const orderBy = typeof filters.column === 'string' ? filters.column : 'submitted_at'
+    const sort = (typeof filters.order === 'string' && (filters.order === 'asc' || filters.order === 'desc')) ? filters.order : 'desc'
+
+    const filter = {
+        search: typeof filters.q === 'string' ? filters.q : '',
+        offset: typeof filters.page === 'string' ? (Number(filters.page) - 1) * 14 : 0,
+        limit: 14,
+        orderBy,
+        sort: sort as 'asc' | 'desc'
+    }
 
     const data = type === 'settings' ?
         await getForm(id) :
         type === 'permissions' ?
             await getPermissions(id) :
             type === 'submissions' ?
-                await getSubmissions(id) :
+                await getSubmissions(id, filter) :
                 await getFields(id)
 
     if (!data || 'error' in data) {
@@ -68,7 +85,7 @@ export default async function Page({ params }: { params: Promise<{ id: string, s
                 </Link>
             </div>
             <div className='pt-20 pb-4 flex flex-col h-full'>
-                <div className='flex justify-between mb-4'>
+                <div className='flex justify-between mb-4 h-full'>
                     {type === 'settings' ?
                         <EditFormPage
                             form={data as GetFormProps}
@@ -81,6 +98,8 @@ export default async function Page({ params }: { params: Promise<{ id: string, s
                             : type === 'submissions' ?
                                 <SubmissionsPage
                                     submissions={data as GetSubmissionsProps}
+                                    currentOrderBy={filter.orderBy}
+                                    currentSort={filter.sort}
                                 />
                                 :
                                 <EditFieldsPage

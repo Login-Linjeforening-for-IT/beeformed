@@ -1,13 +1,20 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import { deleteEntity } from '../../utils/crud.ts'
+import run from '../../db.ts'
+import { loadSQL } from '../../utils/sql.ts'
 
 export default async function deleteUser(req: FastifyRequest, res: FastifyReply) {
-    await deleteEntity({
-        res,
-        sqlPath: 'users/delete.sql',
-        requiredFields: ['id'],
-        sqlParams: {
-            id: req.user!.id
-        }
-    })
+    const id = req.user!.id
+
+    if (!id) {
+        return res.status(400).send({ error: 'id is required' })
+    }
+
+    try {
+        const sql = await loadSQL('users/delete.sql')
+        await run(sql, [id])
+        res.status(204).send()
+    } catch (error) {
+        console.error('Error deleting entity:', error)
+        res.status(500).send({ error: 'Internal server error' })
+    }
 }

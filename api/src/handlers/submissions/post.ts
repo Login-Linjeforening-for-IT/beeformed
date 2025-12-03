@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import run from '../../db.ts'
+import run, { runInTransaction } from '../../db.ts'
 import { loadSQL } from '../../utils/sql.ts'
 import { sendTemplatedMail } from '../../utils/sendSMTP.ts'
 
@@ -22,14 +22,17 @@ export default async function createSubmission(req: FastifyRequest, res: Fastify
 
         const userId = form.anonymous_submissions ? null : req.user!.id
 
-        const submissionSql = await loadSQL('submissions/post.sql')
-        const submissionResult = await run(submissionSql, [formId, userId])
-        const submissionId = submissionResult.rows[0].id
+        const submissionId = await runInTransaction(async (client) => {
+            const submissionSql = await loadSQL('submissions/post.sql')
+            const submissionResult = await client.query(submissionSql, [formId, userId])
+            const submissionId = submissionResult.rows[0].id
 
-        const dataSql = await loadSQL('submissions/postData.sql')
-        for (const { field_id, value } of body.fields || []) {
-            await run(dataSql, [submissionId, field_id, value])
-        }
+            const dataSql = await loadSQL('submissions/postData.sql')
+            for (const { field_id, value } of body.fields || []) {
+                await client.query(dataSql, [submissionId, field_id, value])
+            }
+            return submissionId
+        })
 
         try {
             if (req.user?.email) {

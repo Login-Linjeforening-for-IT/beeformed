@@ -69,13 +69,13 @@ export default async function Page({ params, searchParams }: PageProps) {
                     Shared Forms
                 </Link>
             </div>
-            {formsData && formsData.length > 0 &&
-                <div className='pt-20 pb-4 flex flex-col h-full'>
-                    <div className='flex justify-between mb-4'>
-                        <SearchInput placeholder='Search forms...' />
-                        <FormPopup />
-                    </div>
+            <div className='pt-20 pb-4 flex flex-col h-full'>
+                <div className='flex justify-between mb-4'>
+                    <SearchInput placeholder='Search forms...' />
+                    { type === 'forms' && <FormPopup /> }
+                </div>
 
+                {formsData && formsData.length > 0 ? (
                     <div className='flex-1 flex flex-col justify-between min-h-0'>
                         <Table
                             data={formsData}
@@ -93,8 +93,12 @@ export default async function Page({ params, searchParams }: PageProps) {
                             totalRows={totalItems}
                         />
                     </div>
-                </div>
-            }
+                ) : (
+                    <div className='flex-1 flex flex-col items-center justify-center min-h-0'>
+                        <p className='text-gray-500 text-center'>No forms found</p>
+                    </div>
+                )}
+            </div>
         </PageContainer>
     )
 }

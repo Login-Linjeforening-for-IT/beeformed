@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import { createEntity } from '../../utils/crud.ts'
 import run from '../../db.ts'
+import { loadSQL } from '../../utils/sql.ts'
 
 export default async function createFormPermission(req: FastifyRequest, res: FastifyReply) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,15 +26,30 @@ export default async function createFormPermission(req: FastifyRequest, res: Fas
         userId = userResult.rows[0].user_id
     }
 
-    await createEntity({
-        res,
-        sqlPath: 'form-permissions/post.sql',
-        requiredFields: ['form_id', 'granted_by'],
-        sqlParams: {
-            form_id:    params.id,
-            user_id:    userId || null,
-            group:      body.group || null,
-            granted_by: req.user!.id
-        }
-    })
+    const form_id = params.id
+    const granted_by = req.user!.id
+    const group = body.group || null
+    const user_id = userId || null
+
+    if (!form_id || !granted_by) {
+        return res.status(400).send({ error: 'form_id and granted_by are required' })
+    }
+
+    const formCheckQuery = 'SELECT user_id FROM forms WHERE id = $1'
+    const formCheckResult = await run(formCheckQuery, [form_id])
+    if (formCheckResult.rows.length === 0) {
+        return res.status(404).send({ error: 'Form not found' })
+    }
+    if (formCheckResult.rows[0].user_id !== granted_by) {
+        return res.status(403).send({ error: 'Forbidden' })
+    }
+
+    try {
+        const sql = await loadSQL('form-permissions/post.sql')
+        const result = await run(sql, [form_id, user_id, group, granted_by])
+        res.status(201).send(result.rows[0])
+    } catch (error) {
+        console.error('Error creating entity:', error)
+        res.status(500).send({ error: 'Internal server error' })
+    }
 }

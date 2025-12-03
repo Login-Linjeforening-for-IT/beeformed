@@ -12,7 +12,6 @@ export default function EditFormPage({ form }: { form: GetFormProps }) {
     const [formData, setFormData] = useState({
         title: form.title,
         description: form.description || '',
-        is_active: form.is_active,
         anonymous_submissions: form.anonymous_submissions,
         limit: form.limit ? String(form.limit) : '',
         published_at: form.published_at ? new Date(form.published_at).toISOString().slice(0, 16) : '',
@@ -30,7 +29,7 @@ export default function EditFormPage({ form }: { form: GetFormProps }) {
             if (typeof result === 'string') {
                 toast.error(result)
             } else if (result && 'error' in result) {
-                toast.error('Failed to update form')
+                toast.error('Failed to update form: ' + result.error)
             } else {
                 toast.success('Form updated successfully!')
                 router.refresh()
@@ -65,12 +64,6 @@ export default function EditFormPage({ form }: { form: GetFormProps }) {
                     rows={5}
                 />
 
-                <SwitchInput
-                    name='is_active'
-                    label='Active'
-                    value={formData.is_active}
-                    setValue={(value) => setFormData(prev => ({ ...prev, is_active: value }))}
-                />
 
                 <SwitchInput
                     name='anonymous_submissions'
@@ -93,6 +86,7 @@ export default function EditFormPage({ form }: { form: GetFormProps }) {
                     label='Publish date'
                     value={formData.published_at}
                     setValue={(value) => setFormData(prev => ({ ...prev, published_at: value as string }))}
+                    required
                 />
 
                 <Input
@@ -101,12 +95,13 @@ export default function EditFormPage({ form }: { form: GetFormProps }) {
                     label='Expiration date'
                     value={formData.expires_at}
                     setValue={(value) => setFormData(prev => ({ ...prev, expires_at: value as string }))}
+                    required
                 />
 
                 <div className='flex space-x-3 pt-4'>
                     <button
                         type='submit'
-                        disabled={loading || !formData.title.trim()}
+                        disabled={loading || !formData.title.trim() || !formData.published_at || !formData.expires_at}
                         className='flex-1 px-4 py-2 bg-login text-login-900 rounded-md
                             hover:bg-orange-400 disabled:opacity-50 disabled:cursor-not-allowed
                             transition-colors focus:outline-none focus:ring-2 focus:ring-login

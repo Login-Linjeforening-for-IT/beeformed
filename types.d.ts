@@ -3,11 +3,10 @@ declare global {
     type Form = {
         title: string
         description: string | null
-        is_active: boolean
         anonymous_submissions: boolean
         limit: number | null
-        published_at: string | null
-        expires_at: string | null
+        published_at: string
+        expires_at: string
 
     }
 
@@ -91,8 +90,8 @@ declare global {
 
     // Submissions
     type SubmissionProps = {
-        field_id: number
-        value: string
+        field_id?: number | null
+        value?: string | null
     }
 
     type Submission = {
@@ -105,7 +104,17 @@ declare global {
         data: SubmissionProps[]
     }
 
-    type GetSubmissionsProps = Submission[]
+    type GetSubmissionsProps = {
+        data: {
+            id: number
+            form_id: number
+            form_title: string
+            user_email: string | null
+            user_name: string | null
+            submitted_at: string
+        }[]
+        total: number
+    }
 
     type PostSubmissionProps = {
         fields: { field_id: number; value: string }[]

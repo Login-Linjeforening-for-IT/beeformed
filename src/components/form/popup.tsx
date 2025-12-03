@@ -14,7 +14,6 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
     const [formData, setFormData] = useState({
         title: '',
         description: '',
-        is_active: true,
         anonymous_submissions: false,
         limit: '',
         published_at: '',
@@ -36,7 +35,7 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
         }
     }, [isOpen])
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
         setLoading(true)
 
@@ -44,22 +43,20 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
             const data = {
                 title: formData.title,
                 description: formData.description || null,
-                is_active: formData.is_active,
                 anonymous_submissions: formData.anonymous_submissions,
                 limit: formData.limit ? parseInt(formData.limit) : null,
-                published_at: formData.published_at || null,
-                expires_at: formData.expires_at || null
+                published_at: formData.published_at,
+                expires_at: formData.expires_at
             }
 
             const result = await postForm(data)
 
-            if (!result.error) {
+            if (!('error' in result)) {
                 toast.success('Form created successfully!')
                 closePopup()
                 setFormData({
                     title: '',
                     description: '',
-                    is_active: true,
                     anonymous_submissions: false,
                     limit: '',
                     published_at: '',
@@ -118,12 +115,6 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
                                 rows={5}
                             />
 
-                            <SwitchInput
-                                name='is_active'
-                                label='Active'
-                                value={formData.is_active}
-                                setValue={(value) => setFormData(prev => ({ ...prev, is_active: value }))}
-                            />
 
                             <SwitchInput
                                 name='anonymous_submissions'
@@ -146,6 +137,7 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
                                 label='Publish date'
                                 value={formData.published_at}
                                 setValue={(value) => setFormData(prev => ({ ...prev, published_at: value as string }))}
+                                required
                             />
 
                             <Input
@@ -154,6 +146,7 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
                                 label='Expiration date'
                                 value={formData.expires_at}
                                 setValue={(value) => setFormData(prev => ({ ...prev, expires_at: value as string }))}
+                                required
                             />
 
                             <div className='flex space-x-3 pt-4'>
@@ -169,7 +162,7 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
                                 </button>
                                 <button
                                     type='submit'
-                                    disabled={loading || !formData.title.trim()}
+                                        disabled={loading || !formData.title.trim() || !formData.published_at || !formData.expires_at}
                                     className='flex-1 px-4 py-2 bg-login text-login-900 rounded-md
                                         hover:bg-orange-400 disabled:opacity-50 disabled:cursor-not-allowed
                                         transition-colors focus:outline-none focus:ring-2 focus:ring-login

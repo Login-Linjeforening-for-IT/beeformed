@@ -1,14 +1,21 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import { readEntity } from '../../utils/crud.ts'
+import run from '../../db.ts'
+import { loadSQL } from '../../utils/sql.ts'
 
 export default async function getUser(req: FastifyRequest, res: FastifyReply) {
-    await readEntity({
-        res,
-        sqlPath: 'users/get.sql',
-        requiredFields: ['id'],
-        sqlParams: {
-            id: req.user!.id
-        },
-        singleResult: true
-    })
+    const id = req.user!.id
+
+    if (!id) {
+        return res.status(400).send({ error: 'id is required' })
+    }
+
+    try {
+        const sql = await loadSQL('users/get.sql')
+        const result = await run(sql, [id])
+        const entity = result.rows.length > 0 ? result.rows[0] : null
+        res.send(entity)
+    } catch (error) {
+        console.error('Error reading entity:', error)
+        res.status(500).send({ error: 'Internal server error' })
+    }
 }

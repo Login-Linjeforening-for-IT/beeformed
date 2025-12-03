@@ -36,8 +36,12 @@ export default function FormRenderer({ form, submission }: { form: FormData; sub
     const [formData, setFormData] = useState<Record<string, string>>(() => {
         if (submission) {
             const data: Record<string, string> = {}
-            submission.data.forEach(field => {
-                data[field.field_id.toString()] = field.value
+            submission.data.forEach((field, i) => {
+                if (field.field_id === null || field.field_id === undefined) {
+                    console.warn('Skipped submission field without field_id', { field, index: i })
+                    return
+                }
+                data[field.field_id.toString()] = field.value ?? ''
             })
             return data
         }

@@ -12,11 +12,10 @@ CREATE TABLE forms (
     user_id TEXT REFERENCES users(user_id) ON DELETE CASCADE,
     title TEXT NOT NULL,
     description TEXT,
-    is_active BOOLEAN DEFAULT TRUE,
     anonymous_submissions BOOLEAN DEFAULT FALSE,
     "limit" INTEGER,
-    published_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    expires_at TIMESTAMP,
+    published_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

@@ -15,11 +15,10 @@ declare global {
         user_id: string
         title: string
         description?: string
-        is_active: boolean
         anonymous_submissions: boolean
         limit?: number
-        published_at?: Date
-        expires_at?: Date
+        published_at: Date
+        expires_at: Date
         created_at: Date
         updated_at: Date
     }
@@ -54,6 +53,7 @@ declare global {
         form_id: number
         user_id?: string
         submitted_at: Date
-        data?: { field_id: number; value: string }[]
+        // field_id/value can be NULL in db, reflect that in types
+        data?: { field_id: number | null; value: string | null }[]
     }
 }

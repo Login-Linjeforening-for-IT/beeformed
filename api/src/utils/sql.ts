@@ -16,7 +16,11 @@ export async function buildFilteredQuery(
         order_by?: string
         sort?: string
     },
-    tablePrefix?: string
+    tablePrefix?: string,
+    options?: {
+        searchFields?: string[]
+        explicitOrderField?: string
+    }
 ) {
     const baseSQL = await loadSQL(sqlPath)
     const search = query.search
@@ -25,22 +29,43 @@ export async function buildFilteredQuery(
     const orderBy = query.order_by || 'created_at'
     const sort = query.sort === 'asc' ? 'ASC' : 'DESC'
 
-    const identifierRegex = /^[a-zA-Z_][a-zA-Z0-9_]*$/
-    if (!identifierRegex.test(orderBy)) {
-        throw new Error('Invalid order_by parameter')
-    }
 
     let sql = baseSQL.trim()
     const params = [...initialParams]
 
     if (search) {
-        const titleField = tablePrefix ? `${tablePrefix}.title` : 'title'
-        const descField = tablePrefix ? `${tablePrefix}.description` : 'description'
-        sql += ` AND (${titleField} ILIKE $${params.length + 1} OR ${descField} ILIKE $${params.length + 1})`
+        const fieldsToSearch: string[] = options?.searchFields && options.searchFields.length
+            ? options.searchFields
+            : [tablePrefix ? `${tablePrefix}.title` : 'title', tablePrefix ? `${tablePrefix}.description` : 'description']
+        const clauses = fieldsToSearch.map((f) => `(${f} IS NOT NULL AND ${f} ILIKE $${params.length + 1})`).join(' OR ')
+
+        const upperSQL = sql.toUpperCase()
+        const groupIdx = upperSQL.indexOf('GROUP BY')
+        const orderIdx = upperSQL.indexOf('ORDER BY')
+        const limitIdx = upperSQL.indexOf('LIMIT')
+        const offsetIdx = upperSQL.indexOf('OFFSET')
+
+        const candidateIdx = [groupIdx, orderIdx, limitIdx, offsetIdx].filter(i => i >= 0)
+        const insertAt = candidateIdx.length ? Math.min(...candidateIdx) : -1
+
+        const hasWhere = /\bWHERE\b/i.test(sql)
+        if (insertAt >= 0) {
+            const prefix = sql.slice(0, insertAt).trimEnd()
+            const suffix = sql.slice(insertAt)
+            sql = prefix + (hasWhere ? ` AND (${clauses}) ` : ` WHERE (${clauses}) `) + suffix
+        } else {
+            sql += hasWhere ? ` AND (${clauses})` : ` WHERE (${clauses})`
+        }
+
         params.push(`%${search}%`)
     }
 
-    const orderField = tablePrefix ? `${tablePrefix}.${orderBy}` : orderBy
+    const explicitOrderField = options?.explicitOrderField
+    const orderField = explicitOrderField || (tablePrefix ? `${tablePrefix}.${orderBy}` : orderBy)
+    const identifierRegex = /^[a-zA-Z_][a-zA-Z0-9_]*(?:\.[a-zA-Z_][a-zA-Z0-9_]*)?$/
+    if (!identifierRegex.test(orderField)) {
+        throw new Error('Invalid order_by parameter')
+    }
     sql += ` ORDER BY ${orderField} ${sort}`
 
     if (limit) {

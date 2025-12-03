@@ -1,5 +1,3 @@
-'use server'
-
 import { cookies } from 'next/headers'
 import config from '../../constants'
 
@@ -37,7 +35,7 @@ async function apiRequest({ method, path, data, options = {} }: ApiRequestProps)
         const response = await fetch(`${baseUrl}${path}`, finalOptions)
 
         if (!response.ok) {
-            throw new Error(`API request failed with status ${response.status}`)
+            throw new Error(await response.text())
         }
 
         if (response.status === 204) {
@@ -47,8 +45,8 @@ async function apiRequest({ method, path, data, options = {} }: ApiRequestProps)
         return await response.json()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-        console.log(error)
-        return { error: error.message || 'Unknown error' }
+        console.error(error)
+        return { error: error.message || error.error || 'Unknown error' }
     }
 }
 

@@ -62,7 +62,7 @@ export async function getPublicForm(formId: string): Promise<GetPublicFormProps 
     return await getWrapper({ path: `forms/${formId}/public` })
 }
 
-export async function postForm(data: PostFormProps) {
+export async function postForm(data: PostFormProps): Promise<{id: number} | ErrorResponse> {
     return await postWrapper({ path: 'forms', data })
 }
 
@@ -97,8 +97,19 @@ export async function deletePermission(formId: string, permissionId: string) {
 }
 
 // Submissions
-export async function getSubmissions(formId: string): Promise<GetSubmissionsProps | ErrorResponse> {
-    return await getWrapper({ path: `forms/${formId}/submissions` })
+export async function getSubmissions(
+    formId: string,
+    { search, offset, limit, orderBy, sort }: FilterProps = {}
+): Promise<GetSubmissionsProps | ErrorResponse> {
+    const queryParts = new URLSearchParams()
+    if (search) queryParts.append('search', String(search))
+    if (limit) queryParts.append('limit', String(limit))
+    if (offset) queryParts.append('offset', String(offset))
+    if (orderBy) queryParts.append('order_by', String(orderBy))
+    if (sort) queryParts.append('sort', String(sort))
+
+    const result = await getWrapper({ path: `forms/${formId}/submissions?${queryParts.toString()}` })
+    return result
 }
 
 export async function postSubmission(formId: string, data: PostSubmissionProps) {
@@ -109,6 +120,16 @@ export async function getSubmission(submissionId: string): Promise<Submission | 
     return await getWrapper({ path: `submissions/${submissionId}` })
 }
 
-export async function getUserSubmissions(): Promise<GetSubmissionsProps | ErrorResponse> {
-    return await getWrapper({ path: 'submissions' })
+export async function getUserSubmissions(
+    { search, offset, limit, orderBy, sort }: FilterProps = {}
+): Promise<GetSubmissionsProps | ErrorResponse> {
+    const queryParts = new URLSearchParams()
+    if (search) queryParts.append('search', String(search))
+    if (limit) queryParts.append('limit', String(limit))
+    if (offset) queryParts.append('offset', String(offset))
+    if (orderBy) queryParts.append('order_by', String(orderBy))
+    if (sort) queryParts.append('sort', String(sort))
+
+    const result = await getWrapper({ path: `submissions?${queryParts.toString()}` })
+    return result
 }

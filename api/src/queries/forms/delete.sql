@@ -1,2 +1,2 @@
 -- Delete form
-DELETE FROM forms WHERE id = $1;
+DELETE FROM forms WHERE id = $1 AND user_id = $2;
