@@ -8,6 +8,8 @@ services:
             - '3000:3000'
         env_file:
             - .env
+        mem_limit: 1g
+        cpus: "2.0"
 
     beeformed_api:
         container_name: beeformed_api
@@ -20,6 +22,8 @@ services:
             - .env
         depends_on:
             - beeformed_postgres
+        mem_limit: 1g
+        cpus: "2.0"
 
     beeformed_postgres:
         image: postgres:18
@@ -36,6 +40,8 @@ services:
             test: ["CMD-SHELL", "pg_isready -U beeformed -d beeformed"]
             interval: 5s
             retries: 5
+        mem_limit: 1g
+        cpus: "2.0"
 
 volumes:
     postgres_data:
