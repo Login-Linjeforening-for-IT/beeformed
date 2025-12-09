@@ -7,6 +7,7 @@ declare module 'fastify' {
             id: string
             name: string
             email: string
+            groups: string[]
         }
     }
 }
@@ -20,6 +21,7 @@ export default async function authMiddleware(req: FastifyRequest, res: FastifyRe
     req.user = {
         id: tokenResult.userInfo.sub,
         name: tokenResult.userInfo.name,
-        email: tokenResult.userInfo.email
+        email: tokenResult.userInfo.email,
+        groups: tokenResult.userInfo.groups || []
     }
 }

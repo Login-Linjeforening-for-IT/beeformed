@@ -8,6 +8,10 @@ export default async function createForm(req: FastifyRequest, res: FastifyReply)
     const user_id = req.user!.id
     const title = body.title
 
+    if (req.user?.groups && !req.user.groups.includes('QueenBee')) {
+        return res.status(403).send({ error: 'Forbidden' })
+    }
+
     if (!user_id || !title || !body.published_at || !body.expires_at) {
         return res.status(400).send({ error: 'user_id, title, published_at, and expires_at are required' })
     }
