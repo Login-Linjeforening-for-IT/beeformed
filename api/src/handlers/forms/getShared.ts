@@ -17,7 +17,7 @@ export default async function getSharedForms(req: FastifyRequest, res: FastifyRe
         const result = await run(sql, params)
         const data = result.rows
         const total = data.length > 0 ? (data[0] as Record<string, unknown>).total_count as number : 0
-        
+
         res.send({ data, total })
     } catch (error) {
         if (error instanceof Error && error.message === 'Invalid order_by parameter') {
