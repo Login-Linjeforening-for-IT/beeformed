@@ -5,7 +5,7 @@ services:
             context: .
             dockerfile: Dockerfile
         ports:
-            - '3000:3000'
+            - '8700:3000'
         env_file:
             - .env
         mem_limit: 1g
@@ -17,7 +17,7 @@ services:
             context: ./api
             dockerfile: Dockerfile
         ports:
-            - '8080:8080'
+            - '8701:8080'
         env_file:
             - .env
         depends_on:
