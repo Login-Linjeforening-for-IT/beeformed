@@ -27,7 +27,7 @@ services:
 
     beeformed_postgres:
         image: postgres:18
-        container_name: beeformed_postgres
+        container_name: beeformed_database
         restart: always
         environment:
             POSTGRES_USER: ${DB_USER:-beeformed}
