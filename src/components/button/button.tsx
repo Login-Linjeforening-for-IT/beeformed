@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { toast } from 'sonner'
+import { toast } from 'uibee/components'
 
 interface ButtonProps {
     children: React.ReactNode

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Plus, X } from 'lucide-react'
-import { toast } from 'sonner'
+import { toast } from 'uibee/components'
 import { postForm } from '@utils/api'
 import { Input, SwitchInput, Textarea } from 'uibee/components'
 import { useRouter } from 'next/navigation'
@@ -162,7 +162,7 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
                                 </button>
                                 <button
                                     type='submit'
-                                        disabled={loading || !formData.title.trim() || !formData.published_at || !formData.expires_at}
+                                    disabled={loading || !formData.title.trim() || !formData.published_at || !formData.expires_at}
                                     className='flex-1 px-4 py-2 bg-login text-login-900 rounded-md
                                         hover:bg-orange-400 disabled:opacity-50 disabled:cursor-not-allowed
                                         transition-colors focus:outline-none focus:ring-2 focus:ring-login

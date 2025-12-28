@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { toast } from 'sonner'
+import { toast } from 'uibee/components'
 import { updateForm } from '../actions/form'
 import { Input, SwitchInput, Textarea } from 'uibee/components'
 import { useRouter } from 'next/navigation'

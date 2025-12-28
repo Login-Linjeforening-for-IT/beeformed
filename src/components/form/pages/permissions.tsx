@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { toast } from 'sonner'
+import { toast } from 'uibee/components'
 import { deletePermission, postPermission } from '../../../utils/api'
 import { Input } from 'uibee/components'
 import Table from '../../table/table'

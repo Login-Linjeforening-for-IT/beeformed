@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { toast } from 'sonner'
+import { toast } from 'uibee/components'
 import { postSubmission } from '@utils/api'
 import CustomInput from '../inputs/input'
 import CustomTextarea from '../inputs/textarea'

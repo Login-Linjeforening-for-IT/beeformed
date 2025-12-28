@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { toast } from 'sonner'
+import { toast } from 'uibee/components'
 import { updateFields } from '../actions/field'
 import { Input, SwitchInput, Select } from 'uibee/components'
 import { GripVertical, X } from 'lucide-react'
