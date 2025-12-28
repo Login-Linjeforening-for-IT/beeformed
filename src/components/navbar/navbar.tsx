@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { getCookie } from 'uibee/utils'
+import { getCookie } from 'utilbee/utils'
 import { Navbar as NavBar, NavItem } from 'uibee/components'
 import config from '@config'
 
