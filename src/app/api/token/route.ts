@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
     const access_token = url.searchParams.get('access_token')
     const id = url.searchParams.get('id')
 
-    fetch(`${config.url.API_URL}users`, {
+    fetch(`${config.url.API_URL}/users`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
