@@ -8,7 +8,10 @@ const requiredEnvironmentVariables = [
     'DB_USER',
     'DB_HOST',
     'DB_PASSWORD',
-    'DB_PORT',
+    'DB_PORT'
+]
+
+const smtpVariables = [
     'SMTP_HOST',
     'SMTP_PORT',
     'SMTP_SECURE',
@@ -16,6 +19,12 @@ const requiredEnvironmentVariables = [
     'SMTP_PASSWORD',
     'SMTP_FROM'
 ]
+
+const disableSMTP = process.env.DISABLE_SMTP === 'true'
+
+if (!disableSMTP) {
+    requiredEnvironmentVariables.push(...smtpVariables)
+}
 
 const missingVariables = requiredEnvironmentVariables.filter(
     (key) => !process.env[key]
@@ -34,6 +43,12 @@ const env = Object.fromEntries(
     requiredEnvironmentVariables.map((key) => [key, process.env[key]])
 )
 
+if (!disableSMTP) {
+    smtpVariables.forEach((key) => {
+        env[key] = process.env[key]
+    })
+}
+
 const config = {
     USERINFO_URL: `${env.AUTH_URL}/application/o/userinfo/`,
     DB: env.DB,
@@ -45,6 +60,7 @@ const config = {
     DB_IDLE_TIMEOUT_MS: 5000,
     DB_TIMEOUT_MS: 3000,
     CACHE_TTL: 1000,
+    DISABLE_SMTP: disableSMTP,
     SMTP_HOST: env.SMTP_HOST,
     SMTP_PORT: Number(env.SMTP_PORT) || 465,
     SMTP_SECURE: env.SMTP_SECURE === 'true',

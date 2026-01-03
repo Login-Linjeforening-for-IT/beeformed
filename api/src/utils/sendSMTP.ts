@@ -9,7 +9,7 @@ type MailOptions = {
     html?: string
 }
 
-const transporter = nodemailer.createTransport({
+const transporter = config.DISABLE_SMTP ? null : nodemailer.createTransport({
     host: config.SMTP_HOST,
     port: Number(config.SMTP_PORT),
     secure: config.SMTP_SECURE,
@@ -20,14 +20,17 @@ const transporter = nodemailer.createTransport({
 })
 
 export default async function sendMail({ to, subject, text, html }: MailOptions): Promise<string> {
+    if (config.DISABLE_SMTP) {
+        return 'SMTP disabled'
+    }
     const from = config.SMTP_FROM
     const mailOptions = { to, subject, text, html }
     try {
-        const info = await transporter.sendMail({
+        const info = await transporter?.sendMail({
             from,
             ...mailOptions,
         })
-        return info.response
+        return info?.response || 'SMTP disabled'
     } catch (error) {
         console.error('Error sending email:', error)
         throw error
