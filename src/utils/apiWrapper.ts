@@ -6,8 +6,7 @@ const baseUrl = config.url.API_URL
 type ApiRequestProps = {
     method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
     path: string
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    data?: any
+    data?: unknown
     options?: RequestInit
 }
 
@@ -32,7 +31,7 @@ async function apiRequest({ method, path, data, options = {} }: ApiRequestProps)
     const finalOptions = { ...defaultOptions, ...options }
 
     try {
-        const response = await fetch(`${baseUrl}${path}`, finalOptions)
+        const response = await fetch(`${baseUrl}/${path}`, finalOptions)
 
         if (!response.ok) {
             throw new Error(await response.text())
@@ -50,13 +49,11 @@ async function apiRequest({ method, path, data, options = {} }: ApiRequestProps)
     }
 }
 
-// Wrapper functions for backward compatibility
 async function getWrapper({ path, options = {} }: { path: string; options?: RequestInit }) {
     return await apiRequest({ method: 'GET', path, options })
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function postWrapper({ path, data }: { path: string; data: any }) {
+async function postWrapper({ path, data }: { path: string; data: unknown }) {
     return await apiRequest({ method: 'POST', path, data })
 }
 
