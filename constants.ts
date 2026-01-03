@@ -4,7 +4,7 @@ const { env } = process
 
 const config = {
     url: {
-        API_URL: env.API_URL || 'http://froms.login.no/api/',
+        API_URL: env.API_URL || 'http://forms-api.login.no/api',
         CDN_URL: 'https://cdn.login.no',
         GITLAB_URL: 'https://gitlab.login.no',
         LOGIN_URL: 'https://login.no',
