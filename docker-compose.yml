@@ -21,11 +21,11 @@ services:
         env_file:
             - .env
         depends_on:
-            - beeformed_postgres
+            - beeformed_database
         mem_limit: 1g
         cpus: "2.0"
 
-    beeformed_postgres:
+    beeformed_database:
         image: postgres:18
         container_name: beeformed_database
         restart: always
