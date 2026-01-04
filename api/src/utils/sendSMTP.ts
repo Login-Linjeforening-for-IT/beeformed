@@ -1,6 +1,6 @@
 import config from '#constants'
 import nodemailer from 'nodemailer'
-import { createEmailTemplate, type EmailContent } from './emailTemplate.ts'
+import { createEmailTemplate, type EmailContent } from '#utils/emailTemplate.ts'
 
 type MailOptions = {
     to: string

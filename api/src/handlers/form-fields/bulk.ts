@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import { runInTransaction } from '../../db.ts'
-import { loadSQL } from '../../utils/sql.ts'
+import { runInTransaction } from '#db'
+import { loadSQL } from '#utils/sql.ts'
 
 interface BulkOperation {
     operation: 'create' | 'update' | 'delete'

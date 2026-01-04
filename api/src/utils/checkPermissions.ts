@@ -1,5 +1,5 @@
-import run from '../db.ts'
-import { loadSQL } from './sql.ts'
+import run from '#db'
+import { loadSQL } from '#utils/sql.ts'
 
 export async function checkPermission(formId: number, userId: string): Promise<boolean> {
     try {

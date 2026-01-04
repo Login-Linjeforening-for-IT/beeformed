@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers'
-import config from '../../constants'
+import config from '@config'
 
 const baseUrl = config.url.api
 

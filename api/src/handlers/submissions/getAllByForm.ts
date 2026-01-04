@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import run from '../../db.ts'
-import { loadSQL, buildFilteredQuery } from '../../utils/sql.ts'
+import run from '#db'
+import { loadSQL, buildFilteredQuery } from '#utils/sql.ts'
 
 export default async function getSubmissionsByForm(req: FastifyRequest, res: FastifyReply) {
     const { id: formId } = req.params as { id: string }

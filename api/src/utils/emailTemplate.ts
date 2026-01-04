@@ -1,4 +1,4 @@
-import { LOGO_SVG } from './logo.ts'
+import { LOGO_SVG } from '#utils/logo.ts'
 
 type EmailTemplate = {
     subject: string

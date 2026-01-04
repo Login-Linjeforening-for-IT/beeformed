@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import run from '../../db.ts'
-import { buildFilteredQuery } from '../../utils/sql.ts'
+import run from '#db'
+import { buildFilteredQuery } from '#utils/sql.ts'
 
 export default async function getSubmissionsByUser(req: FastifyRequest, res: FastifyReply) {
     const userId = req.user!.id

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { toast } from 'uibee/components'
-import { updateForm } from '../actions/form'
+import { updateForm } from '@components/form/actions/form'
 import { Input, Switch, Textarea } from 'uibee/components'
 import { useRouter } from 'next/navigation'
 

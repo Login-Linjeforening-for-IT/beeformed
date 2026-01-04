@@ -3,11 +3,11 @@
 import { useState } from 'react'
 import { toast } from 'uibee/components'
 import { postSubmission } from '@utils/api'
-import CustomInput from '../inputs/input'
-import CustomTextarea from '../inputs/textarea'
-import CustomSelect from '../inputs/select'
-import CustomSwitch from '../inputs/switch'
-import CustomChoice from '../inputs/choice'
+import CustomInput from '@components/inputs/input'
+import CustomTextarea from '@components/inputs/textarea'
+import CustomSelect from '@components/inputs/select'
+import CustomSwitch from '@components/inputs/switch'
+import CustomChoice from '@components/inputs/choice'
 
 interface FormField {
     id: string

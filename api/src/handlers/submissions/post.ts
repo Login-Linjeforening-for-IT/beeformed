@@ -1,7 +1,7 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import run, { runInTransaction } from '../../db.ts'
-import { loadSQL } from '../../utils/sql.ts'
-import { sendTemplatedMail } from '../../utils/sendSMTP.ts'
+import run, { runInTransaction } from '#db'
+import { loadSQL } from '#utils/sql.ts'
+import { sendTemplatedMail } from '#utils/sendSMTP.ts'
 
 export default async function createSubmission(req: FastifyRequest, res: FastifyReply) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

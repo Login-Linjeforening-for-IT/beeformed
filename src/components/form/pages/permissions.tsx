@@ -2,9 +2,9 @@
 
 import { useState } from 'react'
 import { toast } from 'uibee/components'
-import { deletePermission, postPermission } from '../../../utils/api'
+import { deletePermission, postPermission } from '@utils/api'
 import { Input } from 'uibee/components'
-import Table from '../../table/table'
+import Table from '@components/table/table'
 import { useRouter } from 'next/navigation'
 
 export default function EditPermissionsPage({ permissions, formId }: { permissions: GetPermissionsProps, formId: string }) {

@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import checkToken from '../utils/checkToken.ts'
+import checkToken from '#utils/checkToken.ts'
 
 declare module 'fastify' {
     interface FastifyRequest {

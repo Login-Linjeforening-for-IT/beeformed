@@ -6,7 +6,7 @@ import {
     postWrapper,
     putWrapper,
     patchWrapper,
-} from './apiWrapper'
+} from '@utils/apiWrapper'
 
 type FilterProps = {
     search?: string

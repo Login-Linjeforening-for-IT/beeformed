@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { toast } from 'uibee/components'
-import { updateFields } from '../actions/field'
+import { updateFields } from '@components/form/actions/field'
 import { Input, Switch, Select } from 'uibee/components'
 import { GripVertical, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'

@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import { checkPermission } from './checkPermissions.ts'
+import { checkPermission } from '#utils/checkPermissions.ts'
 
 export default async function permissionMiddleware(req: FastifyRequest<{ Params: { id?: string, formId?: string } }>, res: FastifyReply) {
     const id = req.params.id || req.params.formId
