@@ -32,7 +32,7 @@ export default async function Footer() {
                     <div>
                         <div className='block w-full'>
                             <Image
-                                src={`${config.url.CDN_URL}/img/logo/logo-tekst-white.svg`}
+                                src={`${config.url.cdn}/img/logo/logo-tekst-white.svg`}
                                 className='block w-full'
                                 alt='Login - Linjeforeningen for IT'
                                 width={800}
@@ -44,7 +44,7 @@ export default async function Footer() {
                         <Link href='https://www.mnemonic.io/' target='_blank'>
                             <div className='block w-full'>
                                 <Image
-                                    src={`${config.url.CDN_URL}/img/company/mnemonic-logo_light-nopayoff-2021.svg`}
+                                    src={`${config.url.cdn}/img/company/mnemonic-logo_light-nopayoff-2021.svg`}
                                     className='block w-full'
                                     alt='mnemonic'
                                     width={800}
@@ -77,9 +77,9 @@ export default async function Footer() {
                         <p>
                             <a
                                 className=' link--underscore-hover'
-                                href={`mailto:${config.url.MAIL_URL}`}
+                                href={`mailto:${config.url.mail}`}
                             >
-                                {config.url.MAIL_URL}
+                                {config.url.mail}
                             </a>
                         </p>
                     </div>
@@ -99,7 +99,7 @@ export default async function Footer() {
                             className='bg-[rgba(200,200,200,0.1)] px-[0.6rem] py-[0.4rem]
                                 rounded-(--border-radius) text-white tracking-wide font-semibold'
                             target='_blank'
-                            href={`${config.url.GITLAB_URL}/tekkom/web/beehive/frontend/-/tags/${config.version}`}
+                            href={`${config.url.gitlab}/tekkom/web/beehive/frontend/-/tags/${config.version}`}
                         >
                             v{config.version}
                         </Link>

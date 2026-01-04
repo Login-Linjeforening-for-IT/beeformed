@@ -35,7 +35,7 @@ export default function Navbar() {
                 Submissions
             </NavItem>
             <NavItem
-                href={config.url.LOGIN_URL}
+                href={config.url.login}
                 external
             >
                 Login

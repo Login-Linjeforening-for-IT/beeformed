@@ -15,7 +15,7 @@ export default async function Home() {
         <div className='w-full min-h-full flex items-center justify-center'>
             <LoginPage
                 title='Nettskjema'
-                redirectURL={config.authInternal.LOGIN_URL}
+                redirectURL={config.auth.login}
                 version={config.version}
             />
         </div>

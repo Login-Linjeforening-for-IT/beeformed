@@ -13,7 +13,7 @@ export default function Version() {
                 'rounded-md text-white tracking-[0.05em] font-semibold text-lg'
             }
             target='_blank'
-            href={`${config.url.GITLAB_URL}/tekkom/web/beehive/beeformed/-/tags/${config.version}`}
+            href={`${config.url.gitlab}/tekkom/web/beehive/beeformed/-/tags/${config.version}`}
         >
             v{config.version}
         </Link>

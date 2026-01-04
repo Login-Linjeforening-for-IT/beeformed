@@ -8,7 +8,7 @@ export default function SocialLinks() {
             <a
                 className='block w-8 h-8 mx-auto'
                 title='Discord'
-                href={config.url.DISCORD_URL}
+                href={config.url.discord}
                 target='_blank'
                 rel='noreferrer'
             >
@@ -17,7 +17,7 @@ export default function SocialLinks() {
             <a
                 className='block w-8 h-8 mx-auto'
                 title='Instagram'
-                href={config.url.INSTAGRAM_URL}
+                href={config.url.instagram}
                 target='_blank'
                 rel='noreferrer'
             >
@@ -27,7 +27,7 @@ export default function SocialLinks() {
             <a
                 className='block w-8 h-8 mx-auto'
                 title='Facebook'
-                href={config.url.FACEBOOK_URL}
+                href={config.url.facebook}
                 target='_blank'
                 rel='noreferrer'
             >
@@ -36,7 +36,7 @@ export default function SocialLinks() {
             <a
                 className='block w-8 h-8 mx-auto'
                 title='Linkedin'
-                href={config.url.LINKEDIN_URL}
+                href={config.url.linkedin}
                 target='_blank'
                 rel='noreferrer'
             >
@@ -45,7 +45,7 @@ export default function SocialLinks() {
             <a
                 className='block w-8 h-8 mx-auto'
                 title='Gitlab'
-                href={config.url.GITLAB_URL}
+                href={config.url.gitlab}
                 target='_blank'
                 rel='noreferrer'
             >
@@ -54,7 +54,7 @@ export default function SocialLinks() {
             <a
                 className='block w-8 h-8 mx-auto'
                 title='Wiki'
-                href={config.url.WIKI_URL}
+                href={config.url.wiki}
                 target='_blank'
                 rel='noreferrer'
             >

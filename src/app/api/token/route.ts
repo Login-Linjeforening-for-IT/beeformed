@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
     const access_token = url.searchParams.get('access_token')
     const id = url.searchParams.get('id')
 
-    fetch(`${config.url.API_URL}/users`, {
+    fetch(`${config.url.api}/users`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
 
     return await authToken({
         req: request,
-        frontendURL: config.authInternal.BASE_URL,
+        frontendURL: config.auth.base,
         redirectPath: '/'
     })
 }

@@ -13,7 +13,7 @@ export default function NotFoundPage() {
         <div className='py-16 px-4 max-w-160 m-auto 800px:flex 800px:items-center 800px:justify-around 800px:max-w-[75rem] 800px:gap-8'>
             <div className='block w-full max-w-[40rem] m-auto'>
                 <Image
-                    src={`${config.url.CDN_URL}/img/pizza404.png`}
+                    src={`${config.url.cdn}/img/pizza404.png`}
                     className='not-block w-full max-w-[40rem] m-auto' alt='Hangry 404'
                     width={1508}
                     height={1200}

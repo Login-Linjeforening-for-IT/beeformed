@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers'
 import config from '../../constants'
 
-const baseUrl = config.url.API_URL
+const baseUrl = config.url.api
 
 type ApiRequestProps = {
     method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
