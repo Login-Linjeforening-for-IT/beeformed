@@ -2,7 +2,7 @@ services:
     beeformed:
         container_name: beeformed
         build:
-            context: .
+            context: ./frontend
             dockerfile: Dockerfile
         ports:
             - '8700:3000'
