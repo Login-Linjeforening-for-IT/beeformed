@@ -7,8 +7,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "lint:fix": "eslint --fix"
+    "lint": "eslint ./src",
+    "lint:fix": "eslint --fix ./src"
   },
   "dependencies": {
     "@stylistic/eslint-plugin": "^5.6.1",
@@ -17,7 +17,7 @@
     "next": "16.1.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "uibee": "^2.6.0",
+    "uibee": "^2.7.16",
     "utilbee": "^1.1.0"
   },
   "devDependencies": {

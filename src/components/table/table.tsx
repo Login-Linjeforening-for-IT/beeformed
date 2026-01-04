@@ -35,7 +35,7 @@ export default function Table({
     const searchParams = useSearchParams()
     const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null)
 
-    const handleSort = (columnKey: string) => {
+    function handleSort(columnKey: string) {
         const params = new URLSearchParams(searchParams.toString())
         const newOrder = currentOrderBy === columnKey && currentSort === 'asc' ? 'desc' : 'asc'
         params.set('column', columnKey)
@@ -44,21 +44,21 @@ export default function Table({
         router.push(`?${params.toString()}`)
     }
 
-    const toggleMenu = (index: number) => {
+    function toggleMenu(index: number) {
         setOpenMenuIndex(openMenuIndex === index ? null : index)
     }
 
-    const handleEdit = (row: Record<string, unknown>) => {
+    function handleEdit(row: Record<string, unknown>) {
         router.push(`/form/${row.id}`)
         setOpenMenuIndex(null)
     }
 
-    const handleDelete = (row: Record<string, unknown>) => {
+    function handleDelete(row: Record<string, unknown>) {
         if (onDelete) onDelete(row)
         setOpenMenuIndex(null)
     }
 
-    const handleView = (row: Record<string, unknown>) => {
+    function handleView(row: Record<string, unknown>) {
         if (viewBaseHref) router.push(`${viewBaseHref}${row[viewHrefKey]}`)
         setOpenMenuIndex(null)
     }

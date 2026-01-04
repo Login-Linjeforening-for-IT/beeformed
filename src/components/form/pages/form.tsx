@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { toast } from 'uibee/components'
 import { updateForm } from '../actions/form'
-import { Input, SwitchInput, Textarea } from 'uibee/components'
+import { Input, Switch, Textarea } from 'uibee/components'
 import { useRouter } from 'next/navigation'
 
 export default function EditFormPage({ form }: { form: GetFormProps }) {
@@ -18,7 +18,7 @@ export default function EditFormPage({ form }: { form: GetFormProps }) {
         expires_at: form.expires_at ? new Date(form.expires_at).toISOString().slice(0, 16) : ''
     })
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
         setLoading(true)
 
@@ -45,14 +45,14 @@ export default function EditFormPage({ form }: { form: GetFormProps }) {
         <div className='bg-login-700 rounded-lg w-full max-w-2xl'>
             <h2 className='text-xl font-semibold text-login-50 mb-6'>Edit Form Settings</h2>
 
-            <form onSubmit={handleSubmit} className='space-y-4'>
+            <form onSubmit={handleSubmit}>
                 <input type='hidden' name='id' value={form.id} />
                 <Input
                     name='title'
                     type='text'
                     label='Title'
                     value={formData.title}
-                    setValue={(value) => setFormData(prev => ({ ...prev, title: value as string }))}
+                    onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
                     required
                 />
 
@@ -60,16 +60,16 @@ export default function EditFormPage({ form }: { form: GetFormProps }) {
                     name='description'
                     label='Description'
                     value={formData.description}
-                    setValue={(value) => setFormData(prev => ({ ...prev, description: value as string }))}
+                    onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                     rows={5}
                 />
 
 
-                <SwitchInput
+                <Switch
                     name='anonymous_submissions'
                     label='Allow anonymous submissions'
-                    value={formData.anonymous_submissions}
-                    setValue={(value) => setFormData(prev => ({ ...prev, anonymous_submissions: value }))}
+                    checked={formData.anonymous_submissions}
+                    onChange={(e) => setFormData(prev => ({ ...prev, anonymous_submissions: e.target.checked }))}
                 />
 
                 <Input
@@ -77,7 +77,7 @@ export default function EditFormPage({ form }: { form: GetFormProps }) {
                     type='number'
                     label='Submission limit'
                     value={formData.limit}
-                    setValue={(value) => setFormData(prev => ({ ...prev, limit: value as string }))}
+                    onChange={(e) => setFormData(prev => ({ ...prev, limit: e.target.value }))}
                 />
 
                 <Input
@@ -85,7 +85,7 @@ export default function EditFormPage({ form }: { form: GetFormProps }) {
                     type='datetime-local'
                     label='Publish date'
                     value={formData.published_at}
-                    setValue={(value) => setFormData(prev => ({ ...prev, published_at: value as string }))}
+                    onChange={(e) => setFormData(prev => ({ ...prev, published_at: e.target.value }))}
                     required
                 />
 
@@ -94,7 +94,7 @@ export default function EditFormPage({ form }: { form: GetFormProps }) {
                     type='datetime-local'
                     label='Expiration date'
                     value={formData.expires_at}
-                    setValue={(value) => setFormData(prev => ({ ...prev, expires_at: value as string }))}
+                    onChange={(e) => setFormData(prev => ({ ...prev, expires_at: e.target.value }))}
                     required
                 />
 

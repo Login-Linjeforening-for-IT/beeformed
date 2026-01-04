@@ -44,7 +44,7 @@ export default function Select({
         : options
 
     useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
+        function handleClickOutside(event: MouseEvent) {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
                 setIsOpen(false)
                 setSearchTerm('')
@@ -61,7 +61,7 @@ export default function Select({
         }
     }, [isOpen, searchable])
 
-    const handleSelect = (option: Option) => {
+    function handleSelect(option: Option) {
         if (option.disabled) return
         const syntheticEvent = {
             target: { value: option.value, name: props.name }
@@ -71,7 +71,7 @@ export default function Select({
         setSearchTerm('')
     }
 
-    const handleKeyDown = (event: React.KeyboardEvent) => {
+    function handleKeyDown(event: React.KeyboardEvent) {
         if (event.key === 'Escape') {
             setIsOpen(false)
             setSearchTerm('')

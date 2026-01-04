@@ -19,7 +19,7 @@ export default function SearchInput({ placeholder = 'Search...' }: SearchInputPr
         setSearchValue(currentQ)
     }, [searchParams])
 
-    const handleSearch = (value: string) => {
+    function handleSearch(value: string) {
         setSearchValue(value)
         const params = new URLSearchParams(searchParams.toString())
         if (value.trim()) {
@@ -31,7 +31,7 @@ export default function SearchInput({ placeholder = 'Search...' }: SearchInputPr
         router.push(`${pathname}?${params.toString()}`)
     }
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
         if (e.key === 'Enter') {
             handleSearch(searchValue)
         }

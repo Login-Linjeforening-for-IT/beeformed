@@ -76,13 +76,13 @@ export default function EditPermissionsPage({ permissions, formId }: { permissio
             <div className='bg-login-700 rounded-lg w-full max-w-2xl'>
                 <h2 className='text-xl font-semibold text-login-50 mb-6'>Add Permission</h2>
 
-                <form onSubmit={handleSubmit} className='space-y-4'>
+                <form onSubmit={handleSubmit}>
                     <Input
                         name='email'
                         type='text'
                         label='Email'
                         value={formData.email}
-                        setValue={(value) => setFormData(prev => ({ ...prev, email: value as string }))}
+                        onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                     />
 
                     <Input
@@ -90,7 +90,7 @@ export default function EditPermissionsPage({ permissions, formId }: { permissio
                         type='text'
                         label='Group'
                         value={formData.group}
-                        setValue={(value) => setFormData(prev => ({ ...prev, group: value as string }))}
+                        onChange={(e) => setFormData(prev => ({ ...prev, group: e.target.value }))}
                     />
 
                     {bothFilled && (

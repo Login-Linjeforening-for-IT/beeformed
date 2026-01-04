@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Plus, X } from 'lucide-react'
 import { toast } from 'uibee/components'
 import { postForm } from '@utils/api'
-import { Input, SwitchInput, Textarea } from 'uibee/components'
+import { Input, Switch, Textarea } from 'uibee/components'
 import { useRouter } from 'next/navigation'
 
 export function FormPopup({children, buttonClassName}: {children?: React.ReactNode, buttonClassName?: string}) {
@@ -20,8 +20,13 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
         expires_at: ''
     })
 
-    const openPopup = () => setIsOpen(true)
-    const closePopup = () => setIsOpen(false)
+    function openPopup() {
+        setIsOpen(true)
+    }
+
+    function closePopup() {
+        setIsOpen(false)
+    }
 
     useEffect(() => {
         if (isOpen) {
@@ -97,13 +102,13 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
                             </button>
                         </div>
 
-                        <form onSubmit={handleSubmit} className='space-y-4'>
+                        <form onSubmit={handleSubmit}>
                             <Input
                                 name='title'
                                 type='text'
                                 label='Title'
                                 value={formData.title}
-                                setValue={(value) => setFormData(prev => ({ ...prev, title: value as string }))}
+                                onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
                                 required
                             />
 
@@ -111,16 +116,16 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
                                 name='description'
                                 label='Description'
                                 value={formData.description}
-                                setValue={(value) => setFormData(prev => ({ ...prev, description: value as string }))}
+                                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                                 rows={5}
                             />
 
 
-                            <SwitchInput
+                            <Switch
                                 name='anonymous_submissions'
                                 label='Allow anonymous submissions'
-                                value={formData.anonymous_submissions}
-                                setValue={(value) => setFormData(prev => ({ ...prev, anonymous_submissions: value }))}
+                                checked={formData.anonymous_submissions}
+                                onChange={(e) => setFormData(prev => ({ ...prev, anonymous_submissions: e.target.checked }))}
                             />
 
                             <Input
@@ -128,7 +133,7 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
                                 type='number'
                                 label='Submission limit'
                                 value={formData.limit}
-                                setValue={(value) => setFormData(prev => ({ ...prev, limit: value as string }))}
+                                onChange={(e) => setFormData(prev => ({ ...prev, limit: e.target.value }))}
                             />
 
                             <Input
@@ -136,7 +141,7 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
                                 type='datetime-local'
                                 label='Publish date'
                                 value={formData.published_at}
-                                setValue={(value) => setFormData(prev => ({ ...prev, published_at: value as string }))}
+                                onChange={(e) => setFormData(prev => ({ ...prev, published_at: e.target.value }))}
                                 required
                             />
 
@@ -145,7 +150,7 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
                                 type='datetime-local'
                                 label='Expiration date'
                                 value={formData.expires_at}
-                                setValue={(value) => setFormData(prev => ({ ...prev, expires_at: value as string }))}
+                                onChange={(e) => setFormData(prev => ({ ...prev, expires_at: e.target.value }))}
                                 required
                             />
 

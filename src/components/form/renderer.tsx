@@ -48,7 +48,7 @@ export default function FormRenderer({ form, submission }: { form: FormData; sub
         return {}
     })
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
         if (submission) return
 
@@ -75,7 +75,7 @@ export default function FormRenderer({ form, submission }: { form: FormData; sub
         }
     }
 
-    const renderField = (field: FormField) => {
+    function renderField(field: FormField) {
         const value = formData[field.id] || ''
         const setValue = (newValue: string | number) => {
             if (submission) return

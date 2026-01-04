@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react'
 import { toast } from 'uibee/components'
 import { updateFields } from '../actions/field'
-import { Input, SwitchInput, Select } from 'uibee/components'
+import { Input, Switch, Select } from 'uibee/components'
 import { GripVertical, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
@@ -26,12 +26,12 @@ export default function EditFieldsPage({ fields, formId }: { fields: GetFieldsPr
         { value: 'datetime', label: 'DateTime' }
     ]
 
-    const handleDragStart = (index: number) => {
+    function handleDragStart(index: number) {
         setDraggedIndex(index)
         lastReorderRef.current = null
     }
 
-    const handleDragOver = (e: React.DragEvent, targetIndex: number) => {
+    function handleDragOver(e: React.DragEvent, targetIndex: number) {
         e.preventDefault()
         if (draggedIndex === null || draggedIndex === targetIndex || lastReorderRef.current === targetIndex) return
 
@@ -48,12 +48,12 @@ export default function EditFieldsPage({ fields, formId }: { fields: GetFieldsPr
         setDraggedIndex(targetIndex)
     }
 
-    const handleDrop = () => {
+    function handleDrop() {
         setDraggedIndex(null)
         lastReorderRef.current = null
     }
 
-    const handleAddField = () => {
+    function handleAddField() {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const newField: any = {
             id: null,
@@ -69,7 +69,7 @@ export default function EditFieldsPage({ fields, formId }: { fields: GetFieldsPr
         setFieldsData(prev => [...prev, newField])
     }
 
-    const handleAddFieldAt = (position: number) => {
+    function handleAddFieldAt(position: number) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const newField: any = {
             id: null,
@@ -92,11 +92,11 @@ export default function EditFieldsPage({ fields, formId }: { fields: GetFieldsPr
         })
     }
 
-    const handleRemove = (index: number) => {
+    function handleRemove(index: number) {
         setFieldsData(prev => prev.map((f, i) => i === index ? { ...f, deleted: true } : f))
     }
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
         setLoading(true)
 
@@ -145,7 +145,7 @@ export default function EditFieldsPage({ fields, formId }: { fields: GetFieldsPr
                         key={index}
                         onDragOver={(e) => handleDragOver(e, index)}
                         onDrop={handleDrop}
-                        className={`p-4 border border-login-500 rounded-xl bg-login-700 space-y-8 ${
+                        className={`p-4 border border-login-500 rounded-xl bg-login-700 ${
                             draggedIndex === index ? 'opacity-50' : ''
                         }`}
                     >
@@ -175,14 +175,14 @@ export default function EditFieldsPage({ fields, formId }: { fields: GetFieldsPr
                             name={`field_${index}_operation`}
                             value={(field as { operation?: string }).operation || 'update'}
                         />
-                        <div className='grid grid-cols-4 gap-4'>
+                        <div className='grid grid-cols-4 gap-x-4'>
                             <Input
                                 name={`field_${index}_title`}
                                 type='text'
                                 label='Title'
                                 value={field.title}
-                                setValue={(value) =>
-                                    setFieldsData(prev => prev.map((f, i) => i === index ? { ...f, title: value as string } : f))}
+                                onChange={(e) =>
+                                    setFieldsData(prev => prev.map((f, i) => i === index ? { ...f, title: e.target.value } : f))}
                                 required
                                 className='col-span-2'
                             />
@@ -191,18 +191,22 @@ export default function EditFieldsPage({ fields, formId }: { fields: GetFieldsPr
                                 name={`field_${index}_field_type`}
                                 label='Field Type'
                                 value={field.field_type}
-                                setValue={(value) =>
+                                onChange={(value) =>
                                     setFieldsData(prev => prev.map((f, i) => i === index ? { ...f, field_type: value as string } : f))
                                 }
                                 options={fieldTypeOptions}
                                 required
                             />
 
-                            <SwitchInput
+                            <Switch
                                 name={`field_${index}_required`}
                                 label='Required'
-                                value={field.required}
-                                setValue={(value) => setFieldsData(prev => prev.map((f, i) => i === index ? { ...f, required: value } : f))}
+                                checked={field.required}
+                                onChange={(e) => setFieldsData(
+                                    prev => prev.map((f, i) => i === index ? { ...f, required: e.target.checked } : f)
+                                )}
+                                switchOnly
+                                className='justify-center'
                             />
                         </div>
 
@@ -212,8 +216,8 @@ export default function EditFieldsPage({ fields, formId }: { fields: GetFieldsPr
                             type='text'
                             label='Description'
                             value={field.description || ''}
-                            setValue={(value) =>
-                                setFieldsData(prev => prev.map((f, i) => i === index ? { ...f, description: value as string } : f))}
+                            onChange={(e) =>
+                                setFieldsData(prev => prev.map((f, i) => i === index ? { ...f, description: e.target.value } : f))}
                             className='col-span-2'
                         />
 
