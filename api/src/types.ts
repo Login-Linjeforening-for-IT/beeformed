@@ -13,6 +13,7 @@ declare global {
     interface Form {
         id: number
         user_id: string
+        slug: string
         title: string
         description?: string
         anonymous_submissions: boolean

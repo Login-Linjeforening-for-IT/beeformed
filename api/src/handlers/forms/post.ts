@@ -6,14 +6,13 @@ export default async function createForm(req: FastifyRequest, res: FastifyReply)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const body = req.body as any
     const user_id = req.user!.id
-    const title = body.title
 
     if (req.user?.groups && !req.user.groups.includes('QueenBee')) {
         return res.status(403).send({ error: 'Forbidden' })
     }
 
-    if (!user_id || !title || !body.published_at || !body.expires_at) {
-        return res.status(400).send({ error: 'user_id, title, published_at, and expires_at are required' })
+    if (!user_id || !body.slug || !body.title || !body.published_at || !body.expires_at) {
+        return res.status(400).send({ error: 'user_id, slug, title, published_at, and expires_at are required' })
     }
 
     const publishedAt = new Date(body.published_at)
@@ -30,7 +29,8 @@ export default async function createForm(req: FastifyRequest, res: FastifyReply)
 
     const sqlParams = [
         user_id,
-        title,
+        body.slug,
+        body.title,
         body.description || null,
         body.anonymous_submissions || false,
         body.limit || null,

@@ -1,12 +1,13 @@
 -- Update form
 UPDATE forms
 SET 
-    title = $2,
-    description = $3,
-    anonymous_submissions = $4,
-    "limit" = $5,
-    published_at = $6,
-    expires_at = $7,
+    slug = $2,
+    title = $3,
+    description = $4,
+    anonymous_submissions = $5,
+    "limit" = $6,
+    published_at = $7,
+    expires_at = $8,
     updated_at = NOW()
 WHERE id = $1
 RETURNING *;

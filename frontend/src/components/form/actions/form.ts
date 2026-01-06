@@ -20,6 +20,7 @@ type PutFormState = FormState | PutFormProps
 
 function extractFormProps(formData: FormData): PutFormProps {
     return {
+        slug:                   getRequiredString(formData, 'slug'),
         title:                  getRequiredString(formData, 'title'),
         description:            getOptionalString(formData, 'description'),
         anonymous_submissions:  getBoolean(formData, 'anonymous_submissions'),

@@ -12,6 +12,7 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
     const [isOpen, setIsOpen] = useState(false)
     const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState({
+        slug: '',
         title: '',
         description: '',
         anonymous_submissions: false,
@@ -46,6 +47,7 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
 
         try {
             const data = {
+                slug: formData.slug,
                 title: formData.title,
                 description: formData.description || null,
                 anonymous_submissions: formData.anonymous_submissions,
@@ -60,6 +62,7 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
                 toast.success('Form created successfully!')
                 closePopup()
                 setFormData({
+                    slug: '',
                     title: '',
                     description: '',
                     anonymous_submissions: false,
@@ -120,6 +123,14 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
                                 rows={5}
                             />
 
+                            <Input
+                                name='slug'
+                                type='text'
+                                label='Slug (URL Identifier)'
+                                value={formData.slug}
+                                onChange={(e) => setFormData(prev => ({ ...prev, slug: e.target.value }))}
+                                required
+                            />
 
                             <Switch
                                 name='anonymous_submissions'

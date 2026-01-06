@@ -8,8 +8,8 @@ export default async function updateForm(req: FastifyRequest, res: FastifyReply)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const params = req.params as any
 
-    if (!body.title || !body.published_at || !body.expires_at) {
-        return res.status(400).send({ error: 'title, published_at and expires_at are required' })
+    if (!body.slug || !body.title || !body.published_at || !body.expires_at) {
+        return res.status(400).send({ error: 'slug, title, published_at and expires_at are required' })
     }
 
     const publishedAt = new Date(body.published_at)
@@ -26,6 +26,7 @@ export default async function updateForm(req: FastifyRequest, res: FastifyReply)
 
     const sqlParams = [
         params.id,
+        body.slug,
         body.title,
         body.description || null,
         body.anonymous_submissions || false,

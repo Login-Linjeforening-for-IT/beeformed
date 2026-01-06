@@ -1,13 +1,13 @@
 declare global {
     // Form
     type Form = {
+        slug: string
         title: string
         description: string | null
         anonymous_submissions: boolean
         limit: number | null
         published_at: string
         expires_at: string
-
     }
 
     type GetFormProps = Form & {

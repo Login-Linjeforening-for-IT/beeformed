@@ -10,6 +10,7 @@ CREATE TABLE users (
 CREATE TABLE forms (
     id SERIAL PRIMARY KEY,
     user_id TEXT REFERENCES users(user_id) ON DELETE CASCADE,
+    slug TEXT UNIQUE NOT NULL,
     title TEXT NOT NULL,
     description TEXT,
     anonymous_submissions BOOLEAN DEFAULT FALSE,

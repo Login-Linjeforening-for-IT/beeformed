@@ -1,6 +1,7 @@
 -- Create form
 INSERT INTO forms (
     user_id,
+    slug,
     title,
     description,
     anonymous_submissions,
@@ -15,6 +16,7 @@ VALUES (
     $4,
     $5,
     $6,
-    $7
+    $7,
+    $8
 )
 RETURNING *;

@@ -10,6 +10,7 @@ export default function EditFormPage({ form }: { form: GetFormProps }) {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState({
+        slug: form.slug,
         title: form.title,
         description: form.description || '',
         anonymous_submissions: form.anonymous_submissions,
@@ -64,6 +65,14 @@ export default function EditFormPage({ form }: { form: GetFormProps }) {
                     rows={5}
                 />
 
+                <Input
+                    name='slug'
+                    type='text'
+                    label='Slug (URL Identifier)'
+                    value={formData.slug}
+                    onChange={(e) => setFormData(prev => ({ ...prev, slug: e.target.value }))}
+                    required
+                />
 
                 <Switch
                     name='anonymous_submissions'
