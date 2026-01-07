@@ -4,6 +4,7 @@ services:
         build:
             context: ./frontend
             dockerfile: Dockerfile
+        restart: always
         ports:
             - '8700:3000'
         env_file:
