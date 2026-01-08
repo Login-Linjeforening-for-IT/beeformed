@@ -25,6 +25,7 @@ function extractFormProps(formData: FormData): PutFormProps {
         description:            getOptionalString(formData, 'description'),
         anonymous_submissions:  getBoolean(formData, 'anonymous_submissions'),
         limit:                  getOptionalNumber(formData, 'limit'),
+        waitlist:               getBoolean(formData, 'waitlist'),
         published_at:           getRequiredDateTime(formData, 'published_at'),
         expires_at:             getRequiredDateTime(formData, 'expires_at')
     }

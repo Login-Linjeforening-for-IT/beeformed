@@ -2,6 +2,7 @@ SELECT
     f.*,
     u.name as creator_name,
     u.email as creator_email,
+    (SELECT COUNT(*) FROM submissions s WHERE s.form_id = f.id AND s.status = 'confirmed') as confirmed_count,
     COALESCE(json_agg(
         jsonb_build_object(
             'id', ff.id,

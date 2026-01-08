@@ -6,8 +6,9 @@ SET
     description = $4,
     anonymous_submissions = $5,
     "limit" = $6,
-    published_at = $7,
-    expires_at = $8,
+    waitlist = $7,
+    published_at = $8,
+    expires_at = $9,
     updated_at = NOW()
 WHERE id = $1
 RETURNING *;

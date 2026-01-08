@@ -8,6 +8,7 @@ type Column = {
     key: string
     label: string
     sortable?: boolean
+    highlightColor?: 'red' | 'green' | 'orange' | ((row: Record<string, unknown>) => 'red' | 'green' | 'orange' | undefined)
 }
 
 type TableProps = {
@@ -16,6 +17,7 @@ type TableProps = {
     currentOrderBy?: string
     currentSort?: 'asc' | 'desc'
     onDelete?: (row: Record<string, unknown>) => void
+    canDelete?: (row: Record<string, unknown>) => boolean
     disableEdit?: boolean
     viewBaseHref?: string
     viewHrefKey?: string
@@ -27,6 +29,7 @@ export default function Table({
     currentOrderBy,
     currentSort,
     onDelete,
+    canDelete,
     disableEdit,
     viewBaseHref,
     viewHrefKey = 'id'
@@ -100,11 +103,16 @@ export default function Table({
                 <tbody>
                     {data.map((row, index) => (
                         <tr key={index}>
-                            {columns.map((column) => (
-                                <td key={column.key}>
-                                    {String(row[column.key])}
-                                </td>
-                            ))}
+                            {columns.map((column) => {
+                                const color = typeof column.highlightColor === 'function'
+                                    ? column.highlightColor(row)
+                                    : column.highlightColor
+                                return (
+                                    <td key={column.key} className={color ? `text-${color}-500` : ''}>
+                                        {String(row[column.key])}
+                                    </td>
+                                )
+                            })}
                             <td className='relative'>
                                 <button
                                     onClick={() => toggleMenu(index)}
@@ -133,7 +141,7 @@ export default function Table({
                                                 View
                                             </button>
                                         )}
-                                        {onDelete && (
+                                        {onDelete && (!canDelete || canDelete(row)) && (
                                             <button
                                                 onClick={() => handleDelete(row)}
                                                 className='flex items-center w-full px-3 py-2 text-sm

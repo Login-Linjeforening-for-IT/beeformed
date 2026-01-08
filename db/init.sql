@@ -1,3 +1,7 @@
+-- Enums
+CREATE TYPE submission_status AS ENUM ('confirmed', 'waitlisted');
+CREATE TYPE field_type_enum AS ENUM ('text', 'textarea', 'number', 'select', 'radio', 'checkbox', 'date', 'time', 'datetime');
+
 -- Users 
 CREATE TABLE users (
     user_id TEXT PRIMARY KEY,
@@ -15,6 +19,7 @@ CREATE TABLE forms (
     description TEXT,
     anonymous_submissions BOOLEAN DEFAULT FALSE,
     "limit" INTEGER,
+    waitlist BOOLEAN DEFAULT FALSE,
     published_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     expires_at TIMESTAMP NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -25,12 +30,12 @@ CREATE TABLE forms (
 CREATE TABLE form_fields (
     id SERIAL PRIMARY KEY,
     form_id INTEGER REFERENCES forms(id) ON DELETE CASCADE,
-    field_type TEXT NOT NULL,
+    field_type field_type_enum NOT NULL,
     title TEXT NOT NULL,
     description TEXT,
     required BOOLEAN DEFAULT FALSE,
-    options TEXT[], -- For select/radio/checkbox options: ["option1", "option2"]
-    validation JSONB, -- Validation rules: {"min_length": 5, "max_length": 100, "pattern": "regex"}
+    options TEXT[],
+    validation JSONB,
     field_order INTEGER NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -40,6 +45,7 @@ CREATE TABLE submissions (
     id SERIAL PRIMARY KEY,
     form_id INTEGER REFERENCES forms(id) ON DELETE CASCADE,
     user_id TEXT REFERENCES users(user_id),
+    status submission_status DEFAULT 'confirmed',
     submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

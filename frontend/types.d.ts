@@ -6,6 +6,7 @@ declare global {
         description: string | null
         anonymous_submissions: boolean
         limit: number | null
+        waitlist: boolean
         published_at: string
         expires_at: string
     }
@@ -26,8 +27,10 @@ declare global {
     type PutFormProps = Form
 
     type GetPublicFormProps = Form & {
+        id: number
         creator_email: string
         creator_name: string
+        confirmed_count: string
         fields: {
             id: string
             field_type: string
@@ -100,6 +103,7 @@ declare global {
         form_title: string
         user_email: string | null
         user_name: string | null
+        status: string
         submitted_at: string
         data: SubmissionProps[]
     }
@@ -109,8 +113,10 @@ declare global {
             id: number
             form_id: number
             form_title: string
+            expires_at: string
             user_email: string | null
             user_name: string | null
+            status: string
             submitted_at: string
         }[]
         total: number

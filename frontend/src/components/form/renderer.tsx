@@ -27,12 +27,20 @@ interface FormData {
     creator_name: string
     creator_email: string
     fields: FormField[]
+    limit: number | null
+    waitlist: boolean
+    confirmed_count: string
 }
 
 
 
 export default function FormRenderer({ form, submission }: { form: FormData; submission?: Submission }) {
     const [loading, setLoading] = useState(false)
+    const confirmedCount = parseInt(form.confirmed_count || '0')
+    const isFull = form.limit !== null && confirmedCount >= form.limit
+    const canSubmit = !isFull || form.waitlist
+    const isWaitlist = isFull && form.waitlist
+
     const [formData, setFormData] = useState<Record<string, string>>(() => {
         if (submission) {
             const data: Record<string, string> = {}
@@ -256,6 +264,17 @@ export default function FormRenderer({ form, submission }: { form: FormData; sub
 
     return (
         <form onSubmit={handleSubmit} className='space-y-6'>
+            {!submission && isFull && !form.waitlist && (
+                <div className='bg-red-500/10 border border-red-500 text-red-500 rounded p-4 max-w-2xl mb-4'>
+                    NOTE: This form is currently full.
+                </div>
+            )}
+
+            {!submission && isWaitlist && (
+                <div className='bg-orange-500/10 border border-orange-500 text-orange-500 rounded p-4 max-w-2xl mb-4'>
+                    NOTE: This form is full. Submitting now will place you on the waitlist.
+                </div>
+            )}
             {form.fields
                 .sort((a, b) => a.field_order - b.field_order)
                 .map(field => (
@@ -264,7 +283,7 @@ export default function FormRenderer({ form, submission }: { form: FormData; sub
                     </div>
                 ))}
 
-            {!submission && (
+            {!submission && canSubmit && (
                 <div className='max-w-2xl'>
                     <button
                         type='submit'
@@ -274,7 +293,7 @@ export default function FormRenderer({ form, submission }: { form: FormData; sub
                             transition-colors focus:outline-none focus:ring-2 focus:ring-login
                             focus:ring-offset-2 focus:ring-offset-login-700 font-medium cursor-pointer'
                     >
-                        {loading ? 'Submitting...' : 'Submit Form'}
+                        {loading ? 'Submitting...' : (isWaitlist ? 'Join Waitlist' : 'Submit Form')}
                     </button>
                 </div>
             )}

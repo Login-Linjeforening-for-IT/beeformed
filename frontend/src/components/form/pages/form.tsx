@@ -15,6 +15,7 @@ export default function EditFormPage({ form }: { form: GetFormProps }) {
         description: form.description || '',
         anonymous_submissions: form.anonymous_submissions,
         limit: form.limit ? String(form.limit) : '',
+        waitlist: form.waitlist,
         published_at: form.published_at ? new Date(form.published_at).toISOString().slice(0, 16) : '',
         expires_at: form.expires_at ? new Date(form.expires_at).toISOString().slice(0, 16) : ''
     })
@@ -87,6 +88,13 @@ export default function EditFormPage({ form }: { form: GetFormProps }) {
                     label='Submission limit'
                     value={formData.limit}
                     onChange={(e) => setFormData(prev => ({ ...prev, limit: e.target.value }))}
+                />
+
+                <Switch
+                    name='waitlist'
+                    label='Enable waitlist when full'
+                    checked={formData.waitlist}
+                    onChange={(e) => setFormData(prev => ({ ...prev, waitlist: e.target.checked }))}
                 />
 
                 <Input

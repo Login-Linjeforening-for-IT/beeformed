@@ -1,4 +1,4 @@
-SELECT s.id, s.form_id, f.title as form_title, u.email as user_email, u.name as user_name, s.submitted_at,
+SELECT s.id, s.form_id, f.title as form_title, u.email as user_email, u.name as user_name, s.status, s.submitted_at,
     COALESCE(json_agg(json_build_object('field_id', sd.field_id, 'value', sd.value)) FILTER (WHERE sd.field_id IS NOT NULL), '[]'::json) as data
 FROM submissions s
 LEFT JOIN users u ON s.user_id = u.user_id

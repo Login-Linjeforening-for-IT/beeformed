@@ -19,7 +19,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
                     <p>{form.description}</p>
                 </div>
             }
-            <FormRenderer form={{ ...form, id: slug }} />
+            <FormRenderer form={{ ...form, id: form.id.toString() }} />
         </PageContainer>
     )
 }

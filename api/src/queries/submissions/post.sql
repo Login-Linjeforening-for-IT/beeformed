@@ -1,1 +1,1 @@
-INSERT INTO submissions (form_id, user_id) VALUES ($1, $2) RETURNING id
+INSERT INTO submissions (form_id, user_id, status) VALUES ($1, $2, $3) RETURNING id

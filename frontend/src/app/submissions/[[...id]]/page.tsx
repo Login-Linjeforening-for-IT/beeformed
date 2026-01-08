@@ -1,10 +1,10 @@
 import { PageContainer } from '@components/container/page'
 import { getSubmission, getUserSubmissions, getPublicForm } from '@utils/api'
 import { notFound } from 'next/navigation'
-import Table from '@components/table/table'
 import SearchInput from '@components/search/search'
 import Pagination from '@components/pagination/pagination'
 import FormRenderer from '@components/form/renderer'
+import SubmissionsTable from './SubmissionsTable'
 
 export default async function Page(
     { params, searchParams }: { params: Promise<{ id?: string[] }>; searchParams: Promise<{ [key: string]: string | undefined }> }
@@ -34,16 +34,30 @@ export default async function Page(
             notFound()
         }
 
-        const form = { id: submission.form_id.toString(), ...formData }
+        const form = { ...formData, id: submission.form_id.toString() }
 
         return (
             <PageContainer title='Submission Details'>
-                {form.description &&
-                    <div className='highlighted-section'>
-                        <p>{form.description}</p>
-                    </div>
-                }
-                <FormRenderer form={form} submission={submission} />
+                <div className='flex flex-col gap-4'>
+                    {submission.status === 'waitlisted' && (
+                        <div className='bg-orange-500/10 border border-orange-500 text-orange-500 rounded p-4'>
+                            <strong>Status: Waitlisted</strong><br/>
+                            This form is full. You are currently on the waitlist.
+                        </div>
+                    )}
+                    {submission.status === 'confirmed' && (
+                        <div className='bg-green-500/10 border border-green-500 text-green-500 rounded p-4'>
+                            <strong>Status: Confirmed</strong><br/>
+                            Your spot is confirmed.
+                        </div>
+                    )}
+                    {form.description &&
+                        <div className='highlighted-section'>
+                            <p>{form.description}</p>
+                        </div>
+                    }
+                    <FormRenderer form={form} submission={submission} />
+                </div>
             </PageContainer>
         )
     } else {
@@ -67,19 +81,10 @@ export default async function Page(
                                     <p>No submissions yet.</p>
                                 </div>
                             ) : (
-                                <Table
+                                <SubmissionsTable
                                     data={submissionsData}
-                                    columns={[
-                                        { key: 'form_title', label: 'Form Title', sortable: true },
-                                        { key: 'form_id', label: 'Form ID' },
-                                        { key: 'id', label: 'Submission ID', sortable: true },
-                                        { key: 'submitted_at', label: 'Submitted At', sortable: true }
-                                    ]}
-                                    disableEdit={true}
-                                    currentOrderBy={orderBy}
-                                    currentSort={order}
-                                    viewBaseHref='/submissions/'
-                                    viewHrefKey='id'
+                                    orderBy={orderBy}
+                                    order={order}
                                 />
                             )}
                         </div>

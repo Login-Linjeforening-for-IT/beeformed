@@ -120,6 +120,10 @@ export async function getSubmission(submissionId: string): Promise<Submission | 
     return await getWrapper({ path: `submissions/${submissionId}` })
 }
 
+export async function deleteSubmission(submissionId: string) {
+    return await deleteWrapper({ path: `submissions/${submissionId}` })
+}
+
 export async function getUserSubmissions(
     { search, offset, limit, orderBy, sort }: FilterProps = {}
 ): Promise<GetSubmissionsProps | ErrorResponse> {

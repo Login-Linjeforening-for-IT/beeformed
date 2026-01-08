@@ -38,7 +38,10 @@ export default function SubmissionsPage({ submissions, currentOrderBy, currentSo
                             { key: 'form_title', label: 'Form Title', sortable: true },
                             { key: 'submitted_at', label: 'Submitted At', sortable: true },
                             { key: 'user_email', label: 'User Email' },
-                            { key: 'user_name', label: 'User Name' }
+                            { key: 'user_name', label: 'User Name' },
+                            { key: 'status', label: 'Status', sortable: true,
+                                highlightColor: (row) => row.status === 'waitlisted' ? 'red' : 'green'
+                            }
                         ]}
                         disableEdit={true}
                         currentOrderBy={currentOrderBy}

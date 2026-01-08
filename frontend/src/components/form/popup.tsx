@@ -17,6 +17,7 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
         description: '',
         anonymous_submissions: false,
         limit: '',
+        waitlist: false,
         published_at: '',
         expires_at: ''
     })
@@ -52,6 +53,7 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
                 description: formData.description || null,
                 anonymous_submissions: formData.anonymous_submissions,
                 limit: formData.limit ? parseInt(formData.limit) : null,
+                waitlist: formData.waitlist,
                 published_at: formData.published_at,
                 expires_at: formData.expires_at
             }
@@ -67,6 +69,7 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
                     description: '',
                     anonymous_submissions: false,
                     limit: '',
+                    waitlist: false,
                     published_at: '',
                     expires_at: ''
                 })
@@ -145,6 +148,13 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
                                 label='Submission limit'
                                 value={formData.limit}
                                 onChange={(e) => setFormData(prev => ({ ...prev, limit: e.target.value }))}
+                            />
+
+                            <Switch
+                                name='waitlist'
+                                label='Enable waitlist when full'
+                                checked={formData.waitlist}
+                                onChange={(e) => setFormData(prev => ({ ...prev, waitlist: e.target.checked }))}
                             />
 
                             <Input

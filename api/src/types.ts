@@ -18,6 +18,7 @@ declare global {
         description?: string
         anonymous_submissions: boolean
         limit?: number
+        waitlist: boolean
         published_at: Date
         expires_at: Date
         created_at: Date
