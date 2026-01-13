@@ -15,8 +15,6 @@ const smtpVariables = [
     'SMTP_HOST',
     'SMTP_PORT',
     'SMTP_SECURE',
-    'SMTP_USER',
-    'SMTP_PASSWORD',
     'SMTP_FROM'
 ]
 
@@ -64,8 +62,6 @@ const config = {
     SMTP_HOST: env.SMTP_HOST,
     SMTP_PORT: Number(env.SMTP_PORT) || 465,
     SMTP_SECURE: env.SMTP_SECURE === 'true',
-    SMTP_USER: env.SMTP_USER,
-    SMTP_PASSWORD: env.SMTP_PASSWORD,
     SMTP_FROM: env.SMTP_FROM,
 }
 

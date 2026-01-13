@@ -13,10 +13,6 @@ const transporter = config.DISABLE_SMTP ? null : nodemailer.createTransport({
     host: config.SMTP_HOST,
     port: Number(config.SMTP_PORT),
     secure: config.SMTP_SECURE,
-    auth: {
-        user: config.SMTP_USER,
-        pass: config.SMTP_PASSWORD,
-    },
 })
 
 export default async function sendMail({ to, subject, text, html }: MailOptions): Promise<string> {
