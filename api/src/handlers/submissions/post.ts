@@ -2,6 +2,7 @@ import type { FastifyReply, FastifyRequest } from 'fastify'
 import run, { runInTransaction } from '#db'
 import { loadSQL } from '#utils/sql.ts'
 import { sendTemplatedMail } from '#utils/sendSMTP.ts'
+import config from '#constants'
 
 export default async function createSubmission(req: FastifyRequest, res: FastifyReply) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -85,7 +86,10 @@ export default async function createSubmission(req: FastifyRequest, res: Fastify
                 await sendTemplatedMail(req.user.email, {
                     title: subject,
                     header: header,
-                    content: content
+                    content: content,
+                    actionUrl: `${config.FRONTEND_URL}/submissions/${submissionId}`,
+                    actionText: 'View Submission'
+
                 })
             }
         } catch (emailError) {
