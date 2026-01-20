@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { toast } from 'uibee/components'
 import { postSubmission } from '@utils/api'
 import CustomInput from '@components/inputs/input'
@@ -43,6 +44,7 @@ export default function FormRenderer({ form, submission }: { form: FormData; sub
     const isWaitlist = isFull && form.waitlist
     const blockMultiple = !form.multiple_submissions && form.user_has_submitted
     const canSubmit = (!isFull || form.waitlist) && !blockMultiple
+    const router = useRouter()
 
     const [formData, setFormData] = useState<Record<string, string>>(() => {
         if (submission) {
@@ -78,6 +80,7 @@ export default function FormRenderer({ form, submission }: { form: FormData; sub
             } else {
                 toast.success('Form submitted successfully!')
                 setFormData({})
+                router.push(`/submissions/${result.id}`)
             }
         } catch {
             toast.error('An unexpected error occurred')
