@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ChevronUp, ChevronDown, MoreHorizontal, Edit, Trash2, Eye } from 'lucide-react'
+import { ChevronUp, ChevronDown, MoreHorizontal, Edit, Trash2, Eye, Settings, Shield, List } from 'lucide-react'
 
 type Column = {
     key: string
@@ -21,6 +21,7 @@ type TableProps = {
     disableEdit?: boolean
     viewBaseHref?: string
     viewHrefKey?: string
+    showFormActions?: boolean
 }
 
 export default function Table({
@@ -32,11 +33,13 @@ export default function Table({
     canDelete,
     disableEdit,
     viewBaseHref,
-    viewHrefKey = 'id'
+    viewHrefKey = 'id',
+    showFormActions = false
 }: TableProps) {
     const router = useRouter()
     const searchParams = useSearchParams()
     const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null)
+    const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
 
     function handleSort(columnKey: string) {
         const params = new URLSearchParams(searchParams.toString())
@@ -56,6 +59,21 @@ export default function Table({
         setOpenMenuIndex(null)
     }
 
+    function handleSettings(row: Record<string, unknown>) {
+        router.push(`/form/${row.id}/settings`)
+        setOpenMenuIndex(null)
+    }
+
+    function handlePermissions(row: Record<string, unknown>) {
+        router.push(`/form/${row.id}/permissions`)
+        setOpenMenuIndex(null)
+    }
+
+    function handleSubmissions(row: Record<string, unknown>) {
+        router.push(`/form/${row.id}/submissions`)
+        setOpenMenuIndex(null)
+    }
+
     function handleDelete(row: Record<string, unknown>) {
         if (onDelete) onDelete(row)
         setOpenMenuIndex(null)
@@ -65,6 +83,40 @@ export default function Table({
         if (viewBaseHref) router.push(`${viewBaseHref}${row[viewHrefKey]}`)
         setOpenMenuIndex(null)
     }
+
+    useEffect(() => {
+        function handleKeyDown(e: KeyboardEvent) {
+            if (hoveredIndex === null) return
+            const row = data[hoveredIndex]
+            if (!row) return
+
+            if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
+
+            switch (e.key.toLowerCase()) {
+                case 'e':
+                    if (!disableEdit) handleEdit(row)
+                    break
+                case 's':
+                    if (showFormActions) handleSettings(row)
+                    break
+                case 'p':
+                    if (showFormActions) handlePermissions(row)
+                    break
+                case 'a':
+                    if (showFormActions) handleSubmissions(row)
+                    break
+                case 'v':
+                    if (viewBaseHref) handleView(row)
+                    break
+                case 'd':
+                    if (onDelete && (!canDelete || canDelete(row))) handleDelete(row)
+                    break
+            }
+        }
+
+        window.addEventListener('keydown', handleKeyDown)
+        return () => window.removeEventListener('keydown', handleKeyDown)
+    }, [hoveredIndex, data, disableEdit, showFormActions, viewBaseHref, onDelete, canDelete])
 
     return (
         <div className='prose prose-login max-w-none py-4'>
@@ -102,7 +154,11 @@ export default function Table({
                 </thead>
                 <tbody>
                     {data.map((row, index) => (
-                        <tr key={index}>
+                        <tr
+                            key={index}
+                            onMouseEnter={() => setHoveredIndex(index)}
+                            onMouseLeave={() => setHoveredIndex(null)}
+                        >
                             {columns.map((column) => {
                                 const color = typeof column.highlightColor === 'function'
                                     ? column.highlightColor(row)
@@ -121,34 +177,82 @@ export default function Table({
                                     <MoreHorizontal className='w-4 h-4' />
                                 </button>
                                 {openMenuIndex === index && (
-                                    <div className='absolute right-0 mt-1 w-32 bg-login-500
-                                        border border-login-600 rounded-lg shadow-lg z-10'>
+                                    <div className='absolute right-0 mt-1 w-44 bg-login-500
+                                        border border-login-600 rounded-lg shadow-lg z-10 overflow-hidden'>
                                         {!disableEdit && (
                                             <button
                                                 onClick={() => handleEdit(row)}
-                                                className='flex items-center w-full px-3 py-2 text-sm hover:bg-login-600 cursor-pointer'
+                                                className={`flex items-center justify-between w-full px-3 py-2 text-sm
+                                                    hover:bg-login-600 cursor-pointer`}
                                             >
-                                                <Edit className='w-4 h-4 mr-2' />
-                                                Edit
+                                                <div className='flex items-center'>
+                                                    <Edit className='w-4 h-4 mr-2' />
+                                                    Edit
+                                                </div>
+                                                <span className='text-xs opacity-50 font-mono'>E</span>
                                             </button>
+                                        )}
+                                        {showFormActions && (
+                                            <>
+                                                <button
+                                                    onClick={() => handleSettings(row)}
+                                                    className={`flex items-center justify-between w-full px-3 py-2 text-sm
+                                                        hover:bg-login-600 cursor-pointer`}
+                                                >
+                                                    <div className='flex items-center'>
+                                                        <Settings className='w-4 h-4 mr-2' />
+                                                        Settings
+                                                    </div>
+                                                    <span className='text-xs opacity-50 font-mono'>S</span>
+                                                </button>
+                                                <button
+                                                    onClick={() => handlePermissions(row)}
+                                                    className={`flex items-center justify-between w-full px-3 py-2 text-sm
+                                                        hover:bg-login-600 cursor-pointer`}
+                                                >
+                                                    <div className='flex items-center'>
+                                                        <Shield className='w-4 h-4 mr-2' />
+                                                        Permissions
+                                                    </div>
+                                                    <span className='text-xs opacity-50 font-mono'>P</span>
+                                                </button>
+                                                <button
+                                                    onClick={() => handleSubmissions(row)}
+                                                    className={`flex items-center justify-between w-full px-3 py-2 text-sm
+                                                        hover:bg-login-600 cursor-pointer`}
+                                                >
+                                                    <div className='flex items-center'>
+                                                        <List className='w-4 h-4 mr-2' />
+                                                        Submissions
+                                                    </div>
+                                                    <span className='text-xs opacity-50 font-mono'>A</span>
+                                                </button>
+                                            </>
                                         )}
                                         {viewBaseHref && (
                                             <button
                                                 onClick={() => handleView(row)}
-                                                className='flex items-center w-full px-3 py-2 text-sm hover:bg-login-600 cursor-pointer'
+                                                className={`flex items-center justify-between w-full px-3 py-2 text-sm
+                                                    hover:bg-login-600 cursor-pointer`}
                                             >
-                                                <Eye className='w-4 h-4 mr-2' />
-                                                View
+                                                <div className='flex items-center'>
+                                                    <Eye className='w-4 h-4 mr-2' />
+                                                    View
+                                                </div>
+                                                <span className='text-xs opacity-50 font-mono'>V</span>
                                             </button>
                                         )}
                                         {onDelete && (!canDelete || canDelete(row)) && (
                                             <button
                                                 onClick={() => handleDelete(row)}
-                                                className='flex items-center w-full px-3 py-2 text-sm
-                                                    hover:bg-login-600 text-red-400 cursor-pointer'
+                                                className={`flex items-center justify-between w-full px-3 py-2 text-sm
+                                                    hover:bg-login-600 text-red-400 cursor-pointer`}
                                             >
-                                                <Trash2 className='w-4 h-4 mr-2' />
-                                                Delete
+                                                <div className='flex items-center'>
+                                                    <Trash2 className='w-4 h-4 mr-2' />
+                                                    Delete
+                                                </div>
+                                                <span className='text-xs opacity-50 font-mono'>D</span>
                                             </button>
                                         )}
                                     </div>

@@ -86,6 +86,7 @@ export default async function Page({ params, searchParams }: PageProps) {
                             ]}
                             currentOrderBy={orderBy}
                             currentSort={sort}
+                            showFormActions={true}
                         />
 
                         <Pagination
