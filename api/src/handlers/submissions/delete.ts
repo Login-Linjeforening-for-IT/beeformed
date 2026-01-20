@@ -33,6 +33,21 @@ export default async function deleteSubmission(req: FastifyRequest, res: Fastify
         const deleteSql = await loadSQL('submissions/delete.sql')
         await run(deleteSql, [params.id])
 
+        if (submission.user_email) {
+            const isOwner = submission.user_id === user.id
+            await sendTemplatedMail(submission.user_email, {
+                header: isOwner ? 'Submission Withdrawn' : 'Submission Removed',
+                title: isOwner 
+                    ? `You have withdrawn your submission for ${submission.form_title}`
+                    : `Your submission for ${submission.form_title} has been removed`,
+                content: isOwner
+                    ? `We're confirming that your submission for ${submission.form_title} has been removed.`
+                    : `An administrator has removed your submission for ${submission.form_title}.`,
+                actionUrl: `${config.FRONTEND_URL}/f/${submission.form_slug}`,
+                actionText: 'View Form'
+            })
+        }
+
         if (submission.status === 'confirmed' && submission.limit !== null) {
             const countSql = await loadSQL('submissions/countConfirmed.sql')
             const countResult = await run(countSql, [submission.form_id])
@@ -53,7 +68,7 @@ export default async function deleteSubmission(req: FastifyRequest, res: Fastify
                             header: 'Good news!',
                             title: `You have a spot in ${submission.form_title}!`,
                             content: `Your submission for ${submission.form_title} has been confirmed. A spot opened up and you have been moved from the waitlist to confirmed list.`,
-                            actionUrl: `${config.FRONTEND_URL || 'http://localhost:3000'}/submissions/${nextPerson.id}`,
+                            actionUrl: `${config.FRONTEND_URL}/submissions/${nextPerson.id}`,
                             actionText: 'View Submission'
                         })
                     }
