@@ -6,9 +6,9 @@ import { LoginPage } from 'uibee/components'
 export default async function Home() {
     const Cookies = await cookies()
     const token = Cookies.get('access_token')?.value
-    const redirectAfterLogin = Cookies.get('redirect_after_login')?.value
+
     if (token) {
-        redirect(redirectAfterLogin || '/profile')
+        redirect('/profile')
     }
 
     return (

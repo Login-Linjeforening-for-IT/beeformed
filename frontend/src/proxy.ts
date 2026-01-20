@@ -7,13 +7,11 @@ export async function proxy(req: NextRequest) {
 
     if (!pathIsAllowedWhileUnauthorized(req.nextUrl.pathname)) {
         if (!tokenCookie) {
-            const response = NextResponse.redirect(new URL('/', req.url))
-            response.cookies.set('redirect_after_login', req.nextUrl.pathname, {
-                path: '/',
-                sameSite: 'lax',
-                maxAge: 60 * 10
-            })
-            return response
+            const res = NextResponse.redirect(new URL('/', req.url))
+            if (!req.cookies.get('redirect_after_login')) {
+                res.cookies.set('redirect_after_login', req.nextUrl.pathname)
+            }
+            return res
         }
 
         const token = tokenCookie.value
@@ -44,7 +42,6 @@ function pathIsAllowedWhileUnauthorized(path: string) {
         path.startsWith('/api/login') ||
         path.startsWith('/api/callback') ||
         path.startsWith('/api/token') ||
-        path.startsWith('/api/logout') ||
         path.startsWith('/_next/webpack-hmr') ||
         path === '/sw.js'
     ) {
