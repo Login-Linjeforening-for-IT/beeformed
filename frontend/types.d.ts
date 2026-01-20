@@ -7,6 +7,7 @@ declare global {
         anonymous_submissions: boolean
         limit: number | null
         waitlist: boolean
+        multiple_submissions: boolean
         published_at: string
         expires_at: string
     }
@@ -31,6 +32,7 @@ declare global {
         creator_email: string
         creator_name: string
         confirmed_count: string
+        user_has_submitted?: boolean
         fields: {
             id: string
             field_type: string

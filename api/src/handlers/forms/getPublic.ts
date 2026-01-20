@@ -1,6 +1,7 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import run from '#db'
 import { loadSQL } from '#utils/sql.ts'
+import checkToken from '#utils/checkToken.ts'
 
 export default async function getPublicForm(req: FastifyRequest, res: FastifyReply) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -11,9 +12,19 @@ export default async function getPublicForm(req: FastifyRequest, res: FastifyRep
         return res.status(400).send({ error: 'id is required' })
     }
 
+    let userId: string | null = null
+    const authHeader = req.headers['authorization']
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+        const tokenResult = await checkToken(req, res)
+        if (res.sent) return
+        if (tokenResult.valid && tokenResult.userInfo) {
+            userId = tokenResult.userInfo.sub
+        }
+    }
+
     try {
         const sql = await loadSQL('forms/getPublic.sql')
-        const result = await run(sql, [id])
+        const result = await run(sql, [id, userId])
         const entity = result.rows.length > 0 ? result.rows[0] : null
         res.send(entity)
     } catch (error) {

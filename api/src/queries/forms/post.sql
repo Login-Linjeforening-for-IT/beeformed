@@ -7,6 +7,7 @@ INSERT INTO forms (
     anonymous_submissions,
     "limit",
     waitlist,
+    multiple_submissions,
     published_at,
     expires_at
 )
@@ -19,6 +20,7 @@ VALUES (
     $6,
     $7,
     $8,
-    $9
+    $9,
+    $10
 )
 RETURNING *;

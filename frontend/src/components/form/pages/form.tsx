@@ -16,6 +16,7 @@ export default function EditFormPage({ form }: { form: GetFormProps }) {
         anonymous_submissions: form.anonymous_submissions,
         limit: form.limit ? String(form.limit) : '',
         waitlist: form.waitlist,
+        multiple_submissions: form.multiple_submissions,
         published_at: form.published_at ? new Date(form.published_at).toISOString().slice(0, 16) : '',
         expires_at: form.expires_at ? new Date(form.expires_at).toISOString().slice(0, 16) : ''
     })
@@ -82,13 +83,14 @@ export default function EditFormPage({ form }: { form: GetFormProps }) {
                     onChange={(e) => setFormData(prev => ({ ...prev, anonymous_submissions: e.target.checked }))}
                 />
 
-                <Input
-                    name='limit'
-                    type='number'
-                    label='Submission limit'
-                    value={formData.limit}
-                    onChange={(e) => setFormData(prev => ({ ...prev, limit: e.target.value }))}
-                />
+                {formData.anonymous_submissions !== true &&
+                    <Switch
+                        name='multiple_submissions'
+                        label='Allow multiple submissions per user'
+                        checked={formData.multiple_submissions}
+                        onChange={(e) => setFormData(prev => ({ ...prev, multiple_submissions: e.target.checked }))}
+                    />
+                }
 
                 <Switch
                     name='waitlist'
@@ -96,6 +98,16 @@ export default function EditFormPage({ form }: { form: GetFormProps }) {
                     checked={formData.waitlist}
                     onChange={(e) => setFormData(prev => ({ ...prev, waitlist: e.target.checked }))}
                 />
+
+                {formData.waitlist === true &&
+                    <Input
+                        name='limit'
+                        type='number'
+                        label='Submission limit'
+                        value={formData.limit}
+                        onChange={(e) => setFormData(prev => ({ ...prev, limit: e.target.value }))}
+                    />
+                }
 
                 <Input
                     name='published_at'

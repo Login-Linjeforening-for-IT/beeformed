@@ -31,6 +31,14 @@ export default async function createSubmission(req: FastifyRequest, res: Fastify
             const userId = form.anonymous_submissions ? null : req.user!.id
             let status = 'confirmed'
             
+            if (!form.anonymous_submissions && !form.multiple_submissions && userId) {
+                const checkSubmissionSql = await loadSQL('submissions/checkUserSubmission.sql')
+                const existingSubmission = await client.query(checkSubmissionSql, [formId, userId])
+                if (parseInt(existingSubmission.rows[0].count) > 0) {
+                    throw new Error('You have already submitted to this form')
+                }
+            }
+            
             if (form.limit) {
                 const currentCount = parseInt(form.confirmed_count) || 0
                 if (currentCount >= form.limit) {

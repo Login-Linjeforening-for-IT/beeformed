@@ -1,0 +1,1 @@
+SELECT COUNT(*) as count FROM submissions WHERE form_id = $1 AND user_id = $2

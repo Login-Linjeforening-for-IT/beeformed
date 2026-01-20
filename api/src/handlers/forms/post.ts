@@ -35,6 +35,7 @@ export default async function createForm(req: FastifyRequest, res: FastifyReply)
         body.anonymous_submissions || false,
         body.limit || null,
         body.waitlist || false,
+        body.multiple_submissions || false,
         publishedAt,
         expiresAt
     ]

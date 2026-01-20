@@ -20,6 +20,7 @@ CREATE TABLE forms (
     anonymous_submissions BOOLEAN DEFAULT FALSE,
     "limit" INTEGER,
     waitlist BOOLEAN DEFAULT FALSE,
+    multiple_submissions BOOLEAN DEFAULT FALSE,
     published_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     expires_at TIMESTAMP NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

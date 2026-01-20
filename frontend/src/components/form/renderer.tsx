@@ -29,7 +29,9 @@ interface FormData {
     fields: FormField[]
     limit: number | null
     waitlist: boolean
+    multiple_submissions: boolean
     confirmed_count: string
+    user_has_submitted?: boolean
 }
 
 
@@ -38,8 +40,9 @@ export default function FormRenderer({ form, submission }: { form: FormData; sub
     const [loading, setLoading] = useState(false)
     const confirmedCount = parseInt(form.confirmed_count || '0')
     const isFull = form.limit !== null && confirmedCount >= form.limit
-    const canSubmit = !isFull || form.waitlist
     const isWaitlist = isFull && form.waitlist
+    const blockMultiple = !form.multiple_submissions && form.user_has_submitted
+    const canSubmit = (!isFull || form.waitlist) && !blockMultiple
 
     const [formData, setFormData] = useState<Record<string, string>>(() => {
         if (submission) {
@@ -86,11 +89,11 @@ export default function FormRenderer({ form, submission }: { form: FormData; sub
     function renderField(field: FormField) {
         const value = formData[field.id] || ''
         const setValue = (newValue: string | number) => {
-            if (submission) return
+            if (submission || blockMultiple) return
             setFormData(prev => ({ ...prev, [field.id]: String(newValue) }))
         }
 
-        const disabled = !!submission
+        const disabled = !!submission || blockMultiple
 
         switch (field.field_type) {
             case 'text':
@@ -273,6 +276,12 @@ export default function FormRenderer({ form, submission }: { form: FormData; sub
             {!submission && isWaitlist && (
                 <div className='bg-orange-500/10 border border-orange-500 text-orange-500 rounded p-4 max-w-2xl mb-4'>
                     NOTE: This form is full. Submitting now will place you on the waitlist.
+                </div>
+            )}
+
+            {!submission && blockMultiple && (
+                <div className='bg-red-500/10 border border-red-500 text-red-500 rounded p-4 max-w-2xl mb-4'>
+                    You have already submitted this form. Multiple submissions are not allowed.
                 </div>
             )}
             {form.fields

@@ -18,6 +18,7 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
         anonymous_submissions: false,
         limit: '',
         waitlist: false,
+        multiple_submissions: false,
         published_at: '',
         expires_at: ''
     })
@@ -54,6 +55,7 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
                 anonymous_submissions: formData.anonymous_submissions,
                 limit: formData.limit ? parseInt(formData.limit) : null,
                 waitlist: formData.waitlist,
+                multiple_submissions: formData.multiple_submissions,
                 published_at: formData.published_at,
                 expires_at: formData.expires_at
             }
@@ -70,6 +72,7 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
                     anonymous_submissions: false,
                     limit: '',
                     waitlist: false,
+                    multiple_submissions: false,
                     published_at: '',
                     expires_at: ''
                 })
@@ -142,13 +145,14 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
                                 onChange={(e) => setFormData(prev => ({ ...prev, anonymous_submissions: e.target.checked }))}
                             />
 
-                            <Input
-                                name='limit'
-                                type='number'
-                                label='Submission limit'
-                                value={formData.limit}
-                                onChange={(e) => setFormData(prev => ({ ...prev, limit: e.target.value }))}
-                            />
+                            {formData.anonymous_submissions !== true &&
+                                <Switch
+                                    name='multiple_submissions'
+                                    label='Allow multiple submissions per user'
+                                    checked={formData.multiple_submissions}
+                                    onChange={(e) => setFormData(prev => ({ ...prev, multiple_submissions: e.target.checked }))}
+                                />
+                            }
 
                             <Switch
                                 name='waitlist'
@@ -156,6 +160,16 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
                                 checked={formData.waitlist}
                                 onChange={(e) => setFormData(prev => ({ ...prev, waitlist: e.target.checked }))}
                             />
+
+                            {formData.waitlist === true &&
+                                <Input
+                                    name='limit'
+                                    type='number'
+                                    label='Submission limit'
+                                    value={formData.limit}
+                                    onChange={(e) => setFormData(prev => ({ ...prev, limit: e.target.value }))}
+                                />
+                            }
 
                             <Input
                                 name='published_at'
