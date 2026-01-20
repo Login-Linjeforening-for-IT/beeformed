@@ -2,6 +2,7 @@ import type { FastifyReply, FastifyRequest } from 'fastify'
 import run from '#db'
 import { loadSQL } from '#utils/sql.ts'
 import { sendTemplatedMail } from '#utils/sendSMTP.ts'
+import config from '#constants'
 
 export default async function updateForm(req: FastifyRequest, res: FastifyReply) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -58,7 +59,7 @@ export default async function updateForm(req: FastifyRequest, res: FastifyReply)
                         header: 'Good news!',
                         title: `You have a spot in ${body.title}!`,
                         content: `Your submission for ${body.title} has been confirmed. A spot opened up and you have been moved from the waitlist to confirmed list.`,
-                        actionUrl: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/submissions/${submission.id}`,
+                        actionUrl: `${config.FRONTEND_URL || 'http://localhost:3000'}/submissions/${submission.id}`,
                         actionText: 'View Submission'
                     })
                 }
