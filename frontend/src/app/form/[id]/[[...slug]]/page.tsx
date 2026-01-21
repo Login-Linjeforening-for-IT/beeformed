@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import EditPermissionsPage from '@components/form/pages/permissions'
 import SubmissionsPage from '@components/form/pages/submissions'
+import ShareButton from '@components/share-button'
 
 type PageProps = {
     params: Promise<{ id: string, slug?: string[] | string }>
@@ -36,7 +37,9 @@ export default async function Page({ params, searchParams }: PageProps) {
                 await getSubmissions(id, filter) :
                 await getFields(id)
 
-    if (!data || 'error' in data) {
+    const formData = await getForm(id)
+
+    if (!data || 'error' in data || !formData || 'error' in formData) {
         notFound()
     }
 
@@ -83,6 +86,7 @@ export default async function Page({ params, searchParams }: PageProps) {
                 >
                     Submissions
                 </Link>
+                <ShareButton slug={formData.slug} />
             </div>
             <div className='pt-20 pb-4 flex flex-col h-full'>
                 <div className='flex justify-between mb-4 h-full'>

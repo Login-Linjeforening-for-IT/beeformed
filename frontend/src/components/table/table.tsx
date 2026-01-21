@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ChevronUp, ChevronDown, MoreHorizontal, Edit, Trash2, Eye, Settings, Shield, List } from 'lucide-react'
+import { ChevronUp, ChevronDown, MoreHorizontal, Edit, Trash2, Eye, Settings, Shield, List, Share } from 'lucide-react'
+import { toast } from 'uibee/components'
 
 type Column = {
     key: string
@@ -84,6 +85,14 @@ export default function Table({
         setOpenMenuIndex(null)
     }
 
+    function handleShare(row: Record<string, unknown>) {
+        const slug = row.slug as string
+        const link = `${window.location.origin}/f/${slug}`
+        navigator.clipboard.writeText(link)
+        setOpenMenuIndex(null)
+        toast.success('Form link copied to clipboard!')
+    }
+
     useEffect(() => {
         function handleKeyDown(e: KeyboardEvent) {
             if (hoveredIndex === null) return
@@ -107,6 +116,9 @@ export default function Table({
                     break
                 case 'v':
                     if (viewBaseHref) handleView(row)
+                    break
+                case 'h':
+                    handleShare(row)
                     break
                 case 'd':
                     if (onDelete && (!canDelete || canDelete(row))) handleDelete(row)
@@ -226,6 +238,17 @@ export default function Table({
                                                         Submissions
                                                     </div>
                                                     <span className='text-xs opacity-50 font-mono'>A</span>
+                                                </button>
+                                                <button
+                                                    onClick={() => handleShare(row)}
+                                                    className={`flex items-center justify-between w-full px-3 py-2 text-sm
+                                                        hover:bg-login-600 cursor-pointer`}
+                                                >
+                                                    <div className='flex items-center'>
+                                                        <Share className='w-4 h-4 mr-2' />
+                                                        Share
+                                                    </div>
+                                                    <span className='text-xs opacity-50 font-mono'>H</span>
                                                 </button>
                                             </>
                                         )}
