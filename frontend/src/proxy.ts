@@ -42,6 +42,7 @@ function pathIsAllowedWhileUnauthorized(path: string) {
         path.startsWith('/api/login') ||
         path.startsWith('/api/callback') ||
         path.startsWith('/api/token') ||
+        path.startsWith('/api/logout') ||
         path.startsWith('/_next/webpack-hmr') ||
         path === '/sw.js'
     ) {

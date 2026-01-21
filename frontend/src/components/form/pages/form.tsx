@@ -92,20 +92,20 @@ export default function EditFormPage({ form }: { form: GetFormProps }) {
                     />
                 }
 
-                <Switch
-                    name='waitlist'
-                    label='Enable waitlist when full'
-                    checked={formData.waitlist}
-                    onChange={(e) => setFormData(prev => ({ ...prev, waitlist: e.target.checked }))}
+                <Input
+                    name='limit'
+                    type='number'
+                    label='Submission limit'
+                    value={formData.limit}
+                    onChange={(e) => setFormData(prev => ({ ...prev, limit: e.target.value }))}
                 />
 
-                {formData.waitlist === true &&
-                    <Input
-                        name='limit'
-                        type='number'
-                        label='Submission limit'
-                        value={formData.limit}
-                        onChange={(e) => setFormData(prev => ({ ...prev, limit: e.target.value }))}
+                {formData.limit !== '' &&
+                    <Switch
+                        name='waitlist'
+                        label='Enable waitlist when full'
+                        checked={formData.waitlist}
+                        onChange={(e) => setFormData(prev => ({ ...prev, waitlist: e.target.checked }))}
                     />
                 }
 

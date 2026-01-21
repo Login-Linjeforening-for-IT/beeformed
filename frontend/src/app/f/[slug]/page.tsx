@@ -1,7 +1,7 @@
 import { getPublicForm } from '@utils/api'
 import FormRenderer from '@components/form/renderer'
 import { PageContainer } from '@components/container/page'
-import { notFound } from 'next/navigation'
+import { Alert } from 'uibee/components'
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params
@@ -9,7 +9,17 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     const form = await getPublicForm(slug)
 
     if (!form || 'error' in form) {
-        notFound()
+        return (
+            <PageContainer title='Form Not Found'>
+                <div className='w-full h-full flex items-center justify-center'>
+                    <Alert variant='warning'>
+                        <p>
+                            The form you are looking for does not exist or is not published.
+                        </p>
+                    </Alert>
+                </div>
+            </PageContainer>
+        )
     }
 
     return (

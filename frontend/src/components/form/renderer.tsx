@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { toast } from 'uibee/components'
+import { Alert, toast } from 'uibee/components'
 import { postSubmission } from '@utils/api'
 import CustomInput from '@components/inputs/input'
 import CustomTextarea from '@components/inputs/textarea'
@@ -269,31 +269,39 @@ export default function FormRenderer({ form, submission }: { form: FormData; sub
     }
 
     return (
-        <form onSubmit={handleSubmit} className='space-y-6'>
-            {!submission && isFull && !form.waitlist && (
-                <div className='bg-red-500/10 border border-red-500 text-red-500 rounded p-4 max-w-2xl mb-4'>
-                    NOTE: This form is currently full.
-                </div>
-            )}
-
-            {!submission && isWaitlist && (
-                <div className='bg-orange-500/10 border border-orange-500 text-orange-500 rounded p-4 max-w-2xl mb-4'>
-                    NOTE: This form is full. Submitting now will place you on the waitlist.
-                </div>
-            )}
-
+        <form onSubmit={handleSubmit} className='space-y-6 h-full'>
             {!submission && blockMultiple && (
-                <div className='bg-red-500/10 border border-red-500 text-red-500 rounded p-4 max-w-2xl mb-4'>
-                    You have already submitted this form. Multiple submissions are not allowed.
-                </div>
+                <Alert variant='warning'>
+                    <p>
+                        You have already submitted this form. Multiple submissions are not allowed.
+                    </p>
+                </Alert>
             )}
-            {form.fields
+
+            {!submission && !blockMultiple && isFull && !form.waitlist && (
+                <Alert variant='warning'>
+                    <p>
+                        This form is currently full.
+                    </p>
+                </Alert>
+            )}
+
+            {!submission && !blockMultiple && isWaitlist && (
+                <Alert variant='info'>
+                    <p>
+                        This form is full. Submitting now will place you on the waitlist.
+                    </p>
+                </Alert>
+            )}
+
+            {canSubmit && form.fields
                 .sort((a, b) => a.field_order - b.field_order)
                 .map(field => (
                     <div key={field.id} className='max-w-2xl'>
                         {renderField(field)}
                     </div>
-                ))}
+                ))
+            }
 
             {!submission && canSubmit && (
                 <div className='max-w-2xl'>
