@@ -88,7 +88,8 @@ export default async function createSubmission(req: FastifyRequest, res: Fastify
                     header: header,
                     content: content,
                     actionUrl: `${config.FRONTEND_URL}/submissions/${submissionId}`,
-                    actionText: 'View Submission'
+                    actionText: 'View Submission',
+                    submissionId: submissionId
 
                 })
             }

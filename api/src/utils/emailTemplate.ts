@@ -1,4 +1,5 @@
 import { LOGO_SVG } from '#utils/logo.ts'
+import generateQRCode from './qr/generator.ts'
 
 type EmailTemplate = {
     subject: string
@@ -12,6 +13,7 @@ export type EmailContent = {
     content: string
     actionUrl?: string
     actionText?: string
+    submissionId?: string
 }
 
 const COMPANY_INFO = {
@@ -29,8 +31,8 @@ const COMPANY_INFO = {
     }
 }
 
-function generateEmailHTML(content: EmailContent): string {
-    const { title, header, content: bodyContent, actionUrl, actionText } = content
+function generateEmailHTML(content: EmailContent, qrCodeDataUrl?: string | null): string {
+    const { title, header, content: bodyContent, actionUrl, actionText, submissionId } = content
 
     return `
         <!DOCTYPE html>
@@ -214,6 +216,13 @@ function generateEmailHTML(content: EmailContent): string {
                 <div class="content">
                     <div style="white-space: pre-line;">${bodyContent}</div>
 
+                    ${qrCodeDataUrl ? `
+                    <div class="qr-code" style="text-align: center; margin: 20px 0;">
+                        <img src="${qrCodeDataUrl}" alt="QR Code" style="max-width: 150px; height: auto;" />
+                        ${submissionId ? `<p style="font-size: 12px; color: #666; margin-top: 5px;">ID: ${submissionId}</p>` : ''}
+                    </div>
+                    ` : ''}
+
                     ${actionUrl && actionText ? `
                     <div class="action-wrap">
                         <a href="${actionUrl}" class="action-button">${actionText}</a>
@@ -271,10 +280,12 @@ function generateEmailText(content: EmailContent): string {
     return text
 }
 
-export function createEmailTemplate(content: EmailContent): EmailTemplate {
+export async function createEmailTemplate(content: EmailContent): Promise<EmailTemplate> {
+    const qrCodeDataUrl = content.submissionId ? await generateQRCode({ data: content.submissionId }) : null
+
     return {
         subject: content.title,
-        html: generateEmailHTML(content),
+        html: generateEmailHTML(content, qrCodeDataUrl),
         text: generateEmailText(content)
     }
 }

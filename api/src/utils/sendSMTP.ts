@@ -34,7 +34,7 @@ export default async function sendMail({ to, subject, text, html }: MailOptions)
 }
 
 export async function sendTemplatedMail(to: string, content: EmailContent): Promise<string> {
-    const template = createEmailTemplate(content)
+    const template = await createEmailTemplate(content)
     return sendMail({
         to,
         subject: template.subject,

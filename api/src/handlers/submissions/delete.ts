@@ -69,7 +69,8 @@ export default async function deleteSubmission(req: FastifyRequest, res: Fastify
                             title: `You have a spot in ${submission.form_title}!`,
                             content: `Your submission for ${submission.form_title} has been confirmed. A spot opened up and you have been moved from the waitlist to confirmed list.`,
                             actionUrl: `${config.FRONTEND_URL}/submissions/${nextPerson.id}`,
-                            actionText: 'View Submission'
+                            actionText: 'View Submission',
+                            submissionId: nextPerson.id
                         })
                     }
                 }
