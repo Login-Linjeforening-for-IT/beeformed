@@ -108,6 +108,8 @@ declare global {
         status: string
         submitted_at: string
         data: SubmissionProps[]
+        scanned_at?: string | null
+        already_scanned?: boolean
     }
 
     type GetSubmissionsProps = {

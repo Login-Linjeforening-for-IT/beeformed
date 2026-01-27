@@ -38,7 +38,8 @@ import {
     getSubmission,
     getSubmissionsByForm,
     getSubmissionsByUser,
-    deleteSubmission
+    deleteSubmission,
+    scanSubmission
 } from './handlers/submissions/index.ts'
 
 
@@ -77,6 +78,7 @@ export default async function apiRoutes(fastify: FastifyInstance) {
     fastify.get('/forms/:id/submissions', { preHandler: [authMiddleware, permissionMiddleware] }, getSubmissionsByForm)
     fastify.post('/forms/:id/submissions', { preHandler: authMiddleware }, createSubmission)
     fastify.get('/submissions/:id', { preHandler: authMiddleware }, getSubmission)
+    fastify.post('/submissions/:id/scan', { preHandler: authMiddleware }, scanSubmission)
     fastify.get('/submissions', { preHandler: authMiddleware }, getSubmissionsByUser)
     fastify.delete('/submissions/:id', { preHandler: authMiddleware }, deleteSubmission)
 }

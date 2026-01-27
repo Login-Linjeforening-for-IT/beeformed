@@ -47,7 +47,8 @@ CREATE TABLE submissions (
     form_id INTEGER REFERENCES forms(id) ON DELETE CASCADE,
     user_id TEXT REFERENCES users(user_id),
     status submission_status DEFAULT 'confirmed',
-    submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    scanned_at TIMESTAMP
 );
 
 -- Submission data

@@ -5,7 +5,7 @@ import { PageContainer } from '@/components/container/page'
 import Button from '@/components/button/button'
 import jsQR from 'jsqr'
 import { AlertCircle, Loader2, ScanLine, User, Clock, CheckCircle2, XCircle } from 'lucide-react'
-import { getSubmission } from '@/utils/api'
+import { scanSubmission } from '@/utils/api'
 import { useParams } from 'next/navigation'
 
 export default function Page() {
@@ -38,7 +38,7 @@ export default function Page() {
     const fetchSubmission = useCallback(async (id: string) => {
         setLoadingSubmission(true)
         try {
-            const result = await getSubmission(id, formId)
+            const result = await scanSubmission(id, formId)
             if ('error' in result) {
                 const json = JSON.parse(result.error)
                 setError(result.error)
@@ -192,9 +192,25 @@ export default function Page() {
 
                     {submission && !loadingSubmission && (
                         <div className='relative z-10 flex flex-col items-center justify-center p-6 text-center gap-4'>
-                            <h3 className='font-bold text-xl text-white'>
-                                Submission Found
-                            </h3>
+                            {submission.already_scanned ? (
+                                <div className='flex flex-col items-center gap-2 mb-2 w-full'>
+                                    <div className='w-16 h-16 rounded-full bg-yellow-500/10 flex items-center justify-center
+                                                    text-yellow-500 mb-2 ring-1 ring-yellow-500/20'
+                                    >
+                                        <AlertCircle className='w-10 h-10' />
+                                    </div>
+                                    <h3 className='font-bold text-xl text-yellow-500'>
+                                        Already Scanned
+                                    </h3>
+                                    <p className='text-login-200 text-sm'>
+                                        Scanned: {new Date(submission.scanned_at!).toLocaleString()}
+                                    </p>
+                                </div>
+                            ) : (
+                                <h3 className='font-bold text-xl text-white'>
+                                    Submission Scanned
+                                </h3>
+                            )}
 
                             <div className='bg-login-900 rounded-xl border border-login-800 p-4 w-full'>
                                 <div className='flex items-center gap-3 text-login-100 mb-1'>
