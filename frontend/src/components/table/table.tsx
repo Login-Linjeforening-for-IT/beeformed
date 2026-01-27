@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ChevronUp, ChevronDown, MoreHorizontal, Edit, Trash2, Eye, Settings, Shield, List, Share } from 'lucide-react'
+import { ChevronUp, ChevronDown, MoreHorizontal, Edit, Trash2, Eye, Settings, Shield, List, Share, QrCode } from 'lucide-react'
 import { toast } from 'uibee/components'
 
 type Column = {
@@ -255,7 +255,7 @@ export default function Table({
                                                         hover:bg-login-600 cursor-pointer`}
                                                 >
                                                     <div className='flex items-center'>
-                                                        <List className='w-4 h-4 mr-2' />
+                                                        <QrCode className='w-4 h-4 mr-2' />
                                                         QR
                                                     </div>
                                                     <span className='text-xs opacity-50 font-mono'>Q</span>
