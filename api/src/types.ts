@@ -51,7 +51,7 @@ declare global {
     }
 
     interface Submission {
-        id: number
+        id: string
         form_id: number
         user_id?: string
         submitted_at: Date

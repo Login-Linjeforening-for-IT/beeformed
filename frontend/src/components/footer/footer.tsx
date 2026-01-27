@@ -15,7 +15,7 @@ const text = {
             'email': 'Email'
         },
         'sponsor': 'Main partner',
-        'copy1': 'Copyright &copy; ',
+        'copy1': 'Copyright ©',
         'copy2': ' Login - Linjeforeningen for IT, NO 811 940 372'
     }
 }
@@ -26,7 +26,7 @@ export default async function Footer() {
 
     return (
         <div className='bg-login-950 mt-40'>
-            <div className='w-full mx-auto pt-16 px-4 pb-4 md:max-w-[calc(72rem+4rem)]
+            <div className='w-full mx-auto pt-16 px-4 pb-4 md:max-w-304
                 md:pt-20 md:px-12 md:pb-4 md:grid md:grid-cols-[18rem_1fr] md:gap-x-12'>
                 <div className='grid gap-16 max-w-60 w-full mx-auto md:row-span-2 md:max-w-72 md:gap-20'>
                     <div>
@@ -90,10 +90,9 @@ export default async function Footer() {
                 <div className='grid grid-cols-[auto_min-content] gap-8 mt-24 items-end md:col-span-2 md:row-start-3'>
                     <p
                         className='text-login-100 text-xs'
-                        dangerouslySetInnerHTML={{
-                            __html: ` ${text.footer.copy1} ${currentYear} ${text.footer.copy2}`,
-                        }}
-                    />
+                    >
+                        {`${text.footer.copy1} ${currentYear} ${text.footer.copy2}`}
+                    </p>
                     {typeof config.version !== 'undefined' ? (
                         <Link
                             className='bg-[rgba(200,200,200,0.1)] px-[0.6rem] py-[0.4rem]

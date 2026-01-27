@@ -43,7 +43,7 @@ CREATE TABLE form_fields (
 
 -- Form submissions
 CREATE TABLE submissions (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT uuidv7(),
     form_id INTEGER REFERENCES forms(id) ON DELETE CASCADE,
     user_id TEXT REFERENCES users(user_id),
     status submission_status DEFAULT 'confirmed',
@@ -53,7 +53,7 @@ CREATE TABLE submissions (
 -- Submission data
 CREATE TABLE submission_data (
     id SERIAL PRIMARY KEY,
-    submission_id INTEGER REFERENCES submissions(id) ON DELETE CASCADE,
+    submission_id UUID REFERENCES submissions(id) ON DELETE CASCADE,
     field_id INTEGER REFERENCES form_fields(id) ON DELETE CASCADE,
     value TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

@@ -86,6 +86,16 @@ export default async function Page({ params, searchParams }: PageProps) {
                 >
                     Submissions
                 </Link>
+                <Link
+                    href={`/qr/${id}`}
+                    className={`px-4 py-2 rounded transition-colors ${
+                        type === 'qr'
+                            ? 'bg-login text-white'
+                            : 'bg-login-700 text-login-100 hover:bg-login-600'
+                    }`}
+                >
+                    QR
+                </Link>
                 <ShareButton slug={formData.slug} />
             </div>
             <div className='pt-20 pb-4 flex flex-col h-full'>

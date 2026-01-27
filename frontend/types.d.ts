@@ -100,7 +100,7 @@ declare global {
     }
 
     type Submission = {
-        id: number
+        id: string
         form_id: number
         form_title: string
         user_email: string | null
@@ -112,7 +112,7 @@ declare global {
 
     type GetSubmissionsProps = {
         data: {
-            id: number
+            id: string
             form_id: number
             form_title: string
             expires_at: string

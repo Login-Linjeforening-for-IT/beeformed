@@ -6,7 +6,7 @@ import { toast } from 'uibee/components'
 
 interface ButtonProps {
     children: React.ReactNode
-    onAction?: () => Promise<{ error?: string }>
+    onAction?: () => void | Promise<{ error?: string }>
     errorMessage?: string
     successMessage?: string
     href?: string
@@ -23,13 +23,13 @@ export default function Button({ children, onAction, errorMessage, successMessag
         try {
             if (onAction) {
                 const result = await onAction()
-                if (!result.error) {
+                if (result && result.error) {
+                    if (errorMessage) toast.error(errorMessage)
+                } else {
                     if (successMessage) toast.success(successMessage)
                     if (href) {
                         router.push(href)
                     }
-                } else {
-                    if (errorMessage) toast.error(errorMessage)
                 }
             } else {
                 if (href) {

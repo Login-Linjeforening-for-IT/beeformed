@@ -1,0 +1,242 @@
+'use client'
+
+import { useEffect, useRef, useState, useCallback } from 'react'
+import { PageContainer } from '@/components/container/page'
+import Button from '@/components/button/button'
+import jsQR from 'jsqr'
+import { AlertCircle, Loader2, ScanLine, User, Clock, CheckCircle2, XCircle } from 'lucide-react'
+import { getSubmission } from '@/utils/api'
+import { useParams } from 'next/navigation'
+
+export default function Page() {
+    const params = useParams()
+    const formId = params.id as string
+
+    const videoRef = useRef<HTMLVideoElement>(null)
+    const canvasRef = useRef<HTMLCanvasElement>(null)
+    const [error, setError] = useState<string | null>(null)
+    const [scannedData, setScannedData] = useState<string | null>(null)
+    const [submission, setSubmission] = useState<Submission | null>(null)
+    const [loadingSubmission, setLoadingSubmission] = useState(false)
+    const [isScanning, setIsScanning] = useState(false)
+    const animationFrameId = useRef<number | null>(null)
+
+    const stopScan = useCallback(() => {
+        if (animationFrameId.current) {
+            cancelAnimationFrame(animationFrameId.current)
+            animationFrameId.current = null
+        }
+
+        if (videoRef.current && videoRef.current.srcObject) {
+            const stream = videoRef.current.srcObject as MediaStream
+            stream.getTracks().forEach(track => track.stop())
+            videoRef.current.srcObject = null
+        }
+        setIsScanning(false)
+    }, [])
+
+    const fetchSubmission = useCallback(async (id: string) => {
+        setLoadingSubmission(true)
+        try {
+            const result = await getSubmission(id, formId)
+            if ('error' in result) {
+                const json = JSON.parse(result.error)
+                setError(result.error)
+                if ('error' in json) setError(json.error)
+            } else {
+                setSubmission(result)
+            }
+        } catch (err) {
+            console.error(err)
+            setError('Failed to fetch submission details')
+        } finally {
+            setLoadingSubmission(false)
+        }
+    }, [formId])
+
+    const startScan = useCallback(async () => {
+        setError(null)
+        setSubmission(null)
+        setScannedData(null)
+
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: 'environment' }
+            })
+
+            const video = videoRef.current
+            const canvas = canvasRef.current
+
+            if (video && canvas) {
+                video.srcObject = stream
+                await video.play()
+                setIsScanning(true)
+
+                const ctx = canvas.getContext('2d', { willReadFrequently: true })
+
+                const detect = () => {
+                    if (video.readyState === video.HAVE_ENOUGH_DATA && ctx) {
+                        canvas.width = video.videoWidth
+                        canvas.height = video.videoHeight
+
+                        if (canvas.width > 0 && canvas.height > 0) {
+                            ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+                            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+                            const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                                inversionAttempts: 'dontInvert',
+                            })
+
+                            if (code) {
+                                const id = code.data
+                                setScannedData(id)
+                                stopScan()
+                                fetchSubmission(id)
+                                return
+                            }
+                        }
+                    }
+                    animationFrameId.current = requestAnimationFrame(detect)
+                }
+
+                detect()
+            }
+        } catch (err) {
+            console.error('Error accessing camera:', err)
+            setError('Could not access camera. Please ensure permissions are granted.')
+            setIsScanning(false)
+        }
+    }, [stopScan, fetchSubmission])
+
+    useEffect(() => {
+        if (!scannedData) {
+            startScan()
+        }
+        return () => {
+            stopScan()
+        }
+    }, [startScan, stopScan, scannedData])
+
+    function handleContinue() {
+        setError(null)
+        setScannedData(null)
+        setSubmission(null)
+    }
+
+    function getStatusColor(status: string) {
+        switch (status) {
+            case 'confirmed': return 'text-green-500 bg-green-500/10'
+            case 'waitlisted': return 'text-yellow-500 bg-yellow-500/10'
+            case 'rejected': return 'text-red-500 bg-red-500/10'
+            default: return 'text-login-200 bg-login-900'
+        }
+    }
+
+    function getStatusIcon(status: string) {
+        switch (status) {
+            case 'confirmed': return <CheckCircle2 className='w-5 h-5' />
+            case 'waitlisted': return <Clock className='w-5 h-5' />
+            case 'rejected': return <XCircle className='w-5 h-5' />
+            default: return <AlertCircle className='w-5 h-5' />
+        }
+    }
+
+    return (
+        <PageContainer title='QR Scanner'>
+            <canvas ref={canvasRef} className='hidden' />
+
+            <div className='flex flex-col items-center gap-6 w-full max-w-md mx-auto'>
+                <div className={`relative w-full ${!submission || loadingSubmission ? 'aspect-square' : ''} 
+                    bg-login-950 rounded-2xl overflow-hidden shadow-2xl ring-1 ring-login-800`}
+                >
+                    <video
+                        ref={videoRef}
+                        className={`absolute inset-0 w-full h-full object-cover ${scannedData ? 'hidden' : ''}`}
+                        playsInline
+                        muted
+                    />
+
+                    {(!isScanning && !scannedData && !error) || loadingSubmission ? (
+                        <div className='absolute inset-0 flex flex-col items-center justify-center text-login-200 bg-login-950'>
+                            <Loader2 className='w-8 h-8 animate-spin mb-4 text-login' />
+                            <p className='text-sm font-medium'>{loadingSubmission ? 'Fetching details...' : 'Starting camera...'}</p>
+                        </div>
+                    ) : null}
+
+                    {error && (
+                        <div className='absolute inset-0 flex flex-col items-center justify-center p-6 text-center text-login-50
+                                        bg-login-950/95 backdrop-blur-sm z-20'
+                        >
+                            <div className='w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center mb-4 text-red-500'>
+                                <AlertCircle className='w-6 h-6' />
+                            </div>
+                            <p className='text-sm text-login-200 mb-6'>{error}</p>
+                            <Button
+                                onAction={() => { setError(null); setScannedData(null) }}
+                                className='bg-login-800 hover:bg-login-700 text-white px-6 py-2 rounded-lg text-sm'
+                            >
+                                Try Again
+                            </Button>
+                        </div>
+                    )}
+
+                    {isScanning && !scannedData && !loadingSubmission && (
+                        <div className='absolute inset-0 p-16 pointer-events-none transition-all duration-300'>
+                            <div className='w-full h-full border-2 border-login/50 rounded-lg relative'>
+                                <div className='absolute -top-0.5 -left-0.5 w-6 h-6 border-t-4 border-l-4 border-login rounded-tl-sm' />
+                                <div className='absolute -top-0.5 -right-0.5 w-6 h-6 border-t-4 border-r-4 border-login rounded-tr-sm' />
+                                <div className='absolute -bottom-0.5 -left-0.5 w-6 h-6 border-b-4 border-l-4 border-login rounded-bl-sm' />
+                                <div className='absolute -bottom-0.5 -right-0.5 w-6 h-6 border-b-4 border-r-4 border-login rounded-br-sm' />
+                            </div>
+                        </div>
+                    )}
+
+                    {submission && !loadingSubmission && (
+                        <div className='relative z-10 flex flex-col items-center justify-center p-6 text-center gap-4'>
+                            <h3 className='font-bold text-xl text-white'>
+                                Submission Found
+                            </h3>
+
+                            <div className='bg-login-900 rounded-xl border border-login-800 p-4 w-full'>
+                                <div className='flex items-center gap-3 text-login-100 mb-1'>
+                                    <User className='w-4 h-4 text-login-400' />
+                                    <span className='text-sm font-medium'>Name</span>
+                                </div>
+                                <p className='text-lg font-semibold text-white pl-7 text-left'>
+                                    {submission.user_name || 'Anonymous'}
+                                </p>
+                            </div>
+
+                            <div className='bg-login-900 rounded-xl border border-login-800 p-4 w-full'>
+                                <div className='flex items-center gap-3 text-login-100 mb-2'>
+                                    <Clock className='w-4 h-4 text-login-400' />
+                                    <span className='text-sm font-medium'>Status</span>
+                                </div>
+                                <div className={`ml-7 flex w-fit gap-2 px-3 py-1.5 rounded-full text-sm font-semibold
+                                    ${getStatusColor(submission.status)}`}
+                                >
+                                    {getStatusIcon(submission.status)}
+                                    <span className='capitalize'>{submission.status}</span>
+                                </div>
+                            </div>
+
+                            <Button
+                                onAction={handleContinue}
+                                className='w-full py-4 bg-login/90 hover:bg-login text-white font-bold rounded-xl
+                                active:scale-95 transition-all flex items-center justify-center gap-2'
+                            >
+                                <ScanLine className='w-4 h-4' />
+                                Scan Next
+                            </Button>
+                        </div>
+                    )}
+                </div>
+
+                {!error && !scannedData && !loadingSubmission && (
+                    <p className='text-sm text-login-300 text-center animate-pulse'>
+                        Point your camera at a QR code
+                    </p>
+                )}
+            </div>
+        </PageContainer>
+    )
+}

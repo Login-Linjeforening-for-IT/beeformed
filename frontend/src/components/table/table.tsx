@@ -23,6 +23,7 @@ type TableProps = {
     viewBaseHref?: string
     viewHrefKey?: string
     showFormActions?: boolean
+    customActions?: (row: Record<string, unknown>, closeMenu: () => void) => React.ReactNode
 }
 
 export default function Table({
@@ -35,7 +36,8 @@ export default function Table({
     disableEdit,
     viewBaseHref,
     viewHrefKey = 'id',
-    showFormActions = false
+    showFormActions = false,
+    customActions
 }: TableProps) {
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -72,6 +74,11 @@ export default function Table({
 
     function handleSubmissions(row: Record<string, unknown>) {
         router.push(`/form/${row.id}/submissions`)
+        setOpenMenuIndex(null)
+    }
+
+    function handleQR(row: Record<string, unknown>) {
+        router.push(`/qr/${row.id}`)
         setOpenMenuIndex(null)
     }
 
@@ -116,6 +123,9 @@ export default function Table({
                     break
                 case 'v':
                     if (viewBaseHref) handleView(row)
+                    break
+                case 'q':
+                    if (showFormActions) handleQR(row)
                     break
                 case 'h':
                     handleShare(row)
@@ -240,6 +250,17 @@ export default function Table({
                                                     <span className='text-xs opacity-50 font-mono'>A</span>
                                                 </button>
                                                 <button
+                                                    onClick={() => handleQR(row)}
+                                                    className={`flex items-center justify-between w-full px-3 py-2 text-sm
+                                                        hover:bg-login-600 cursor-pointer`}
+                                                >
+                                                    <div className='flex items-center'>
+                                                        <List className='w-4 h-4 mr-2' />
+                                                        QR
+                                                    </div>
+                                                    <span className='text-xs opacity-50 font-mono'>Q</span>
+                                                </button>
+                                                <button
                                                     onClick={() => handleShare(row)}
                                                     className={`flex items-center justify-between w-full px-3 py-2 text-sm
                                                         hover:bg-login-600 cursor-pointer`}
@@ -252,6 +273,7 @@ export default function Table({
                                                 </button>
                                             </>
                                         )}
+                                        {customActions && customActions(row, () => setOpenMenuIndex(null))}
                                         {viewBaseHref && (
                                             <button
                                                 onClick={() => handleView(row)}

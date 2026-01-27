@@ -116,8 +116,9 @@ export async function postSubmission(formId: string, data: PostSubmissionProps) 
     return await postWrapper({ path: `forms/${formId}/submissions`, data })
 }
 
-export async function getSubmission(submissionId: string): Promise<Submission | ErrorResponse> {
-    return await getWrapper({ path: `submissions/${submissionId}` })
+export async function getSubmission(submissionId: string, formId?: string): Promise<Submission | ErrorResponse> {
+    const path = formId ? `submissions/${submissionId}?formId=${formId}` : `submissions/${submissionId}`
+    return await getWrapper({ path })
 }
 
 export async function deleteSubmission(submissionId: string) {

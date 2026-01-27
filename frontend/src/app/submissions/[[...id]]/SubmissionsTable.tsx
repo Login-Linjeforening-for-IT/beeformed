@@ -5,6 +5,7 @@ import { deleteSubmission } from '@utils/api'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'uibee/components'
+import { QrCode } from 'lucide-react'
 
 interface SubmissionsTableProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -52,6 +53,12 @@ export default function SubmissionsTable({ data, orderBy, order }: SubmissionsTa
         return new Date(expiresAt) >= new Date()
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    function handleShowQR(row: any, closeMenu: () => void) {
+        router.push(`/submissions/qr/${row.id}`)
+        closeMenu()
+    }
+
     return (
         <Table
             data={data}
@@ -71,6 +78,19 @@ export default function SubmissionsTable({ data, orderBy, order }: SubmissionsTa
             viewHrefKey='id'
             onDelete={handleDelete}
             canDelete={canDelete}
+            customActions={(row, closeMenu) => (
+                <button
+                    onClick={() => handleShowQR(row, closeMenu)}
+                    className={`flex items-center justify-between w-full px-3 py-2 text-sm
+                        hover:bg-login-600 cursor-pointer`}
+                >
+                    <div className='flex items-center'>
+                        <QrCode className='w-4 h-4 mr-2' />
+                        QR Code
+                    </div>
+                    <span className='text-xs opacity-50 font-mono'>Q</span>
+                </button>
+            )}
         />
     )
 }
