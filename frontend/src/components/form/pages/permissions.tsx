@@ -76,7 +76,7 @@ export default function EditPermissionsPage({ permissions, formId }: { permissio
             <div className='w-full max-w-2xl'>
                 <h2 className='text-xl font-semibold text-login-50 mb-6'>Add Permission</h2>
                 <p className='text-login-200 mb-6'>
-                    To give permissions will give users/groups access to edit and manage submissions.
+                    Adding permissions grants users or groups the ability to edit the form and manage submissions.
                 </p>
 
                 <form onSubmit={handleSubmit}>
