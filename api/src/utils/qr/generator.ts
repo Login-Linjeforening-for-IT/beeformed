@@ -39,7 +39,7 @@ export async function generateQRCodeHtml({ data }: { data: string }): Promise<st
             return modules.get(c, r)
         }
 
-        let table = `<table style="border:0;border-collapse:collapse;background:#fff;width:${totalSize}px;height:${totalSize}px;margin:0 auto;" cellspacing="0" cellpadding="0" border="0">`
+        let table = `<table style="border:0;border-collapse:collapse;background-color:#ffffff;width:${totalSize}px;height:${totalSize}px;margin:0 auto;" cellspacing="0" cellpadding="0" border="0">`
         
         for (let r = 0; r < size; r++) {
             table += `<tr style="padding:0;margin:0;border:0;height:${moduleSize}px;">`
