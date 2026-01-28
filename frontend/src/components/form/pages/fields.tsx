@@ -4,7 +4,7 @@ import { useState, useRef } from 'react'
 import { toast } from 'uibee/components'
 import { updateFields } from '@components/form/actions/field'
 import { Input, Switch, Select } from 'uibee/components'
-import { GripVertical, X } from 'lucide-react'
+import { GripVertical, X, Plus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 export default function EditFieldsPage({ fields, formId }: { fields: GetFieldsProps; formId: string }) {
@@ -223,17 +223,61 @@ export default function EditFieldsPage({ fields, formId }: { fields: GetFieldsPr
 
                         {(field.field_type === 'select' || field.field_type === 'checkbox' || field.field_type === 'radio') && (
                             <div>
-                                <label className='block text-sm font-medium text-login-50 mb-2'>Options (one per line)</label>
-                                <textarea
+                                <label className='block text-sm font-medium text-login-50 mb-2'>Options</label>
+                                <div className='space-y-2'>
+                                    {Array.isArray(field.options) && field.options.map((option, optionIndex) => (
+                                        <div key={optionIndex} className='flex gap-2 items-center'>
+                                            <div className='flex-1'>
+                                                <input
+                                                    type='text'
+                                                    value={option}
+                                                    onChange={(e) => {
+                                                        const newOptions = [...(field.options || [])]
+                                                        newOptions[optionIndex] = e.target.value
+                                                        setFieldsData(prev => prev.map((f, i) =>
+                                                            i === index ? { ...f, options: newOptions } : f
+                                                        ))
+                                                    }}
+                                                    placeholder={`Option ${optionIndex + 1}`}
+                                                    className='w-full px-3 py-2 border border-login-500 rounded-md bg-login-700
+                                                        text-login-50 focus:outline-none focus:ring-2 focus:login-50
+                                                        focus:border-transparent'
+                                                />
+                                            </div>
+                                            <button
+                                                type='button'
+                                                onClick={() => {
+                                                    const newOptions = [...(field.options || [])]
+                                                    newOptions.splice(optionIndex, 1)
+                                                    setFieldsData(prev => prev.map((f, i) =>
+                                                        i === index ? { ...f, options: newOptions } : f
+                                                    ))
+                                                }}
+                                                className='p-2 text-red-500 hover:bg-login-600 rounded transition-colors'
+                                            >
+                                                <X size={20} />
+                                            </button>
+                                        </div>
+                                    ))}
+                                    <button
+                                        type='button'
+                                        onClick={() => {
+                                            const newOptions = [...(field.options || []), '']
+                                            setFieldsData(prev => prev.map((f, i) =>
+                                                i === index ? { ...f, options: newOptions } : f
+                                            ))
+                                        }}
+                                        className='flex items-center gap-2 text-sm text-login-50 hover:text-white px-3 py-2
+                                            rounded hover:bg-login-600 transition-colors'
+                                    >
+                                        <Plus size={16} />
+                                        Add Option
+                                    </button>
+                                </div>
+                                <input
+                                    type='hidden'
                                     name={`field_${index}_options`}
                                     value={Array.isArray(field.options) ? field.options.join('\n') : ''}
-                                    onChange={(e) => {
-                                        const choices = e.target.value.split('\n').map((s: string) => s.trim())
-                                        setFieldsData(prev => prev.map((f, i) => i === index ? { ...f, options: choices } : f))
-                                    }}
-                                    rows={3}
-                                    className='w-full px-3 py-2 border border-login-500 rounded-md bg-login-700
-                                        text-login-50 focus:outline-none focus:ring-2 focus:login-50 focus:border-transparent'
                                 />
                             </div>
                         )}
@@ -244,10 +288,10 @@ export default function EditFieldsPage({ fields, formId }: { fields: GetFieldsPr
                         <button
                             type='button'
                             onClick={() => handleAddFieldAt(index + 1)}
-                            className='text-login-50 hover:text-login-300 text-2xl cursor-pointer
+                            className='text-login-50 hover:text-login-300 cursor-pointer
                                 rounded-full w-8 h-8 flex items-center justify-center hover:bg-login-600 transition-colors'
                         >
-                            +
+                            <Plus size={24} />
                         </button>
                     </div>
                 ]
@@ -270,7 +314,7 @@ export default function EditFieldsPage({ fields, formId }: { fields: GetFieldsPr
                         transition-colors focus:outline-none focus:ring-2 focus:ring-login
                         focus:ring-offset-2 focus:ring-offset-login-700 font-medium cursor-pointer'
                 >
-                    {loading ? 'Updating...' : 'Update Fields'}
+                    {loading ? 'Saving...' : 'Save Fields'}
                 </button>
             </div>
         </form>

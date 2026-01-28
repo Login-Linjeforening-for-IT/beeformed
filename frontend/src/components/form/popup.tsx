@@ -76,7 +76,7 @@ export function FormPopup({children, buttonClassName}: {children?: React.ReactNo
                     published_at: '',
                     expires_at: ''
                 })
-                router.refresh()
+                router.push(`/form/${result.id}`)
             } else {
                 toast.error('Failed to create form')
             }

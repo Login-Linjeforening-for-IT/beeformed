@@ -295,7 +295,7 @@ export default function Table({
                             >
                                 <div className='flex items-center'>
                                     <QrCode className='w-4 h-4 mr-2' />
-                                    QR
+                                    Scanner
                                 </div>
                                 <span className='text-xs opacity-50 font-mono'>Q</span>
                             </button>
