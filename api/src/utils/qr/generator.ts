@@ -39,13 +39,15 @@ export async function generateQRCodeHtml({ data }: { data: string }): Promise<st
             return modules.get(c, r)
         }
 
-        let table = `<table style="border:0;border-collapse:collapse;background-color:#ffffff;width:${totalSize}px;height:${totalSize}px;margin:0 auto;" cellspacing="0" cellpadding="0" border="0">`
+        let table = `<table style="border:0;border-collapse:collapse;background-color:transparent;width:${totalSize}px;height:${totalSize}px;margin:0 auto;" cellspacing="0" cellpadding="0" border="0">`
         
         for (let r = 0; r < size; r++) {
             table += `<tr style="padding:0;margin:0;border:0;height:${moduleSize}px;">`
             for (let c = 0; c < size; c++) {
-                const color = isDark(r, c) ? '#000000' : '#ffffff'
-                table += `<td style="width:${moduleSize}px;height:${moduleSize}px;background-color:${color};padding:0;border:0;line-height:0;font-size:0;"></td>`
+                const isDarkModule = isDark(r, c)
+                const color = isDarkModule ? '#000000' : 'transparent'
+                const className = isDarkModule ? 'qr-dot' : ''
+                table += `<td class="${className}" style="width:${moduleSize}px;height:${moduleSize}px;background-color:${color};padding:0;border:0;line-height:0;font-size:0;"></td>`
             }
             table += '</tr>'
         }
