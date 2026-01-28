@@ -36,13 +36,13 @@ export default function Field({
     return (
         <div className={`space-y-1 ${className}`}>
             {label && (
-                <label className='block text-sm font-medium text-login-50'>
+                <label className='block text-lg font-medium text-login-50'>
                     {label}
                     {required && <span className='text-red-500 ml-1'>*</span>}
                 </label>
             )}
             {description && (
-                <p className='text-sm text-login-100'>{description}</p>
+                <p className='text-md text-login-100'>{description}</p>
             )}
             {children}
             {error && (
