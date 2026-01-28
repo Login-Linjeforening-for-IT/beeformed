@@ -70,8 +70,10 @@ export default async function Page({ params, searchParams }: PageProps) {
                 </Link>
             </div>
             <div className='pt-20 pb-4 flex flex-col h-full'>
-                <div className='flex justify-between mb-4'>
-                    <SearchInput placeholder='Search forms...' />
+                <div className='flex flex-col md:flex-row md:justify-between items-start md:items-center gap-4 mb-4'>
+                    <div className='w-full md:w-auto'>
+                        <SearchInput placeholder='Search forms...' />
+                    </div>
                     { type === 'forms' && <FormPopup /> }
                 </div>
 

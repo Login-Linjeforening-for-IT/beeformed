@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ChevronUp, ChevronDown, MoreHorizontal, Edit, Trash2, Eye, Settings, Shield, List, Share, QrCode } from 'lucide-react'
 import { toast } from 'uibee/components'
@@ -42,6 +43,7 @@ export default function Table({
     const router = useRouter()
     const searchParams = useSearchParams()
     const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null)
+    const [menuPosition, setMenuPosition] = useState<{ top: number; left: number } | null>(null)
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
 
     function handleSort(columnKey: string) {
@@ -53,8 +55,19 @@ export default function Table({
         router.push(`?${params.toString()}`)
     }
 
-    function toggleMenu(index: number) {
-        setOpenMenuIndex(openMenuIndex === index ? null : index)
+    function toggleMenu(index: number, e: React.MouseEvent) {
+        e.stopPropagation()
+        if (openMenuIndex === index) {
+            setOpenMenuIndex(null)
+            return
+        }
+
+        const rect = e.currentTarget.getBoundingClientRect()
+        setMenuPosition({
+            top: rect.bottom,
+            left: rect.right
+        })
+        setOpenMenuIndex(index)
     }
 
     function handleEdit(row: Record<string, unknown>) {
@@ -140,8 +153,28 @@ export default function Table({
         return () => window.removeEventListener('keydown', handleKeyDown)
     }, [hoveredIndex, data, disableEdit, showFormActions, viewBaseHref, onDelete, canDelete])
 
+    useEffect(() => {
+        const handleScroll = () => {
+            if (openMenuIndex !== null) setOpenMenuIndex(null)
+        }
+        window.addEventListener('scroll', handleScroll, true)
+        window.addEventListener('resize', handleScroll)
+        return () => {
+            window.removeEventListener('scroll', handleScroll, true)
+            window.removeEventListener('resize', handleScroll)
+        }
+    }, [openMenuIndex])
+
+    useEffect(() => {
+        const handleClick = () => {
+            if (openMenuIndex !== null) setOpenMenuIndex(null)
+        }
+        window.addEventListener('click', handleClick)
+        return () => window.removeEventListener('click', handleClick)
+    }, [openMenuIndex])
+
     return (
-        <div className='prose prose-login max-w-none py-4'>
+        <div className='prose prose-login max-w-none py-4 overflow-x-auto'>
             <table className='w-full'>
                 <thead>
                     <tr>
@@ -186,127 +219,127 @@ export default function Table({
                                     ? column.highlightColor(row)
                                     : column.highlightColor
                                 return (
-                                    <td key={column.key} className={color ? `text-${color}-500` : ''}>
+                                    <td key={column.key} className={`whitespace-nowrap ${color ? `text-${color}-500` : ''}`}>
                                         {String(row[column.key])}
                                     </td>
                                 )
                             })}
                             <td className='relative'>
                                 <button
-                                    onClick={() => toggleMenu(index)}
+                                    onClick={(e) => toggleMenu(index, e)}
                                     className='p-1 rounded hover:bg-login-500 cursor-pointer'
                                 >
                                     <MoreHorizontal className='w-4 h-4' />
                                 </button>
-                                {openMenuIndex === index && (
-                                    <div className='absolute right-0 mt-1 w-44 bg-login-500
-                                        border border-login-600 rounded-lg shadow-lg z-10 overflow-hidden'>
-                                        {!disableEdit && (
-                                            <button
-                                                onClick={() => handleEdit(row)}
-                                                className={`flex items-center justify-between w-full px-3 py-2 text-sm
-                                                    hover:bg-login-600 cursor-pointer`}
-                                            >
-                                                <div className='flex items-center'>
-                                                    <Edit className='w-4 h-4 mr-2' />
-                                                    Edit
-                                                </div>
-                                                <span className='text-xs opacity-50 font-mono'>E</span>
-                                            </button>
-                                        )}
-                                        {showFormActions && (
-                                            <>
-                                                <button
-                                                    onClick={() => handleSettings(row)}
-                                                    className={`flex items-center justify-between w-full px-3 py-2 text-sm
-                                                        hover:bg-login-600 cursor-pointer`}
-                                                >
-                                                    <div className='flex items-center'>
-                                                        <Settings className='w-4 h-4 mr-2' />
-                                                        Settings
-                                                    </div>
-                                                    <span className='text-xs opacity-50 font-mono'>S</span>
-                                                </button>
-                                                <button
-                                                    onClick={() => handlePermissions(row)}
-                                                    className={`flex items-center justify-between w-full px-3 py-2 text-sm
-                                                        hover:bg-login-600 cursor-pointer`}
-                                                >
-                                                    <div className='flex items-center'>
-                                                        <Shield className='w-4 h-4 mr-2' />
-                                                        Permissions
-                                                    </div>
-                                                    <span className='text-xs opacity-50 font-mono'>P</span>
-                                                </button>
-                                                <button
-                                                    onClick={() => handleSubmissions(row)}
-                                                    className={`flex items-center justify-between w-full px-3 py-2 text-sm
-                                                        hover:bg-login-600 cursor-pointer`}
-                                                >
-                                                    <div className='flex items-center'>
-                                                        <List className='w-4 h-4 mr-2' />
-                                                        Submissions
-                                                    </div>
-                                                    <span className='text-xs opacity-50 font-mono'>A</span>
-                                                </button>
-                                                <button
-                                                    onClick={() => handleQR(row)}
-                                                    className={`flex items-center justify-between w-full px-3 py-2 text-sm
-                                                        hover:bg-login-600 cursor-pointer`}
-                                                >
-                                                    <div className='flex items-center'>
-                                                        <QrCode className='w-4 h-4 mr-2' />
-                                                        QR
-                                                    </div>
-                                                    <span className='text-xs opacity-50 font-mono'>Q</span>
-                                                </button>
-                                                <button
-                                                    onClick={() => handleShare(row)}
-                                                    className={`flex items-center justify-between w-full px-3 py-2 text-sm
-                                                        hover:bg-login-600 cursor-pointer`}
-                                                >
-                                                    <div className='flex items-center'>
-                                                        <Share className='w-4 h-4 mr-2' />
-                                                        Share
-                                                    </div>
-                                                    <span className='text-xs opacity-50 font-mono'>H</span>
-                                                </button>
-                                            </>
-                                        )}
-                                        {customActions && customActions(row, () => setOpenMenuIndex(null))}
-                                        {viewBaseHref && (
-                                            <button
-                                                onClick={() => handleView(row)}
-                                                className={`flex items-center justify-between w-full px-3 py-2 text-sm
-                                                    hover:bg-login-600 cursor-pointer`}
-                                            >
-                                                <div className='flex items-center'>
-                                                    <Eye className='w-4 h-4 mr-2' />
-                                                    View
-                                                </div>
-                                                <span className='text-xs opacity-50 font-mono'>V</span>
-                                            </button>
-                                        )}
-                                        {onDelete && (!canDelete || canDelete(row)) && (
-                                            <button
-                                                onClick={() => handleDelete(row)}
-                                                className={`flex items-center justify-between w-full px-3 py-2 text-sm
-                                                    hover:bg-login-600 text-red-400 cursor-pointer`}
-                                            >
-                                                <div className='flex items-center'>
-                                                    <Trash2 className='w-4 h-4 mr-2' />
-                                                    Delete
-                                                </div>
-                                                <span className='text-xs opacity-50 font-mono'>D</span>
-                                            </button>
-                                        )}
-                                    </div>
-                                )}
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
+            {openMenuIndex !== null && data[openMenuIndex] && menuPosition && typeof document !== 'undefined' && createPortal(
+                <div
+                    className='fixed bg-login-500 border border-login-600 rounded-lg shadow-lg z-50 overflow-hidden w-44'
+                    style={{
+                        top: menuPosition.top,
+                        left: menuPosition.left - 176
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    {!disableEdit && (
+                        <button
+                            onClick={() => handleEdit(data[openMenuIndex])}
+                            className='flex items-center justify-between w-full px-3 py-2 text-sm hover:bg-login-600 cursor-pointer'
+                        >
+                            <div className='flex items-center'>
+                                <Edit className='w-4 h-4 mr-2' />
+                                Edit
+                            </div>
+                            <span className='text-xs opacity-50 font-mono'>E</span>
+                        </button>
+                    )}
+                    {showFormActions && (
+                        <>
+                            <button
+                                onClick={() => handleSettings(data[openMenuIndex])}
+                                className='flex items-center justify-between w-full px-3 py-2 text-sm hover:bg-login-600 cursor-pointer'
+                            >
+                                <div className='flex items-center'>
+                                    <Settings className='w-4 h-4 mr-2' />
+                                    Settings
+                                </div>
+                                <span className='text-xs opacity-50 font-mono'>S</span>
+                            </button>
+                            <button
+                                onClick={() => handlePermissions(data[openMenuIndex])}
+                                className='flex items-center justify-between w-full px-3 py-2 text-sm hover:bg-login-600 cursor-pointer'
+                            >
+                                <div className='flex items-center'>
+                                    <Shield className='w-4 h-4 mr-2' />
+                                    Permissions
+                                </div>
+                                <span className='text-xs opacity-50 font-mono'>P</span>
+                            </button>
+                            <button
+                                onClick={() => handleSubmissions(data[openMenuIndex])}
+                                className='flex items-center justify-between w-full px-3 py-2 text-sm hover:bg-login-600 cursor-pointer'
+                            >
+                                <div className='flex items-center'>
+                                    <List className='w-4 h-4 mr-2' />
+                                    Submissions
+                                </div>
+                                <span className='text-xs opacity-50 font-mono'>A</span>
+                            </button>
+                            <button
+                                onClick={() => handleQR(data[openMenuIndex])}
+                                className='flex items-center justify-between w-full px-3 py-2 text-sm hover:bg-login-600 cursor-pointer'
+                            >
+                                <div className='flex items-center'>
+                                    <QrCode className='w-4 h-4 mr-2' />
+                                    QR
+                                </div>
+                                <span className='text-xs opacity-50 font-mono'>Q</span>
+                            </button>
+                            <button
+                                onClick={() => handleShare(data[openMenuIndex])}
+                                className='flex items-center justify-between w-full px-3 py-2 text-sm hover:bg-login-600 cursor-pointer'
+                            >
+                                <div className='flex items-center'>
+                                    <Share className='w-4 h-4 mr-2' />
+                                    Share
+                                </div>
+                                <span className='text-xs opacity-50 font-mono'>H</span>
+                            </button>
+                        </>
+                    )}
+                    {customActions && customActions(data[openMenuIndex], () => setOpenMenuIndex(null))}
+                    {viewBaseHref && (
+                        <button
+                            onClick={() => handleView(data[openMenuIndex])}
+                            className='flex items-center justify-between w-full px-3 py-2 text-sm hover:bg-login-600 cursor-pointer'
+                        >
+                            <div className='flex items-center'>
+                                <Eye className='w-4 h-4 mr-2' />
+                                View
+                            </div>
+                            <span className='text-xs opacity-50 font-mono'>V</span>
+                        </button>
+                    )}
+                    {onDelete && (!canDelete || canDelete(data[openMenuIndex])) && (
+                        <button
+                            onClick={() => handleDelete(data[openMenuIndex])}
+                            className='flex items-center justify-between w-full px-3 py-2 text-sm
+                                    hover:bg-login-600 text-red-400 cursor-pointer'
+                        >
+                            <div className='flex items-center'>
+                                <Trash2 className='w-4 h-4 mr-2' />
+                                Delete
+                            </div>
+                            <span className='text-xs opacity-50 font-mono'>D</span>
+                        </button>
+                    )}
+                </div>,
+                document.body
+            )}
         </div>
     )
 }

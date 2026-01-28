@@ -175,7 +175,7 @@ export default function EditFieldsPage({ fields, formId }: { fields: GetFieldsPr
                             name={`field_${index}_operation`}
                             value={(field as { operation?: string }).operation || 'update'}
                         />
-                        <div className='grid grid-cols-4 gap-x-4'>
+                        <div className='grid grid-cols-1 md:grid-cols-4 gap-4'>
                             <Input
                                 name={`field_${index}_title`}
                                 type='text'
@@ -184,7 +184,7 @@ export default function EditFieldsPage({ fields, formId }: { fields: GetFieldsPr
                                 onChange={(e) =>
                                     setFieldsData(prev => prev.map((f, i) => i === index ? { ...f, title: e.target.value } : f))}
                                 required
-                                className='col-span-2'
+                                className='col-span-1 md:col-span-2'
                             />
 
                             <Select
@@ -206,7 +206,7 @@ export default function EditFieldsPage({ fields, formId }: { fields: GetFieldsPr
                                     prev => prev.map((f, i) => i === index ? { ...f, required: e.target.checked } : f)
                                 )}
                                 switchOnly
-                                className='justify-center'
+                                className='justify-start md:justify-center mt-2 md:mt-0'
                             />
                         </div>
 

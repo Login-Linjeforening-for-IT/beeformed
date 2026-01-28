@@ -11,31 +11,31 @@ export default async function Page() {
 
     return (
         <PageContainer title='Profile'>
-            <div className='flex flex-row gap-6'>
-                <FormPopup buttonClassName={`size-50 bg-login-500 shadow-lg rounded-lg p-8
+            <div className='grid grid-cols-3 gap-3 md:gap-6 w-full max-w-3xl'>
+                <FormPopup buttonClassName={`w-full aspect-square bg-login-500 shadow-lg rounded-lg p-2 md:p-8
                         flex flex-col items-center justify-center hover:bg-login-600
                         transition-colors cursor-pointer`}
                 >
-                    <FilePlusIcon size={56} className='text-white' />
-                    <p className='text-login-50 text-sm mt-2'>Create Form</p>
+                    <FilePlusIcon className='text-white w-8 h-8 md:w-14 md:h-14' />
+                    <p className='text-login-50 text-xs md:text-sm mt-2 text-center'>Create Form</p>
                 </FormPopup>
                 <Link
                     href='/forms'
-                    className={`size-50 bg-login-500 shadow-lg rounded-lg p-8
+                    className={`w-full aspect-square bg-login-500 shadow-lg rounded-lg p-2 md:p-8
                         flex flex-col items-center justify-center hover:bg-login-600
                         transition-colors`}
                 >
-                    <Files size={56} className='text-white' />
-                    <p className='text-login-50 text-sm mt-2'>My Forms</p>
+                    <Files className='text-white w-8 h-8 md:w-14 md:h-14' />
+                    <p className='text-login-50 text-xs md:text-sm mt-2 text-center'>My Forms</p>
                 </Link>
                 <Link
                     href='/submissions'
-                    className={`size-50 bg-login-500 shadow-lg rounded-lg p-8
+                    className={`w-full aspect-square bg-login-500 shadow-lg rounded-lg p-2 md:p-8
                         flex flex-col items-center justify-center hover:bg-login-600
                         transition-colors`}
                 >
-                    <FileText size={56} className='text-white' />
-                    <p className='text-login-50 text-sm mt-2'>Submissions</p>
+                    <FileText className='text-white w-8 h-8 md:w-14 md:h-14' />
+                    <p className='text-login-50 text-xs md:text-sm mt-2 text-center'>Submissions</p>
                 </Link>
             </div>
             {user && !user.error ? (

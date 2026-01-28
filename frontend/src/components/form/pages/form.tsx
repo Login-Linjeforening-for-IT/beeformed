@@ -45,7 +45,7 @@ export default function EditFormPage({ form }: { form: GetFormProps }) {
     }
 
     return (
-        <div className='bg-login-700 rounded-lg w-full max-w-2xl'>
+        <div className='w-full max-w-2xl'>
             <h2 className='text-xl font-semibold text-login-50 mb-6'>Edit Form Settings</h2>
 
             <form onSubmit={handleSubmit}>
