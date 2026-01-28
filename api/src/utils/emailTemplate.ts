@@ -56,9 +56,6 @@ function generateEmailHTML(content: EmailContent, qrCodeHtml?: string | null): s
                         background-color: #181818;
                         color: #ededed;
                     }
-                    .qr-dot {
-                        background-color: #ededed !important;
-                    }
                 }
 
                 .container {
@@ -221,7 +218,7 @@ function generateEmailHTML(content: EmailContent, qrCodeHtml?: string | null): s
 
                     ${qrCodeHtml ? `
                     <div class="qr-code" style="text-align: center; margin: 20px 0;">
-                        <div style="padding: 15px; display: inline-block; border-radius: 8px;">
+                        <div style="padding: 15px; display: inline-block; border-radius: 8px; color: #181818;">
                             ${qrCodeHtml}
                         </div>
                         ${submissionId ? `<p style="font-size: 12px; color: #5e5e5e; margin-top: 5px;">ID: ${submissionId}</p>` : ''}
