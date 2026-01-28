@@ -1,7 +1,7 @@
 export {}
 
 declare global {
-    type SQLParamType = string | number | boolean | null | Date
+    type SQLParamType = string | number | boolean | null | Date | string[]
 
     interface User {
         user_id: string

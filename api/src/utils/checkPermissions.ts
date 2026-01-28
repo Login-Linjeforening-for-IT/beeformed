@@ -1,10 +1,10 @@
 import run from '#db'
 import { loadSQL } from '#utils/sql.ts'
 
-export async function checkPermission(formId: number, userId: string): Promise<boolean> {
+export async function checkPermission(formId: number, userId: string, groups: string[] = []): Promise<boolean> {
     try {
         const sql = await loadSQL('form-permissions/checkPermission.sql')
-        const result = await run(sql, [formId, userId])
+        const result = await run(sql, [formId, userId, groups])
 
         return result.rows[0]?.has_permission || false
     } catch (error) {

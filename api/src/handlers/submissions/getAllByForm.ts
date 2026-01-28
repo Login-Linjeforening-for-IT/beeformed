@@ -1,5 +1,6 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import run from '#db'
+import { checkPermission } from '#utils/checkPermissions.ts'
 import { loadSQL, buildFilteredQuery } from '#utils/sql.ts'
 
 export default async function getSubmissionsByForm(req: FastifyRequest, res: FastifyReply) {
@@ -14,9 +15,8 @@ export default async function getSubmissionsByForm(req: FastifyRequest, res: Fas
     }
 
     try {
-        const formQuery = await loadSQL('forms/get.sql')
-        const formResult = await run(formQuery, [formId])
-        if (formResult.rows.length === 0 || formResult.rows[0].user_id !== userId) {
+        const hasPermission = await checkPermission(parseInt(formId), userId, req.user!.groups || [])
+        if (!hasPermission) {
             return res.status(403).send({ error: 'Forbidden' })
         }
 

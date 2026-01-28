@@ -30,7 +30,7 @@ export default async function scanSubmission(req: FastifyRequest, res: FastifyRe
             return res.status(400).send({ error: 'This submission belongs to a different form' })
         }
 
-        const hasPerm = await checkPermission(submission.form_id, userId)
+        const hasPerm = await checkPermission(submission.form_id, userId, req.user!.groups)
 
         if (!hasPerm) {
             return res.status(403).send({ error: 'You do not have permission to scan this submission' })

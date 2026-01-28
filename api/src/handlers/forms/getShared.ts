@@ -12,7 +12,7 @@ export default async function getSharedForms(req: FastifyRequest, res: FastifyRe
     }
 
     try {
-        const { sql, params } = await buildFilteredQuery('forms/getShared.sql', [req.user!.id], query, 'f')
+        const { sql, params } = await buildFilteredQuery('forms/getShared.sql', [req.user!.id, req.user!.groups], query, 'f')
 
         const result = await run(sql, params)
         const data = result.rows
