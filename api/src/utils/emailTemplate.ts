@@ -1,5 +1,5 @@
 import { LOGO_SVG } from '#utils/logo.ts'
-import generateQRCode from './qr/generator.ts'
+import { generateQRCodeHtml } from './qr/generator.ts'
 
 type EmailTemplate = {
     subject: string
@@ -31,7 +31,7 @@ const COMPANY_INFO = {
     }
 }
 
-function generateEmailHTML(content: EmailContent, qrCodeDataUrl?: string | null): string {
+function generateEmailHTML(content: EmailContent, qrCodeHtml?: string | null): string {
     const { title, header, content: bodyContent, actionUrl, actionText, submissionId } = content
 
     return `
@@ -45,16 +45,16 @@ function generateEmailHTML(content: EmailContent, qrCodeDataUrl?: string | null)
                 body {
                     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
                     line-height: 1.6;
-                    color: #333;
+                    color: #181818;
                     margin: 0;
                     padding: 20px;
-                    background-color: #f5f5f5;
+                    background-color: #ededed;
                 }
 
                 @media (prefers-color-scheme: dark) {
                     body {
-                        background-color: #1a1a1a;
-                        color: #e9ecef;
+                        background-color: #181818;
+                        color: #ededed;
                     }
                 }
 
@@ -62,7 +62,7 @@ function generateEmailHTML(content: EmailContent, qrCodeDataUrl?: string | null)
                     margin: 0 auto;
                     background-color: #ffffff;
                     padding: 30px;
-                    border: 1px solid #e1e5e9;
+                    border: 1px solid #b0b0b0;
                     border-radius: 8px;
                     max-width: 600px;
                     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -70,8 +70,8 @@ function generateEmailHTML(content: EmailContent, qrCodeDataUrl?: string | null)
 
                 @media (prefers-color-scheme: dark) {
                     .container {
-                        background-color: #2d2d2d;
-                        border-color: #404040;
+                        background-color: #212121;
+                        border-color: #424242;
                         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
                     }
                 }
@@ -79,7 +79,7 @@ function generateEmailHTML(content: EmailContent, qrCodeDataUrl?: string | null)
                 .header {
                     margin-bottom: 30px;
                     padding-bottom: 20px;
-                    border-bottom: 1px solid #e1e5e9;
+                    border-bottom: 1px solid #b0b0b0;
                     text-align: center;
                 }
 
@@ -97,17 +97,17 @@ function generateEmailHTML(content: EmailContent, qrCodeDataUrl?: string | null)
                 }
 
                 .landing-logo_letter {
-                    fill: #333;
+                    fill: #181818;
                 }
 
                 @media (prefers-color-scheme: dark) {
                     .landing-logo_letter {
-                        fill: #ffffff;
+                        fill: #ededed;
                     }
                 }
 
                 .header h1 {
-                    color: #333;
+                    color: #181818;
                     margin: 0;
                     font-size: 28px;
                     font-weight: 600;
@@ -118,18 +118,18 @@ function generateEmailHTML(content: EmailContent, qrCodeDataUrl?: string | null)
                     font-size: 24px;
                     font-weight: 600;
                     margin-bottom: 20px;
-                    color: #333;
+                    color: #181818;
                 }
 
                 @media (prefers-color-scheme: dark) {
                     .header {
-                        border-bottom-color: #404040;
+                        border-bottom-color: #424242;
                     }
                     .header h1 {
-                        color: #ffffff;
+                        color: #ededed;
                     }
                     .email-header {
-                        color: #ffffff;
+                        color: #ededed;
                     }
                 }
 
@@ -163,18 +163,18 @@ function generateEmailHTML(content: EmailContent, qrCodeDataUrl?: string | null)
                 }
 
                 .footer {
-                    border-top: 1px solid #e1e5e9;
+                    border-top: 1px solid #b0b0b0;
                     padding-top: 25px;
                     margin-top: 30px;
                     font-size: 14px;
-                    color: #666;
+                    color: #5e5e5e;
                     text-align: center;
                 }
 
                 @media (prefers-color-scheme: dark) {
                     .footer {
-                        border-top-color: #404040;
-                        color: #adb5bd;
+                        border-top-color: #424242;
+                        color: #b0b0b0;
                     }
                 }
 
@@ -216,10 +216,10 @@ function generateEmailHTML(content: EmailContent, qrCodeDataUrl?: string | null)
                 <div class="content">
                     <div style="white-space: pre-line;">${bodyContent}</div>
 
-                    ${qrCodeDataUrl ? `
+                    ${qrCodeHtml ? `
                     <div class="qr-code" style="text-align: center; margin: 20px 0;">
-                        <img src="${qrCodeDataUrl}" alt="QR Code" style="max-width: 150px; height: auto;" />
-                        ${submissionId ? `<p style="font-size: 12px; color: #666; margin-top: 5px;">ID: ${submissionId}</p>` : ''}
+                        ${qrCodeHtml}
+                        ${submissionId ? `<p style="font-size: 12px; color: #5e5e5e; margin-top: 5px;">ID: ${submissionId}</p>` : ''}
                     </div>
                     ` : ''}
 
@@ -281,11 +281,11 @@ function generateEmailText(content: EmailContent): string {
 }
 
 export async function createEmailTemplate(content: EmailContent): Promise<EmailTemplate> {
-    const qrCodeDataUrl = content.submissionId ? await generateQRCode({ data: content.submissionId }) : null
+    const qrCodeHtml = content.submissionId ? await generateQRCodeHtml({ data: content.submissionId }) : null
 
     return {
         subject: content.title,
-        html: generateEmailHTML(content, qrCodeDataUrl),
+        html: generateEmailHTML(content, qrCodeHtml),
         text: generateEmailText(content)
     }
 }
