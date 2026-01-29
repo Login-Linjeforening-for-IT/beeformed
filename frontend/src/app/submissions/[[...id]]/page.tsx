@@ -5,6 +5,7 @@ import SearchInput from '@components/search/search'
 import Pagination from '@components/pagination/pagination'
 import FormRenderer from '@components/form/renderer'
 import SubmissionsTable from './SubmissionsTable'
+import { formatDateTime } from '@utils/dateTime'
 
 export default async function Page(
     { params, searchParams }: { params: Promise<{ id?: string[] }>; searchParams: Promise<{ [key: string]: string | undefined }> }
@@ -45,10 +46,22 @@ export default async function Page(
                             This form is full. You are currently on the waitlist.
                         </div>
                     )}
-                    {submission.status === 'confirmed' && (
+                    {submission.status === 'registered' && (
                         <div className='bg-green-500/10 border border-green-500 text-green-500 rounded p-4'>
-                            <strong>Status: Confirmed</strong><br/>
-                            Your spot is confirmed.
+                            <strong>Status: Registered</strong><br/>
+                            Your submission has been registered.
+                        </div>
+                    )}
+                    {submission.status === 'rejected' && (
+                        <div className='bg-red-500/10 border border-red-500 text-red-500 rounded p-4'>
+                            <strong>Status: Rejected</strong><br/>
+                            Your submission has been rejected.
+                        </div>
+                    )}
+                    {submission.status === 'cancelled' && (
+                        <div className='bg-gray-500/10 border border-gray-500 text-gray-500 rounded p-4'>
+                            <strong>Status: Cancelled</strong><br/>
+                            Your submission has been cancelled.
                         </div>
                     )}
                     {form.description &&
@@ -64,7 +77,7 @@ export default async function Page(
         const submissions = data as GetSubmissionsProps
         const submissionsData = submissions.data.map(submission => ({
             ...submission,
-            submitted_at: new Date(submission.submitted_at).toLocaleString(),
+            submitted_at: formatDateTime(submission.submitted_at),
         }))
         const totalItems = submissions.total
 

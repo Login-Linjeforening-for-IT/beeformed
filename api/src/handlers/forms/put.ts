@@ -29,20 +29,19 @@ export default async function updateForm(req: FastifyRequest, res: FastifyReply)
     try {
         const newLimit = body.limit ? Number(body.limit) : null
 
-        // Get confirmed count
-        const countSql = await loadSQL('submissions/countConfirmed.sql')
+        const countSql = await loadSQL('submissions/countRegistered.sql')
         const countResult = await run(countSql, [params.id])
-        const confirmedCount = countResult.rows[0].count
+        const registeredCount = countResult.rows[0].count
 
-        if (newLimit !== null && newLimit < confirmedCount) {
-            return res.status(400).send({ error: 'Limit cannot be lower than the number of confirmed submissions' })
+        if (newLimit !== null && newLimit < registeredCount) {
+            return res.status(400).send({ error: 'Limit cannot be lower than the number of registered submissions' })
         }
 
         let spotsToFill = 0
         if (newLimit === null) {
             spotsToFill = 999999
         } else {
-            spotsToFill = newLimit - confirmedCount
+            spotsToFill = newLimit - registeredCount
         }
 
         if (spotsToFill > 0) {
@@ -53,12 +52,12 @@ export default async function updateForm(req: FastifyRequest, res: FastifyReply)
             const toPromote = waitlistResult.rows
 
             for (const submission of toPromote) {
-                await run(updateStatusSql, [submission.id, 'confirmed'])
+                await run(updateStatusSql, [submission.id, 'registered'])
                 if (submission.email) {
                     await sendTemplatedMail(submission.email, {
                         header: 'Good news!',
                         title: `You have a spot in ${body.title}!`,
-                        content: `Your submission for ${body.title} has been confirmed. A spot opened up and you have been moved from the waitlist to confirmed list.`,
+                        content: `Your submission for ${body.title} has been registered. A spot opened up and you have been moved from the waitlist to registered list.`,
                         actionUrl: `${config.FRONTEND_URL || 'http://localhost:3000'}/submissions/${submission.id}`,
                         actionText: 'View Submission'
                     })

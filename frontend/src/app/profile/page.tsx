@@ -4,6 +4,7 @@ import Button from '@components/button/button'
 import { FilePlusIcon, Files, FileText } from 'lucide-react'
 import Link from 'next/link'
 import { FormPopup } from '@components/form/popup'
+import { formatDateTime } from '@utils/dateTime'
 
 export default async function Page() {
 
@@ -43,7 +44,7 @@ export default async function Page() {
                     <div className='highlighted-section mt-20'>
                         <p>{user.name}</p>
                         <p>{user.email}</p>
-                        <p>Created {new Date(user.created_at).toLocaleString('no-NO')}</p>
+                        <p>Created {formatDateTime(user.created_at)}</p>
                     </div>
                     <Button
                         href='/api/logout'

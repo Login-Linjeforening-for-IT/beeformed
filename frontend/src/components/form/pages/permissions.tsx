@@ -6,6 +6,7 @@ import { deletePermission, postPermission } from '@utils/api'
 import { Input } from 'uibee/components'
 import Table from '@components/table/table'
 import { useRouter } from 'next/navigation'
+import { formatDateTime } from '@utils/dateTime'
 
 export default function EditPermissionsPage({ permissions, formId }: { permissions: GetPermissionsProps, formId: string }) {
     const router = useRouter()
@@ -68,6 +69,7 @@ export default function EditPermissionsPage({ permissions, formId }: { permissio
 
     const transformedData = permissions.data.map(perm => ({
         ...perm,
+        created_at: formatDateTime(perm.created_at),
         user_or_group: perm.user_email || perm.group
     }))
 

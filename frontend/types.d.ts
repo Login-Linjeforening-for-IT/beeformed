@@ -31,7 +31,7 @@ declare global {
         id: number
         creator_email: string
         creator_name: string
-        confirmed_count: string
+        registered_count: string
         user_has_submitted?: boolean
         fields: {
             id: string

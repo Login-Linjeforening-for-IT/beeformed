@@ -1,5 +1,5 @@
 -- Enums
-CREATE TYPE submission_status AS ENUM ('confirmed', 'waitlisted');
+CREATE TYPE submission_status AS ENUM ('registered', 'waitlisted', 'cancelled', 'rejected');
 CREATE TYPE field_type_enum AS ENUM ('text', 'textarea', 'number', 'select', 'radio', 'checkbox', 'date', 'time', 'datetime');
 
 -- Users 
@@ -46,7 +46,7 @@ CREATE TABLE submissions (
     id UUID PRIMARY KEY DEFAULT uuidv7(),
     form_id INTEGER REFERENCES forms(id) ON DELETE CASCADE,
     user_id TEXT REFERENCES users(user_id),
-    status submission_status DEFAULT 'confirmed',
+    status submission_status DEFAULT 'registered',
     submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     scanned_at TIMESTAMP
 );

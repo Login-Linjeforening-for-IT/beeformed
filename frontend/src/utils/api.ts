@@ -125,7 +125,7 @@ export async function scanSubmission(submissionId: string, formId: string): Prom
     return await postWrapper({ path: `submissions/${submissionId}/scan`, data: { form_id: formId } })
 }
 
-export async function deleteSubmission(submissionId: string) {
+export async function cancelSubmission(submissionId: string) {
     return await deleteWrapper({ path: `submissions/${submissionId}` })
 }
 

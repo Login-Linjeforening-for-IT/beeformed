@@ -2,7 +2,7 @@ SELECT
     f.*,
     u.name as creator_name,
     u.email as creator_email,
-    (SELECT COUNT(*) FROM submissions s WHERE s.form_id = f.id AND s.status = 'confirmed') as confirmed_count,
+    (SELECT COUNT(*) FROM submissions s WHERE s.form_id = f.id AND s.status = 'registered') as registered_count,
     EXISTS (SELECT 1 FROM submissions s WHERE s.form_id = f.id AND s.user_id = $2) as user_has_submitted,
     COALESCE(json_agg(
         jsonb_build_object(

@@ -1,6 +1,7 @@
 services:
     beeformed:
         container_name: beeformed
+        image: beeformed_frontend
         build:
             context: ./frontend
             dockerfile: Dockerfile
@@ -14,6 +15,8 @@ services:
 
     beeformed_api:
         container_name: beeformed_api
+        image: beeformed_api
+        restart: always
         build:
             context: ./api
             dockerfile: Dockerfile

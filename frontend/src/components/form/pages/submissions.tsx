@@ -3,6 +3,7 @@
 import Table from '@components/table/table'
 import SearchInput from '@components/search/search'
 import Pagination from '@components/pagination/pagination'
+import { formatDateTime } from '@utils/dateTime'
 
 type SubmissionsPageProps = {
     submissions: GetSubmissionsProps
@@ -13,9 +14,9 @@ type SubmissionsPageProps = {
 export default function SubmissionsPage({ submissions, currentOrderBy, currentSort }: SubmissionsPageProps) {
     const submissionsData = submissions.data.map(submission => ({
         ...submission,
-        submitted_at: new Date(submission.submitted_at).toLocaleString(),
         user_email: submission.user_email || 'Anonymous',
-        user_name: submission.user_name || 'Anonymous'
+        user_name: submission.user_name || 'Anonymous',
+        submitted_at: formatDateTime(submission.submitted_at)
     }))
 
     return (
@@ -34,13 +35,19 @@ export default function SubmissionsPage({ submissions, currentOrderBy, currentSo
                     <Table
                         data={submissionsData}
                         columns={[
-                            { key: 'id', label: 'ID', sortable: true },
-                            { key: 'form_title', label: 'Form Title', sortable: true },
                             { key: 'submitted_at', label: 'Submitted At', sortable: true },
                             { key: 'user_email', label: 'User Email' },
                             { key: 'user_name', label: 'User Name' },
                             { key: 'status', label: 'Status', sortable: true,
-                                highlightColor: (row) => row.status === 'waitlisted' ? 'red' : 'green'
+                                highlightColor: (row) => {
+                                    switch (row.status) {
+                                        case 'registered': return 'green'
+                                        case 'waitlisted': return 'yellow'
+                                        case 'cancelled': return 'gray'
+                                        case 'rejected': return 'red'
+                                        default: return 'blue'
+                                    }
+                                }
                             }
                         ]}
                         disableEdit={true}

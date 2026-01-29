@@ -30,8 +30,8 @@ export default async function deleteSubmission(req: FastifyRequest, res: Fastify
              return res.status(400).send({ error: 'Cannot remove submission after form has closed' })
         }
 
-        const deleteSql = await loadSQL('submissions/delete.sql')
-        await run(deleteSql, [params.id])
+        const updateStatusSql = await loadSQL('submissions/updateStatus.sql')
+        await run(updateStatusSql, [params.id, 'cancelled'])
 
         if (submission.user_email) {
             const isOwner = submission.user_id === user.id
@@ -41,19 +41,19 @@ export default async function deleteSubmission(req: FastifyRequest, res: Fastify
                     ? `You have withdrawn your submission for ${submission.form_title}`
                     : `Your submission for ${submission.form_title} has been removed`,
                 content: isOwner
-                    ? `We're confirming that your submission for ${submission.form_title} has been removed.`
-                    : `An administrator has removed your submission for ${submission.form_title}.`,
+                    ? `We're confirming that your submission for ${submission.form_title} has been cancelled.`
+                    : `An administrator has cancelled your submission for ${submission.form_title}.`,
                 actionUrl: `${config.FRONTEND_URL}/f/${submission.form_slug}`,
                 actionText: 'View Form'
             })
         }
 
-        if (submission.status === 'confirmed' && submission.limit !== null) {
-            const countSql = await loadSQL('submissions/countConfirmed.sql')
+        if (submission.status === 'registered' && submission.limit !== null) {
+            const countSql = await loadSQL('submissions/countRegistered.sql')
             const countResult = await run(countSql, [submission.form_id])
-            const confirmedCount = countResult.rows[0].count
+            const registeredCount = countResult.rows[0].count
 
-            if (confirmedCount < submission.limit) {
+            if (registeredCount < submission.limit) {
                 const getWaitlistSql = await loadSQL('submissions/getWaitlistBatch.sql')
                 const updateStatusSql = await loadSQL('submissions/updateStatus.sql')
                 
@@ -61,13 +61,13 @@ export default async function deleteSubmission(req: FastifyRequest, res: Fastify
                 
                 if (waitlistResult.rows.length > 0) {
                     const nextPerson = waitlistResult.rows[0]
-                    await run(updateStatusSql, [nextPerson.id, 'confirmed'])
+                    await run(updateStatusSql, [nextPerson.id, 'registered'])
                     
                     if (nextPerson.email) {
                         await sendTemplatedMail(nextPerson.email, {
                             header: 'Good news!',
                             title: `You have a spot in ${submission.form_title}!`,
-                            content: `Your submission for ${submission.form_title} has been confirmed. A spot opened up and you have been moved from the waitlist to confirmed list.`,
+                            content: `Your submission for ${submission.form_title} has been registered. A spot opened up and you have been moved from the waitlist to registered list.`,
                             actionUrl: `${config.FRONTEND_URL}/submissions/${nextPerson.id}`,
                             actionText: 'View Submission',
                             submissionId: nextPerson.id
@@ -77,7 +77,10 @@ export default async function deleteSubmission(req: FastifyRequest, res: Fastify
             }
         }
 
-        res.send({ success: true, message: 'Submission deleted' })
+        const updateSql = await loadSQL('submissions/updateStatus.sql')
+        await run(updateSql, [params.id, 'cancelled'])
+
+        res.send({ success: true, message: 'Submission cancelled' })
 
     } catch (error) {
         console.error('Error deleting submission:', error)

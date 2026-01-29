@@ -3,14 +3,17 @@
 import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ChevronUp, ChevronDown, MoreHorizontal, Edit, Trash2, Eye, Settings, Shield, List, Share, QrCode } from 'lucide-react'
+import { ChevronUp, ChevronDown, MoreHorizontal, Edit, Trash2, Eye, Settings, Shield, List, Share, QrCode, X } from 'lucide-react'
 import { toast } from 'uibee/components'
+
+type color = 'red' | 'green' | 'orange' | 'yellow' | 'blue' | 'gray'
 
 type Column = {
     key: string
     label: string
     sortable?: boolean
-    highlightColor?: 'red' | 'green' | 'orange' | ((row: Record<string, unknown>) => 'red' | 'green' | 'orange' | undefined)
+    highlightColor?: color |
+        ((row: Record<string, unknown>) => color | undefined)
 }
 
 type TableProps = {
@@ -20,6 +23,8 @@ type TableProps = {
     currentSort?: 'asc' | 'desc'
     onDelete?: (row: Record<string, unknown>) => void
     canDelete?: (row: Record<string, unknown>) => boolean
+    onCancel?: (row: Record<string, unknown>) => void
+    canCancel?: (row: Record<string, unknown>) => boolean
     disableEdit?: boolean
     viewBaseHref?: string
     viewHrefKey?: string
@@ -34,6 +39,8 @@ export default function Table({
     currentSort,
     onDelete,
     canDelete,
+    onCancel,
+    canCancel,
     disableEdit,
     viewBaseHref,
     viewHrefKey = 'id',
@@ -100,6 +107,11 @@ export default function Table({
         setOpenMenuIndex(null)
     }
 
+    function handleCancel(row: Record<string, unknown>) {
+        if (onCancel) onCancel(row)
+        setOpenMenuIndex(null)
+    }
+
     function handleView(row: Record<string, unknown>) {
         if (viewBaseHref) router.push(`${viewBaseHref}${row[viewHrefKey]}`)
         setOpenMenuIndex(null)
@@ -143,6 +155,9 @@ export default function Table({
                 case 'h':
                     handleShare(row)
                     break
+                case 'c':
+                    if (onCancel && (!canCancel || canCancel(row))) handleCancel(row)
+                    break
                 case 'd':
                     if (onDelete && (!canDelete || canDelete(row))) handleDelete(row)
                     break
@@ -151,7 +166,7 @@ export default function Table({
 
         window.addEventListener('keydown', handleKeyDown)
         return () => window.removeEventListener('keydown', handleKeyDown)
-    }, [hoveredIndex, data, disableEdit, showFormActions, viewBaseHref, onDelete, canDelete])
+    }, [hoveredIndex, data, disableEdit, showFormActions, viewBaseHref, onDelete, canDelete, onCancel, canCancel])
 
     useEffect(() => {
         const handleScroll = () => {
@@ -322,6 +337,18 @@ export default function Table({
                                 View
                             </div>
                             <span className='text-xs opacity-50 font-mono'>V</span>
+                        </button>
+                    )}
+                    {onCancel && (!canCancel || canCancel(data[openMenuIndex])) && (
+                        <button
+                            onClick={() => handleCancel(data[openMenuIndex])}
+                            className='flex items-center justify-between w-full px-3 py-2 text-sm hover:bg-login-600 cursor-pointer'
+                        >
+                            <div className='flex items-center'>
+                                <X className='w-4 h-4 mr-2' />
+                                Cancel
+                            </div>
+                            <span className='text-xs opacity-50 font-mono'>C</span>
                         </button>
                     )}
                     {onDelete && (!canDelete || canDelete(data[openMenuIndex])) && (

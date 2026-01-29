@@ -6,6 +6,7 @@ import SearchInput from '@components/search/search'
 import { FormPopup } from '@components/form/popup'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { formatDateTime } from '@utils/dateTime'
 
 type PageProps = {
     params: Promise<{ slug?: string[] | string }>
@@ -42,7 +43,10 @@ export default async function Page({ params, searchParams }: PageProps) {
         notFound()
     }
 
-    const formsData = forms.data
+    const formsData = forms.data.map(form => ({
+        ...form,
+        created_at: formatDateTime(form.created_at)
+    }))
     const totalItems = forms.total
 
     return (
@@ -82,8 +86,8 @@ export default async function Page({ params, searchParams }: PageProps) {
                         <Table
                             data={formsData}
                             columns={[
-                                { key: 'id', label: 'Form ID', sortable: true },
                                 { key: 'title', label: 'Title', sortable: true },
+                                { key: 'id', label: 'Form ID', sortable: true },
                                 { key: 'created_at', label: 'Created At', sortable: true }
                             ]}
                             currentOrderBy={orderBy}

@@ -30,7 +30,7 @@ export default async function createSubmission(req: FastifyRequest, res: Fastify
             }
 
             const userId = form.anonymous_submissions ? null : req.user!.id
-            let status = 'confirmed'
+            let status = 'registered'
             
             if (!form.anonymous_submissions && !form.multiple_submissions && userId) {
                 const checkSubmissionSql = await loadSQL('submissions/checkUserSubmission.sql')
@@ -41,7 +41,7 @@ export default async function createSubmission(req: FastifyRequest, res: Fastify
             }
             
             if (form.limit) {
-                const currentCount = parseInt(form.confirmed_count) || 0
+                const currentCount = parseInt(form.registered_count) || 0
                 if (currentCount >= form.limit) {
                     if (form.waitlist) {
                         status = 'waitlisted'
@@ -80,7 +80,7 @@ export default async function createSubmission(req: FastifyRequest, res: Fastify
                     ? `Du er satt på venteliste for "${form.title}".\n` +
                       `Vi gir deg beskjed hvis du får plass.\n` +
                       `\nAnsvarlig for skjemaet: <a href="mailto:${form.creator_email}">${form.creator_email}</a> \n`
-                    : `Din påmelding til "${form.title}" er levert.\n` +
+                    : `Din påmelding til "${form.title}" er registrert.\n` +
                       `\nAnsvarlig for skjemaet: <a href="mailto:${form.creator_email}">${form.creator_email}</a> \n`
 
                 await sendTemplatedMail(req.user.email, {

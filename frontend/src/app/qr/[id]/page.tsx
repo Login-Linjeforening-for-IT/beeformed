@@ -7,6 +7,7 @@ import jsQR from 'jsqr'
 import { AlertCircle, Loader2, ScanLine, User, Clock, CheckCircle2, XCircle } from 'lucide-react'
 import { scanSubmission } from '@/utils/api'
 import { useParams } from 'next/navigation'
+import { formatDateTime } from '@utils/dateTime'
 
 export default function Page() {
     const params = useParams()
@@ -124,8 +125,9 @@ export default function Page() {
 
     function getStatusColor(status: string) {
         switch (status) {
-            case 'confirmed': return 'text-green-500 bg-green-500/10'
+            case 'registered': return 'text-green-500 bg-green-500/10'
             case 'waitlisted': return 'text-yellow-500 bg-yellow-500/10'
+            case 'cancelled': return 'text-gray-500 bg-gray-500/10'
             case 'rejected': return 'text-red-500 bg-red-500/10'
             default: return 'text-login-200 bg-login-900'
         }
@@ -133,8 +135,9 @@ export default function Page() {
 
     function getStatusIcon(status: string) {
         switch (status) {
-            case 'confirmed': return <CheckCircle2 className='w-5 h-5' />
+            case 'registered': return <CheckCircle2 className='w-5 h-5' />
             case 'waitlisted': return <Clock className='w-5 h-5' />
+            case 'cancelled': return <XCircle className='w-5 h-5' />
             case 'rejected': return <XCircle className='w-5 h-5' />
             default: return <AlertCircle className='w-5 h-5' />
         }
@@ -203,7 +206,7 @@ export default function Page() {
                                         Already Scanned
                                     </h3>
                                     <p className='text-login-200 text-sm'>
-                                        Scanned: {new Date(submission.scanned_at!).toLocaleString()}
+                                        Scanned: {formatDateTime(submission.scanned_at!)}
                                     </p>
                                 </div>
                             ) : (

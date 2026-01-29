@@ -31,7 +31,7 @@ interface FormData {
     limit: number | null
     waitlist: boolean
     multiple_submissions: boolean
-    confirmed_count: string
+    registered_count: string
     user_has_submitted?: boolean
 }
 
@@ -39,8 +39,8 @@ interface FormData {
 
 export default function FormRenderer({ form, submission }: { form: FormData; submission?: Submission }) {
     const [loading, setLoading] = useState(false)
-    const confirmedCount = parseInt(form.confirmed_count || '0')
-    const isFull = form.limit !== null && confirmedCount >= form.limit
+    const registeredCount = parseInt(form.registered_count || '0')
+    const isFull = form.limit !== null && registeredCount >= form.limit
     const isWaitlist = isFull && form.waitlist
     const blockMultiple = !form.multiple_submissions && form.user_has_submitted
     const canSubmit = (!isFull || form.waitlist) && !blockMultiple
