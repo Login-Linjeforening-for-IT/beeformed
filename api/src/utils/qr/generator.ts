@@ -45,9 +45,14 @@ export async function generateQRCodeHtml({ data }: { data: string }): Promise<st
             table += `<tr style="padding:0;margin:0;border:0;height:${moduleSize}px;">`
             for (let c = 0; c < size; c++) {
                 const isDarkModule = isDark(r, c)
-                const color = isDarkModule ? '#000000' : 'transparent'
-                const className = isDarkModule ? 'qr-dot' : ''
-                table += `<td class="${className}" style="width:${moduleSize}px;height:${moduleSize}px;background-color:${color};padding:0;border:0;line-height:0;font-size:0;"></td>`
+                
+                if (isDarkModule) {
+                    const msoHack = `mso-style-textfill-type:gradient;mso-style-textfill-fill-gradientfill-stoplist:"0 #000000 1 100000,99000 #000000 1 100000";color:#000000 !important;`
+                    
+                    table += `<td style="width:${moduleSize}px;height:${moduleSize}px;padding:0;border:0;line-height:${moduleSize}px;font-size:${moduleSize}px;${msoHack}">&#9608;</td>`
+                } else {
+                    table += `<td style="width:${moduleSize}px;height:${moduleSize}px;padding:0;border:0;line-height:0;font-size:0;"></td>`
+                }
             }
             table += '</tr>'
         }

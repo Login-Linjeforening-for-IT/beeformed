@@ -56,13 +56,6 @@ function generateEmailHTML(content: EmailContent, qrCodeHtml?: string | null): s
                         background-color: #181818;
                         color: #ededed;
                     }
-                    .qr-dot {
-                        background-color: #ffffff !important;
-                    }
-                }
-
-                [data-ogsc] .qr-dot {
-                    background-color: #ffffff !important;
                 }
 
                 .container {
