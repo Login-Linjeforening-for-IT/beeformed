@@ -94,7 +94,7 @@ export default async function Page({ params, searchParams }: PageProps) {
                             : 'bg-login-700 text-login-100 hover:bg-login-600'
                     }`}
                 >
-                    QR
+                    QR Scanner
                 </Link>
                 <ShareButton slug={formData.slug} />
             </div>
