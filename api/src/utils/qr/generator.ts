@@ -39,7 +39,7 @@ export async function generateQRCodeHtml({ data }: { data: string }): Promise<st
             return modules.get(c, r)
         }
 
-        let table = `<table style="border:0;border-collapse:collapse;background-color:transparent;width:${totalSize}px;height:${totalSize}px;margin:0 auto;" cellspacing="0" cellpadding="0" border="0">`
+        let table = `<table bgcolor="#ffffff" style="border:0;border-collapse:collapse;background-color:#ffffff;width:${totalSize}px;height:${totalSize}px;margin:0 auto;" cellspacing="0" cellpadding="0" border="0">`
         
         for (let r = 0; r < size; r++) {
             table += `<tr style="padding:0;margin:0;border:0;height:${moduleSize}px;">`
@@ -47,11 +47,9 @@ export async function generateQRCodeHtml({ data }: { data: string }): Promise<st
                 const isDarkModule = isDark(r, c)
                 
                 if (isDarkModule) {
-                    const msoHack = `mso-style-textfill-type:gradient;mso-style-textfill-fill-gradientfill-stoplist:"0 #000000 1 100000,99000 #000000 1 100000";color:#000000 !important;`
-                    
-                    table += `<td width="${moduleSize}" height="${moduleSize}" style="width:${moduleSize}px;height:${moduleSize}px;padding:0;margin:0;border:0;vertical-align:top;font-family:monospace;line-height:${moduleSize}px;mso-line-height-rule:exactly;font-size:${moduleSize}px;${msoHack}">&#9608;</td>`
+                   table += `<td width="${moduleSize}" height="${moduleSize}" bgcolor="#000000" style="width:${moduleSize}px;height:${moduleSize}px;background-color:#000000;padding:0;border:0;line-height:0;font-size:0;"></td>`
                 } else {
-                    table += `<td width="${moduleSize}" height="${moduleSize}" style="width:${moduleSize}px;height:${moduleSize}px;padding:0;border:0;line-height:0;font-size:0;"></td>`
+                   table += `<td width="${moduleSize}" height="${moduleSize}" bgcolor="#ffffff" style="width:${moduleSize}px;height:${moduleSize}px;background-color:#ffffff;padding:0;border:0;line-height:0;font-size:0;"></td>`
                 }
             }
             table += '</tr>'
