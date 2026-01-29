@@ -49,9 +49,9 @@ export async function generateQRCodeHtml({ data }: { data: string }): Promise<st
                 if (isDarkModule) {
                     const msoHack = `mso-style-textfill-type:gradient;mso-style-textfill-fill-gradientfill-stoplist:"0 #000000 1 100000,99000 #000000 1 100000";color:#000000 !important;`
                     
-                    table += `<td style="width:${moduleSize}px;height:${moduleSize}px;padding:0;margin:0;border:0;vertical-align:top;font-family:Arial,sans-serif;line-height:${moduleSize}px;mso-line-height-rule:exactly;font-size:${moduleSize}px;${msoHack}">&#9608;</td>`
+                    table += `<td width="${moduleSize}" height="${moduleSize}" style="width:${moduleSize}px;height:${moduleSize}px;padding:0;margin:0;border:0;vertical-align:top;font-family:monospace;line-height:${moduleSize}px;mso-line-height-rule:exactly;font-size:${moduleSize}px;${msoHack}">&#9608;</td>`
                 } else {
-                    table += `<td style="width:${moduleSize}px;height:${moduleSize}px;padding:0;border:0;line-height:0;font-size:0;"></td>`
+                    table += `<td width="${moduleSize}" height="${moduleSize}" style="width:${moduleSize}px;height:${moduleSize}px;padding:0;border:0;line-height:0;font-size:0;"></td>`
                 }
             }
             table += '</tr>'
