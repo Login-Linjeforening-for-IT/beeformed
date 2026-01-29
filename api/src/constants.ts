@@ -63,7 +63,7 @@ const config = {
     SMTP_HOST: env.SMTP_HOST,
     SMTP_PORT: Number(env.SMTP_PORT) || 465,
     SMTP_SECURE: env.SMTP_SECURE === 'true',
-    SMTP_FROM: env.SMTP_FROM,
+    SMTP_FROM: env.SMTP_FROM || '',
     FRONTEND_URL: env.NEXT_PUBLIC_BASE_URL
 }
 

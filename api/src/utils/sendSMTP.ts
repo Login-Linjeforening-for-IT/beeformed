@@ -9,6 +9,8 @@ type MailOptions = {
     html?: string
 }
 
+const retryDelays = [60 * 1000, 5 * 60 * 1000, 5 * 60 * 1000]
+
 const transporter = config.DISABLE_SMTP ? null : nodemailer.createTransport({
     host: config.SMTP_HOST,
     port: Number(config.SMTP_PORT),
@@ -20,31 +22,44 @@ export default async function send({ to, subject, text, html }: MailOptions): Pr
     if (config.DISABLE_SMTP) {
         return 'SMTP disabled'
     }
-    const from = config.SMTP_FROM
     const mailOptions = { to, subject, text, html }
-    
-    let lastError: any
-    const maxRetries = 3
 
-    for (let i = 0; i < maxRetries; i++) {
-        try {
-            const info = await transporter?.sendMail({
-                from,
-                ...mailOptions,
-            })
-            return info?.response || 'SMTP disabled'
-        } catch (error: any) {
-            lastError = error
-            console.error(`Error sending email (attempt ${i + 1}/${maxRetries}):`, error)
+    try {
+        const info = await attemptSend(mailOptions)
+        return info?.response || 'SMTP disabled'
+    } catch (error: any) {
+        return 'Email failed initially, queued for retry'
+    }
+}
 
-            if (i === maxRetries - 1) {
-                throw error
-            }
+async function attemptSend(mailOptions: MailOptions, retryIndex: number = -1) {
+    try {
+        return await transporter?.sendMail({
+            from: {
+                name: 'Login Forms',
+                address: config.SMTP_FROM
+            },
+            ...mailOptions,
+        }) 
+    } catch (error) {
+        console.error(
+            retryIndex === -1
+                ? `Error sending email`
+                : `Retry attempt ${retryIndex + 1} failed:`,
+            error
+        )
 
-            await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)))
+        const nextIndex = retryIndex + 1
+        if (nextIndex < retryDelays.length) {
+            setTimeout(() => attemptSend(mailOptions, nextIndex), retryDelays[nextIndex])
+        } else {
+            console.error(`Failed to send email after multiple attempts`)
+        }
+
+        if (retryIndex === -1) {
+            throw error
         }
     }
-    throw lastError
 }
 
 export async function sendTemplatedMail(to: string, content: EmailContent): Promise<string> {
