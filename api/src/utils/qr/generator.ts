@@ -16,18 +16,15 @@ export async function generateQRCodeHtml({ data }: { data: string }): Promise<st
             return modules.get(c, r)
         }
 
-        let table = `<table role="presentation" width="${totalSize}" height="${totalSize}" align="center" style="border-collapse:separate;border-spacing:0;width:${totalSize}px;height:${totalSize}px;margin:0 auto;" cellspacing="0" cellpadding="0" border="0">`
+        let table = `<table role="presentation" align="center" style="border-collapse:separate;border-spacing:0;margin:0 auto;" cellspacing="0" cellpadding="0" border="0">`
         
         for (let r = 0; r < size; r++) {
             table += `<tr>`
             for (let c = 0; c < size; c++) {
                 const isDarkModule = isDark(r, c)
+                const color = isDarkModule ? '#000000' : '#ffffff'
                 
-                if (isDarkModule) {
-                    table += `<td style="width:${moduleSize}px;height:${moduleSize}px;border:${moduleSize / 2}px solid #000000;padding:0;font-size:0;line-height:0;"></td>`
-                } else {
-                    table += `<td style="width:${moduleSize}px;height:${moduleSize}px;border:${moduleSize / 2}px solid #ffffff;padding:0;font-size:0;line-height:0;"></td>`
-                }
+                table += `<td style="width:0;height:0;border:${moduleSize}px solid ${color};padding:0;font-size:0;line-height:0;mso-border-alt:solid ${color} ${moduleSize}px;"></td>`
             }
             table += '</tr>'
         }
