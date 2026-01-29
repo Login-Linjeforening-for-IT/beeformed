@@ -227,7 +227,13 @@ function generateEmailHTML(content: EmailContent, qrCodeHtml?: string | null): s
 
                     ${actionUrl && actionText ? `
                     <div class="action-wrap">
-                        <a href="${actionUrl}" class="action-button">${actionText}</a>
+                        <table role="presentation" align="center" cellspacing="0" cellpadding="0" border="0" style="margin:0 auto;">
+                            <tr>
+                                <td style="border:12px solid ${COMPANY_INFO.primaryColor};border-radius:6px;mso-border-alt:solid ${COMPANY_INFO.primaryColor} 12px;">
+                                    <a href="${actionUrl}" style="display:inline-block;padding:0 12px;color:#ffffff !important;text-decoration:none;font-weight:600;font-size:16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;line-height:1.2;">${actionText}</a>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                     ` : ''}
                 </div>
