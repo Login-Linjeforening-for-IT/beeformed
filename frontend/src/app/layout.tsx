@@ -9,7 +9,7 @@ import Footer from '@components/footer/footer'
 import '@public/fonts/style.css'
 
 export const metadata: Metadata = {
-    title: 'BeeFormed',
+    title: 'Login Forms',
     description: 'Form management system',
 }
 
@@ -27,7 +27,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
                 <header className='fixed top-0 w-full h-fit z-50'>
                     <Navbar />
                 </header>
-                <main className='min-h-[100vh] flex pt-22 w-full'>
+                <main className='min-h-screen flex pt-22 w-full'>
                     {children}
                 </main>
                 <Footer />
