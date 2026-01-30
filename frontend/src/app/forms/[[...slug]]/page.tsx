@@ -1,5 +1,5 @@
 import { PageContainer } from '@components/container/page'
-import { getForms, getSharedForms } from '@utils/api'
+import { deleteForm, getForms, getSharedForms } from '@utils/api'
 import Table from '@components/table/table'
 import Pagination from '@components/pagination/pagination'
 import SearchInput from '@components/search/search'
@@ -7,6 +7,7 @@ import { FormPopup } from '@components/form/popup'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { formatDateTime } from '@utils/dateTime'
+import { refresh } from 'next/cache'
 
 type PageProps = {
     params: Promise<{ slug?: string[] | string }>
@@ -48,6 +49,13 @@ export default async function Page({ params, searchParams }: PageProps) {
         created_at: formatDateTime(form.created_at)
     }))
     const totalItems = forms.total
+
+    async function handleDelete(row: Record<string, unknown>) {
+        'use server'
+        const id = row.id as string
+        deleteForm(id)
+        refresh()
+    }
 
     return (
         <PageContainer title='Forms'>
@@ -93,6 +101,7 @@ export default async function Page({ params, searchParams }: PageProps) {
                             currentOrderBy={orderBy}
                             currentSort={sort}
                             showFormActions={true}
+                            onDelete={handleDelete}
                         />
 
                         <Pagination
