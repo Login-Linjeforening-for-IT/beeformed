@@ -115,15 +115,15 @@ declare global {
     type GetSubmissionsProps = {
         data: {
             id: string
-            form_id: number
-            form_title: string
-            expires_at: string
             user_email: string | null
             user_name: string | null
             status: string
+            scanned_at: string | null
             submitted_at: string
+            answers?: { field_id: number; value: string }[]
         }[]
         total: number
+        fields?: GetFieldsProps
     }
 
     type PostSubmissionProps = {

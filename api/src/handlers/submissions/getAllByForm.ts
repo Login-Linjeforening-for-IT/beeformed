@@ -12,6 +12,7 @@ export default async function getSubmissionsByForm(req: FastifyRequest, res: Fas
         offset?: string
         order_by?: string
         sort?: string
+        include_answers?: string
     }
 
     try {
@@ -24,17 +25,21 @@ export default async function getSubmissionsByForm(req: FastifyRequest, res: Fas
         const orderMap: Record<string, string> = {
             submitted_at: 's.submitted_at',
             id: 's.id',
-            form_id: 's.form_id',
-            form_title: 'f.title',
             user_name: 'u.name',
-            user_email: 'u.email'
+            user_email: 'u.email',
+            status: 's.status',
+            scanned_at: 's.scanned_at'
         }
         if (!orderMap[orderBy]) {
             return res.status(400).send({ error: 'Invalid order_by parameter' })
         }
 
+        const sqlFile = query.include_answers === 'true'
+            ? 'submissions/getAllByFormWithAnswers.sql'
+            : 'submissions/getAllByForm.sql'
+
         const { sql, params } = await buildFilteredQuery(
-            'submissions/getAllByForm.sql',
+            sqlFile,
             [formId],
             query,
             undefined,
@@ -46,6 +51,12 @@ export default async function getSubmissionsByForm(req: FastifyRequest, res: Fas
         const result = await run(sql, params)
         const data = result.rows
         const total = data.length > 0 ? (data[0] as Record<string, unknown>).total_count as number : 0
+
+        if (query.include_answers === 'true') {
+            const fieldsSql = await loadSQL('form-fields/get.sql')
+            const fieldsResult = await run(fieldsSql, [formId])
+            return res.send({ data, total, fields: fieldsResult.rows })
+        }
 
         res.send({ data, total })
     } catch (error) {

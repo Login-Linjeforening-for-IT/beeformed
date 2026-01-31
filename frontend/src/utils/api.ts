@@ -14,6 +14,7 @@ type FilterProps = {
     limit?: number
     orderBy?: string
     sort?: 'asc' | 'desc'
+    includeAnswers?: boolean
 }
 
 type ErrorResponse = {
@@ -99,7 +100,7 @@ export async function deletePermission(formId: string, permissionId: string) {
 // Submissions
 export async function getSubmissions(
     formId: string,
-    { search, offset, limit, orderBy, sort }: FilterProps = {}
+    { search, offset, limit, orderBy, sort, includeAnswers }: FilterProps = {}
 ): Promise<GetSubmissionsProps | ErrorResponse> {
     const queryParts = new URLSearchParams()
     if (search) queryParts.append('search', String(search))
@@ -107,6 +108,7 @@ export async function getSubmissions(
     if (offset) queryParts.append('offset', String(offset))
     if (orderBy) queryParts.append('order_by', String(orderBy))
     if (sort) queryParts.append('sort', String(sort))
+    if (includeAnswers) queryParts.append('include_answers', 'true')
 
     const result = await getWrapper({ path: `forms/${formId}/submissions?${queryParts.toString()}` })
     return result

@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import EditPermissionsPage from '@components/form/pages/permissions'
 import SubmissionsPage from '@components/form/pages/submissions'
+import AllSubmissionsPage from '@components/form/pages/all-submissions'
 import ShareButton from '@components/share-button'
 
 type PageProps = {
@@ -23,19 +24,28 @@ export default async function Page({ params, searchParams }: PageProps) {
 
     const filter = {
         search: typeof filters.q === 'string' ? filters.q : '',
-        offset: typeof filters.page === 'string' ? (Number(filters.page) - 1) * 14 : 0,
-        limit: 14,
+        offset: type === 'all-submissions' ? undefined : (typeof filters.page === 'string' ? (Number(filters.page) - 1) * 14 : 0),
+        limit: type === 'all-submissions' ? undefined : 14,
+        includeAnswers: type === 'all-submissions',
         orderBy,
         sort: sort as 'asc' | 'desc'
     }
 
-    const data = type === 'settings' ?
-        await getForm(id) :
-        type === 'permissions' ?
-            await getPermissions(id) :
-            type === 'submissions' ?
-                await getSubmissions(id, filter) :
-                await getFields(id)
+    let data
+    switch (type) {
+        case 'settings':
+            data = await getForm(id)
+            break
+        case 'permissions':
+            data = await getPermissions(id)
+            break
+        case 'submissions':
+        case 'all-submissions':
+            data = await getSubmissions(id, filter)
+            break
+        default:
+            data = await getFields(id)
+    }
 
     const formData = await getForm(id)
 
@@ -43,86 +53,92 @@ export default async function Page({ params, searchParams }: PageProps) {
         notFound()
     }
 
+    function renderContent(data: unknown) {
+        switch (type) {
+            case 'settings':
+                return <EditFormPage
+                    form={data as GetFormProps}
+                />
+            case 'permissions':
+                return <EditPermissionsPage
+                    permissions={data as GetPermissionsProps}
+                    formId={id}
+                />
+            case 'submissions':
+                return <SubmissionsPage
+                    submissions={data as GetSubmissionsProps}
+                    currentOrderBy={filter.orderBy}
+                    currentSort={filter.sort}
+                    formId={id}
+                />
+            case 'all-submissions':
+                return <AllSubmissionsPage
+                    submissions={data as GetSubmissionsProps}
+                    currentOrderBy={filter.orderBy}
+                    currentSort={filter.sort}
+                />
+            default:
+                return <EditFieldsPage
+                    fields={data as GetFieldsProps}
+                    formId={id}
+                />
+        }
+    }
+
     return (
-        <PageContainer title={`Editing Form - ${type.charAt(0).toUpperCase() + type.slice(1)}`}>
+        <PageContainer title={`Editing Form - ${(type.charAt(0).toUpperCase() + type.slice(1)).replace('-', ' ')}`}>
             <div className='flex flex-wrap gap-2 mb-4'>
-                <Link
+                <LinkButton
                     href={`/form/${id}/fields`}
-                    className={`px-4 py-2 rounded transition-colors ${
-                        type === 'fields'
-                            ? 'bg-login text-white'
-                            : 'bg-login-700 text-login-100 hover:bg-login-600'
-                    }`}
+                    highlight={type === 'fields'}
                 >
                     Fields
-                </Link>
-                <Link
+                </LinkButton>
+                <LinkButton
                     href={`/form/${id}/settings`}
-                    className={`px-4 py-2 rounded transition-colors ${
-                        type === 'settings'
-                            ? 'bg-login text-white'
-                            : 'bg-login-700 text-login-100 hover:bg-login-600'
-                    }`}
+                    highlight={type === 'settings'}
                 >
                     Settings
-                </Link>
-                <Link
+                </LinkButton>
+                <LinkButton
                     href={`/form/${id}/permissions`}
-                    className={`px-4 py-2 rounded transition-colors ${
-                        type === 'permissions'
-                            ? 'bg-login text-white'
-                            : 'bg-login-700 text-login-100 hover:bg-login-600'
-                    }`}
+                    highlight={type === 'permissions'}
                 >
                     Permissions
-                </Link>
-                <Link
+                </LinkButton>
+                <LinkButton
                     href={`/form/${id}/submissions`}
-                    className={`px-4 py-2 rounded transition-colors ${
-                        type === 'submissions'
-                            ? 'bg-login text-white'
-                            : 'bg-login-700 text-login-100 hover:bg-login-600'
-                    }`}
+                    highlight={type === 'submissions' || type === 'all-submissions'}
                 >
                     Submissions
-                </Link>
-                <Link
+                </LinkButton>
+                <LinkButton
                     href={`/qr/${id}`}
-                    className={`px-4 py-2 rounded transition-colors ${
-                        type === 'qr'
-                            ? 'bg-login text-white'
-                            : 'bg-login-700 text-login-100 hover:bg-login-600'
-                    }`}
+                    highlight={type === 'qr'}
                 >
                     QR Scanner
-                </Link>
+                </LinkButton>
                 <ShareButton slug={formData.slug} />
             </div>
             <div className='pt-20 pb-4 flex flex-col h-full'>
                 <div className='flex justify-between mb-4 h-full'>
-                    {type === 'settings' ?
-                        <EditFormPage
-                            form={data as GetFormProps}
-                        />
-                        : type === 'permissions' ?
-                            <EditPermissionsPage
-                                permissions={data as GetPermissionsProps}
-                                formId={id}
-                            />
-                            : type === 'submissions' ?
-                                <SubmissionsPage
-                                    submissions={data as GetSubmissionsProps}
-                                    currentOrderBy={filter.orderBy}
-                                    currentSort={filter.sort}
-                                />
-                                :
-                                <EditFieldsPage
-                                    fields={data as GetFieldsProps}
-                                    formId={id}
-                                />
-                    }
+                    {renderContent(data)}
                 </div>
             </div>
         </PageContainer>
+    )
+}
+
+function LinkButton({ href, highlight, children }: { href: string, highlight: boolean, children: React.ReactNode }) {
+    return (
+        <Link
+            href={href}
+            className={`px-4 py-2 rounded transition-colors ${highlight ?
+                'bg-login text-white' :
+                'bg-login-700 text-login-100 hover:bg-login-600'
+            }`}
+        >
+            {children}
+        </Link>
     )
 }
