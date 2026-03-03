@@ -41,6 +41,7 @@ import {
     deleteSubmission,
     scanSubmission
 } from './handlers/submissions/index.ts'
+import liveCountHandler from './handlers/submissions/liveCount.ts'
 
 
 
@@ -73,6 +74,8 @@ export default async function apiRoutes(fastify: FastifyInstance) {
     // Form Fields
     fastify.get('/forms/:id/fields', { preHandler: [authMiddleware, permissionMiddleware] }, getFormFields)
     fastify.patch('/forms/:id/fields', { preHandler: [authMiddleware, permissionMiddleware] }, bulkFormFields)
+
+    fastify.get('/forms/:id/live', { websocket: true }, liveCountHandler)
 
     // Submissions
     fastify.get('/forms/:id/submissions', { preHandler: [authMiddleware, permissionMiddleware] }, getSubmissionsByForm)
