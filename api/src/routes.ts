@@ -43,8 +43,6 @@ import {
 } from './handlers/submissions/index.ts'
 import liveCountHandler from './handlers/submissions/liveCount.ts'
 
-
-
 export default async function apiRoutes(fastify: FastifyInstance) {
     // index
     fastify.get('/', getIndex)
@@ -75,7 +73,7 @@ export default async function apiRoutes(fastify: FastifyInstance) {
     fastify.get('/forms/:id/fields', { preHandler: [authMiddleware, permissionMiddleware] }, getFormFields)
     fastify.patch('/forms/:id/fields', { preHandler: [authMiddleware, permissionMiddleware] }, bulkFormFields)
 
-    fastify.get('/forms/:id/live', { websocket: true }, liveCountHandler)
+    fastify.get('/forms/:id/live', liveCountHandler)
 
     // Submissions
     fastify.get('/forms/:id/submissions', { preHandler: [authMiddleware, permissionMiddleware] }, getSubmissionsByForm)

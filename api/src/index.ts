@@ -1,5 +1,4 @@
 import cors from '@fastify/cors'
-import fastifyWebsocket from '@fastify/websocket'
 import Fastify from 'fastify'
 import apiRoutes from './routes.ts'
 import fs from 'fs'
@@ -16,7 +15,6 @@ fastify.register(cors, {
     origin: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD']
 })
-fastify.register(fastifyWebsocket)
 
 const port = Number(process.env.PORT) || 8080
 
