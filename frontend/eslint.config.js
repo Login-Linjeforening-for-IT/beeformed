@@ -2,18 +2,13 @@ import eslint from '@eslint/js'
 import tseslint from 'typescript-eslint'
 import typescriptParser from '@typescript-eslint/parser'
 import stylistic from '@stylistic/eslint-plugin'
-import pluginNext from '@next/eslint-plugin-next'
 
 export default [
     eslint.configs.recommended,
     ...tseslint.configs.recommended,
     {
-        ignores: ['.next/**', 'node_modules/**'],
-    },
-    {
         plugins: {
             '@stylistic': stylistic,
-            '@next/next': pluginNext,
         },
         languageOptions: {
             sourceType: 'module',
@@ -21,7 +16,6 @@ export default [
             parser: typescriptParser,
         },
         rules: {
-            ...pluginNext.configs.recommended.rules,
             strict: 'error',
             'no-var': 'error',
             'array-callback-return': 'error',
@@ -34,6 +28,7 @@ export default [
             '@stylistic/type-annotation-spacing': 'error',
             '@stylistic/no-trailing-spaces': 'error',
             '@typescript-eslint/no-unused-vars': 'error',
+            '@stylistic/eol-last': ['error', 'always'],
             '@typescript-eslint/ban-ts-comment': 'off',
             '@typescript-eslint/no-non-null-assertion': 'off',
             '@stylistic/max-len': [
