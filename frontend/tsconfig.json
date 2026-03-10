@@ -47,8 +47,7 @@
         "./*"
       ]
     },
-    "forceConsistentCasingInFileNames": true,
-    "types": ["bun"]
+    "forceConsistentCasingInFileNames": true
   },
   "include": [
     "next-env.d.ts",
