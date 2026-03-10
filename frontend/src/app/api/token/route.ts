@@ -20,7 +20,6 @@ export async function GET(request: NextRequest) {
 
     return await authToken({
         req: request,
-        frontendURL: config.auth.base,
         redirectPath: '/'
     })
 }

@@ -17,11 +17,10 @@ const config = {
 
     },
     auth: {
-        base: env.NEXT_PUBLIC_BASE_URL,
-        login: `${env.NEXT_PUBLIC_BASE_URL}/api/login`,
-        redirect: `${env.NEXT_PUBLIC_BASE_URL}/api/callback`,
-        token: `${env.NEXT_PUBLIC_BASE_URL}/api/token`,
-        logout: `${env.NEXT_PUBLIC_BASE_URL}/api/logout`,
+        login: '/api/login',
+        redirect: '/api/callback',
+        token: '/api/token',
+        logout: '/api/logout',
     },
     authentik: {
         clientId: env.AUTH_CLIENT_ID,

@@ -1,8 +1,8 @@
-import config from '@config'
+import { NextRequest } from 'next/server'
 import { authLogout } from 'uibee/utils'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
     return await authLogout({
-        frontendURL: config.auth.base
+        req: request,
     })
 }
