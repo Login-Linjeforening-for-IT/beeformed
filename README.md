@@ -7,12 +7,12 @@ To get started with the project, follow these steps:
 
 1. Install the dependencies:
    ```bash
-   npm install
+   bun install
    ```
 
 2. Start the development server:
    ```bash
-   npm run dev
+   bun run dev
    ```
 
 3. Open your browser and navigate to `http://localhost:3000/` to see the application in action.
