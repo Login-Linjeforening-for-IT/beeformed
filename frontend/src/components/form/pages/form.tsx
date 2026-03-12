@@ -3,22 +3,23 @@
 import { useState } from 'react'
 import { toast } from 'uibee/components'
 import { updateForm } from '@components/form/actions/form'
+import { postForm } from '@utils/api'
 import { Input, Switch, Textarea } from 'uibee/components'
 import { useRouter } from 'next/navigation'
 
-export default function EditFormPage({ form }: { form: GetFormProps }) {
+export default function EditFormPage({ form }: { form?: GetFormProps }) {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState({
-        slug: form.slug,
-        title: form.title,
-        description: form.description || '',
-        anonymous_submissions: form.anonymous_submissions,
-        limit: form.limit ? String(form.limit) : '',
-        waitlist: form.waitlist,
-        multiple_submissions: form.multiple_submissions,
-        published_at: form.published_at ? new Date(form.published_at).toISOString().slice(0, 16) : '',
-        expires_at: form.expires_at ? new Date(form.expires_at).toISOString().slice(0, 16) : ''
+        slug: form?.slug || '',
+        title: form?.title || '',
+        description: form?.description || '',
+        anonymous_submissions: form?.anonymous_submissions || false,
+        limit: form?.limit ? String(form.limit) : '',
+        waitlist: form?.waitlist || false,
+        multiple_submissions: form?.multiple_submissions || false,
+        published_at: form?.published_at ? new Date(form.published_at).toISOString().slice(0, 16) : '',
+        expires_at: form?.expires_at ? new Date(form.expires_at).toISOString().slice(0, 16) : ''
     })
 
     async function handleSubmit(e: React.FormEvent) {
@@ -26,16 +27,39 @@ export default function EditFormPage({ form }: { form: GetFormProps }) {
         setLoading(true)
 
         try {
-            const formDataObj = new FormData(e.target as HTMLFormElement)
-            const result = await updateForm(null, formDataObj)
+            if (form) {
+                const formDataObj = new FormData(e.target as HTMLFormElement)
+                const result = await updateForm(null, formDataObj)
 
-            if (typeof result === 'string') {
-                toast.error(result)
-            } else if (result && 'error' in result) {
-                toast.error('Failed to update form: ' + result.error)
+                if (typeof result === 'string') {
+                    toast.error(result)
+                } else if (result && 'error' in result) {
+                    toast.error('Failed to update form: ' + result.error)
+                } else {
+                    toast.success('Form updated successfully!')
+                    router.refresh()
+                }
             } else {
-                toast.success('Form updated successfully!')
-                router.refresh()
+                const data = {
+                    slug: formData.slug,
+                    title: formData.title,
+                    description: formData.description || null,
+                    anonymous_submissions: formData.anonymous_submissions,
+                    limit: formData.limit ? parseInt(formData.limit) : null,
+                    waitlist: formData.waitlist,
+                    multiple_submissions: formData.multiple_submissions,
+                    published_at: formData.published_at,
+                    expires_at: formData.expires_at
+                }
+
+                const result = await postForm(data)
+
+                if (!('error' in result)) {
+                    toast.success('Form created successfully!')
+                    router.push(`/form/${result.id}`)
+                } else {
+                    toast.error('Failed to create form')
+                }
             }
         } catch {
             toast.error('An unexpected error occurred')
@@ -46,10 +70,10 @@ export default function EditFormPage({ form }: { form: GetFormProps }) {
 
     return (
         <div className='w-full max-w-2xl'>
-            <h2 className='text-xl font-semibold text-login-50 mb-6'>Edit Form Settings</h2>
+            <h2 className='text-xl font-semibold text-login-50 mb-6'>{form ? 'Edit Form Settings' : ''}</h2>
 
             <form onSubmit={handleSubmit}>
-                <input type='hidden' name='id' value={form.id} />
+                {form && <input type='hidden' name='id' value={form.id} />}
                 <Input
                     name='title'
                     type='text'
@@ -128,6 +152,17 @@ export default function EditFormPage({ form }: { form: GetFormProps }) {
                 />
 
                 <div className='flex space-x-3 pt-4'>
+                    {!form && (
+                        <button
+                            type='button'
+                            onClick={() => router.back()}
+                            className='flex-1 px-4 py-2 bg-login-800 text-login-100 rounded-md
+                                hover:bg-login-700 transition-colors focus:outline-none
+                                focus:ring-2 focus:ring-login-400 font-medium cursor-pointer'
+                        >
+                            Cancel
+                        </button>
+                    )}
                     <button
                         type='submit'
                         disabled={loading || !formData.title.trim() || !formData.published_at || !formData.expires_at}
@@ -136,7 +171,7 @@ export default function EditFormPage({ form }: { form: GetFormProps }) {
                             transition-colors focus:outline-none focus:ring-2 focus:ring-login
                             focus:ring-offset-2 focus:ring-offset-login-700 font-medium cursor-pointer'
                     >
-                        {loading ? 'Updating...' : 'Update Form'}
+                        {loading ? (form ? 'Updating...' : 'Creating...') : (form ? 'Update Form' : 'Create Form')}
                     </button>
                 </div>
             </form>

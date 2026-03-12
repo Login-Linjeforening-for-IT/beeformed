@@ -1,7 +1,7 @@
 'use client'
 
 import { deleteUser } from '@utils/api'
-import { TriangleAlert } from 'lucide-react'
+import { Trash2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Button, ConfirmPopup, toast } from 'uibee/components'
@@ -12,10 +12,18 @@ export default function Confirm() {
 
     return (
         <>
+            <Button
+                text='Delete Account'
+                icon={<Trash2 className='w-4 h-4' />}
+                onClick={() => setIsOpen(true)}
+                variant='danger'
+            />
+
             <ConfirmPopup
                 isOpen={isOpen}
                 header='Delete Form User'
-                description='Are you sure you want to delete this user?'
+                description={`Are you sure you want to delete this user? This action cannot be undone.
+                    NB! This will not delete your SSO account (authentik)`}
                 confirmText='Delete'
                 cancelText='Cancel'
                 onConfirm={
@@ -41,12 +49,6 @@ export default function Confirm() {
                     }
                 }
                 variant='danger'
-            />
-            <Button
-                text='Delete User'
-                icon={<TriangleAlert />}
-                onClick={() => setIsOpen(true)}
-                className='mb-4 px-4 py-2 bg-red-800 hover:bg-red-900 outline-red-900 rounded w-fit'
             />
         </>
     )

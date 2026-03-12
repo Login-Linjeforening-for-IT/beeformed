@@ -7,7 +7,7 @@ import Link from 'next/link'
 import EditPermissionsPage from '@components/form/pages/permissions'
 import SubmissionsPage from '@components/form/pages/submissions'
 import AllSubmissionsPage from '@components/form/pages/all-submissions'
-import ShareButton from '@components/share-button'
+import ShareButton from '@components/button/share-button'
 
 type PageProps = {
     params: Promise<{ id: string, slug?: string[] | string }>

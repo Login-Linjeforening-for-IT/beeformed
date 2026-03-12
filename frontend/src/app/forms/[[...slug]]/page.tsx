@@ -3,11 +3,11 @@ import { deleteForm, getForms, getSharedForms } from '@utils/api'
 import Table from '@components/table/table'
 import Pagination from '@components/pagination/pagination'
 import SearchInput from '@components/search/search'
-import { FormPopup } from '@components/form/popup'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { formatDateTime } from '@utils/dateTime'
 import { refresh } from 'next/cache'
+import { Plus } from 'lucide-react'
 
 type PageProps = {
     params: Promise<{ slug?: string[] | string }>
@@ -86,7 +86,13 @@ export default async function Page({ params, searchParams }: PageProps) {
                     <div className='w-full md:w-auto'>
                         <SearchInput placeholder='Search forms...' />
                     </div>
-                    { type === 'forms' && <FormPopup /> }
+                    { type === 'forms' &&
+                        <Link
+                            href='/forms/create'
+                            className='p-2 rounded transition-colors hover:bg-login-600'
+                        >
+                            <Plus className='inline-block size-6' />
+                        </Link> }
                 </div>
 
                 {formsData && formsData.length > 0 ? (

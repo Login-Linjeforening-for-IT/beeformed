@@ -92,7 +92,7 @@ export default function AllSubmissionsPage({ submissions }: AllSubmissionsPagePr
                     <Button
                         onClick={downloadCSV}
                         text='Download CSV'
-                        color='secondary'
+                        variant='secondary'
                         icon={<></>}
                         className='px-4 py-2 h-10.5 bg-login-500/50! border-login-500!'
                     />
