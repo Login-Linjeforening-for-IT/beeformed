@@ -1,11 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { toast } from 'uibee/components'
-import { deletePermission, postPermission } from '@utils/api'
-import { Input } from 'uibee/components'
-import Table from '@components/table/table'
 import { useRouter } from 'next/navigation'
+import { toast, Input, Table, MenuButton } from 'uibee/components'
+import { Trash } from 'lucide-react'
+import { deletePermission, postPermission } from '@utils/api'
 import { formatDateTime } from '@utils/dateTime'
 
 export default function EditPermissionsPage({ permissions, formId }: { permissions: GetPermissionsProps, formId: string }) {
@@ -124,8 +123,20 @@ export default function EditPermissionsPage({ permissions, formId }: { permissio
                     <Table
                         data={transformedData}
                         columns={columns}
-                        onDelete={(row) => handleDeletePermission(formId, row.id as string)}
-                        disableEdit
+                        variant='minimal'
+                        idKey='id'
+                        menuItems={(item: object) => {
+                            const row = item as { id: string }
+                            return (
+                                <MenuButton
+                                    icon={<Trash />}
+                                    text='Delete'
+                                    hotKey='D'
+                                    onClick={() => handleDeletePermission(formId, row.id)}
+                                    className='text-red-400'
+                                />
+                            )
+                        }}
                     />
                 ) : (
                     <p className='text-login-200'>No permissions found.</p>
