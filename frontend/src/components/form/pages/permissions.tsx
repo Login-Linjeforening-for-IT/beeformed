@@ -35,8 +35,7 @@ export default function EditPermissionsPage({ permissions, formId }: { permissio
             setFormData({ email: '', group: '' })
             router.refresh()
         } catch (error) {
-            console.error(error)
-            toast.error('Failed to add permission')
+            toast.error(error instanceof Error ? error.message : 'Failed to add permission')
         } finally {
             setLoading(false)
         }
@@ -48,8 +47,7 @@ export default function EditPermissionsPage({ permissions, formId }: { permissio
             toast.success('Permission deleted successfully!')
             router.refresh()
         } catch (error) {
-            console.error(error)
-            toast.error('Failed to delete permission')
+            toast.error(error instanceof Error ? error.message : 'Failed to delete permission')
         }
     }
 

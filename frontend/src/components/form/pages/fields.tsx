@@ -110,8 +110,8 @@ export default function EditFieldsPage({ fields, formId }: { fields: GetFieldsPr
                 toast.success('Fields updated successfully!')
                 router.refresh()
             }
-        } catch {
-            toast.error('An unexpected error occurred')
+        } catch (error) {
+            toast.error(error instanceof Error ? error.message : 'An unexpected error occurred')
         } finally {
             setLoading(false)
         }

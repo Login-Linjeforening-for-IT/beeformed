@@ -108,7 +108,6 @@ export default async function bulkFormFields(req: FastifyRequest, res: FastifyRe
         res.status(200).send(results)
     } catch (error) {
         console.error('Error in bulk save:', error)
-        const errorMessage = error instanceof Error ? error.message : 'Internal server error'
-        res.status(500).send({ error: errorMessage })
+        res.status(500).send({ error: 'Internal server error' })
     }
 }

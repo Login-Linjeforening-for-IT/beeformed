@@ -34,8 +34,7 @@ export default function Confirm() {
                             toast.success('User deleted successfully')
                             router.push('/')
                         } catch (error) {
-                            toast.error('An error occurred while deleting the user')
-                            console.error(error)
+                            toast.error(error instanceof Error ? error.message : 'An error occurred while deleting the user')
                         }
                     }
                 }

@@ -38,7 +38,7 @@ export default function Button({ children, onAction, errorMessage, successMessag
             }
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
-            toast.error('An unexpected error occurred')
+            toast.error(error instanceof Error ? error.message : 'An unexpected error occurred')
         } finally {
             setLoading(false)
         }

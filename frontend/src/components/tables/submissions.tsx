@@ -28,9 +28,8 @@ export default function SubmissionsTable({ data }: SubmissionsTableProps) {
             try {
                 await cancelSubmission(row.id)
                 router.refresh()
-            } catch (e) {
-                console.error(e)
-                toast.error('An error occurred')
+            } catch (error) {
+                toast.error(error instanceof Error ? error.message : 'An error occurred')
             } finally {
                 setLoading(false)
             }

@@ -63,8 +63,7 @@ export default function EditFormPage({ form }: { form?: GetFormProps }) {
                 router.push(`/form/${result.id}`)
             }
         } catch (error) {
-            console.error(error)
-            toast.error('An unexpected error occurred')
+            toast.error(error instanceof Error ? error.message : 'An unexpected error occurred')
         } finally {
             setLoading(false)
         }
