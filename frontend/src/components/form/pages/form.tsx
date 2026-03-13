@@ -40,8 +40,6 @@ export default function EditFormPage({ form }: { form?: GetFormProps }) {
 
                 if (typeof result === 'string') {
                     toast.error(result)
-                } else if (result && 'error' in result) {
-                    toast.error('Failed to update form: ' + result.error)
                 } else {
                     toast.success('Form updated successfully!')
                     router.refresh()
@@ -61,14 +59,11 @@ export default function EditFormPage({ form }: { form?: GetFormProps }) {
 
                 const result = await postForm(data)
 
-                if (!('error' in result)) {
-                    toast.success('Form created successfully!')
-                    router.push(`/form/${result.id}`)
-                } else {
-                    toast.error('Failed to create form')
-                }
+                toast.success('Form created successfully!')
+                router.push(`/form/${result.id}`)
             }
-        } catch {
+        } catch (error) {
+            console.error(error)
             toast.error('An unexpected error occurred')
         } finally {
             setLoading(false)

@@ -67,8 +67,8 @@ export async function updateFields(_: FieldsState, formData: FormData): Promise<
             }
         }
 
-        const response = await patchFields(formId, fields)
-        return response
+        await patchFields(formId, fields)
+        return null
     } catch (error) {
         return error instanceof Error ? error.message : 'Unknown error'
     }

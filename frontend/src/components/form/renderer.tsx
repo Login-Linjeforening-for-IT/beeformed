@@ -73,17 +73,13 @@ export default function FormRenderer({ form, submission }: { form: FormData; sub
                 value: formData[field.id] || ''
             }))
 
-            const result = await postSubmission(form.id, { fields })
+            const result = await postSubmission(form.id, { fields }) as { id: string | number }
 
-            if (!result || 'error' in result) {
-                toast.error(result?.error || 'An error occurred while submitting the form')
-            } else {
-                toast.success('Form submitted successfully!')
-                setFormData({})
-                router.push(`/submissions/${result.id}`)
-            }
-        } catch {
-            toast.error('An unexpected error occurred')
+            toast.success('Form submitted successfully!')
+            setFormData({})
+            router.push(`/submissions/${result.id}`)
+        } catch (error) {
+            toast.error(error instanceof Error ? error.message : 'An error occurred while submitting the form')
         } finally {
             setLoading(false)
         }

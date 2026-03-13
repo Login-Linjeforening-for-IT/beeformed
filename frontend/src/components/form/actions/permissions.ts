@@ -28,8 +28,8 @@ export async function updatePermission(_: PostFormState, formData: FormData, for
             return 'At least one of user_email or group must be defined'
         }
 
-        const response = await postPermission(formId, props)
-        return response
+        await postPermission(formId, props)
+        return null
     } catch (error) {
         return error instanceof Error ? error.message : 'Unknown error'
     }

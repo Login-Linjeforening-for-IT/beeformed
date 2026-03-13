@@ -26,13 +26,8 @@ export default function SubmissionsTable({ data }: SubmissionsTableProps) {
         if (confirm(message)) {
             setLoading(true)
             try {
-                const res = await cancelSubmission(row.id)
-                if (res && !('error' in res)) {
-                    router.refresh()
-                } else {
-                    console.error(res)
-                    toast.error('Error cancelling submission')
-                }
+                await cancelSubmission(row.id)
+                router.refresh()
             } catch (e) {
                 console.error(e)
                 toast.error('An error occurred')

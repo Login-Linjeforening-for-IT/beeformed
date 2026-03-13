@@ -40,16 +40,14 @@ export default function Page() {
         setLoadingSubmission(true)
         try {
             const result = await scanSubmission(id, formId)
-            if ('error' in result) {
-                const json = JSON.parse(result.error)
-                setError(result.error)
-                if ('error' in json) setError(json.error)
-            } else {
-                setSubmission(result)
-            }
+            setSubmission(result)
         } catch (err) {
             console.error(err)
-            setError('Failed to fetch submission details')
+            if (err instanceof Error) {
+                setError(err.message)
+            } else {
+                setError('Failed to fetch submission details')
+            }
         } finally {
             setLoadingSubmission(false)
         }

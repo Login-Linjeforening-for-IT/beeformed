@@ -15,23 +15,25 @@ export default async function Page(
 
     const orderBy = typeof filters.column === 'string' ? filters.column : 'submitted_at'
     const order = typeof filters.order === 'string' && (filters.order === 'asc' || filters.order === 'desc') ? filters.order : 'desc'
-    const data = id ? await getSubmission(Array.isArray(id) ? id[0] : id) : await getUserSubmissions({
-        search: typeof filters.q === 'string' ? filters.q : '',
-        offset: typeof filters.page === 'string' ? (Number(filters.page) - 1) * 14 : undefined,
-        limit: 14,
-        orderBy,
-        sort: order
-    })
-
-    if (!data || 'error' in data) {
+    let data
+    try {
+        data = id ? await getSubmission(Array.isArray(id) ? id[0] : id) : await getUserSubmissions({
+            search: typeof filters.q === 'string' ? filters.q : '',
+            offset: typeof filters.page === 'string' ? (Number(filters.page) - 1) * 14 : undefined,
+            limit: 14,
+            orderBy,
+            sort: order
+        })
+    } catch {
         notFound()
     }
 
     if (id) {
         const submission = data as Submission
-        const formData = await getPublicForm(submission.form_id.toString())
-
-        if (!formData || 'error' in formData) {
+        let formData
+        try {
+            formData = await getPublicForm(submission.form_id.toString())
+        } catch {
             notFound()
         }
 

@@ -11,13 +11,17 @@ export default async function Page() {
     const formsPromise = getForms({ limit: 1 })
     const submissionsPromise = getUserSubmissions({ limit: 1 })
 
-    const [user, forms, submissions] = await Promise.all([
-        userPromise,
-        formsPromise,
-        submissionsPromise
-    ]) as [any, any, any] // eslint-disable-line @typescript-eslint/no-explicit-any
+    let user
+    let forms
+    let submissions
 
-    if (!user || user.error) {
+    try {
+        [user, forms, submissions] = await Promise.all([
+            userPromise,
+            formsPromise,
+            submissionsPromise
+        ]) as [any, any, any] // eslint-disable-line @typescript-eslint/no-explicit-any
+    } catch {
         return (
             <PageContainer title='Profile'>
                 <div className='w-full max-w-3xl mx-auto'>

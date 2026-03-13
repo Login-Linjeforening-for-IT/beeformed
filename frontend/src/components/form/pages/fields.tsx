@@ -106,8 +106,6 @@ export default function EditFieldsPage({ fields, formId }: { fields: GetFieldsPr
 
             if (typeof result === 'string') {
                 toast.error(result)
-            } else if (result && 'error' in result) {
-                toast.error('Failed to update fields')
             } else {
                 toast.success('Fields updated successfully!')
                 router.refresh()

@@ -38,8 +38,8 @@ export async function updateForm(_: PutFormState, formData: FormData): Promise<P
 
         const id = getRequiredNumber(formData, 'id')
 
-        const response = await putForm(id, props)
-        return response
+        await putForm(id, props)
+        return null
     } catch (error) {
         return error instanceof Error ? error.message : 'Unknown error'
     }

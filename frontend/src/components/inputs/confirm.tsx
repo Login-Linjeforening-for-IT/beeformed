@@ -30,11 +30,7 @@ export default function Confirm() {
                     async () => {
                         setIsOpen(false)
                         try {
-                            const response = await deleteUser()
-                            if ('error' in response) {
-                                toast.error(response.error as string)
-                                return
-                            }
+                            await deleteUser()
                             toast.success('User deleted successfully')
                             router.push('/')
                         } catch (error) {

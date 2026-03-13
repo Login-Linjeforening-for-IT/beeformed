@@ -32,24 +32,38 @@ export default async function Page({ params, searchParams }: PageProps) {
     }
 
     let data
-    switch (type) {
-        case 'settings':
-            data = await getForm(id)
-            break
-        case 'permissions':
-            data = await getPermissions(id)
-            break
-        case 'submissions':
-        case 'all-submissions':
-            data = await getSubmissions(id, filter)
-            break
-        default:
-            data = await getFields(id)
-    }
+    let formData
 
-    const formData = await getForm(id)
+    try {
+        switch (type) {
+            case 'settings':
+                data = await getForm(id)
+                break
+            case 'permissions':
+                data = await getPermissions(id)
+                break
+            case 'submissions': {
+                const submissionsFilter = {
+                    ...filter,
+                    includeAnswers: false
+                }
+                data = await getSubmissions(id, submissionsFilter)
+                break
+            }
+            case 'all-submissions': {
+                const allSubmissionsFilter = {
+                    ...filter,
+                    includeAnswers: true
+                }
+                data = await getSubmissions(id, allSubmissionsFilter)
+                break
+            }
+            default:
+                data = await getFields(id)
+        }
 
-    if (!data || 'error' in data || !formData || 'error' in formData) {
+        formData = await getForm(id)
+    } catch {
         notFound()
     }
 

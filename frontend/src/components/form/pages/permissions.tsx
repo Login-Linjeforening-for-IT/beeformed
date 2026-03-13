@@ -26,38 +26,31 @@ export default function EditPermissionsPage({ permissions, formId }: { permissio
         setLoading(true)
 
         try {
-            const result = await postPermission(formId, {
+            await postPermission(formId, {
                 user_email: formData.email || null,
                 group: formData.group || null
             })
 
-            if (!result || 'error' in result) {
-                toast.error('Failed to add permission')
-            } else {
-                toast.success('Permission added successfully!')
-                setFormData({ email: '', group: '' })
-                router.refresh()
-            }
-        } catch {
-            toast.error('An unexpected error occurred')
+            toast.success('Permission added successfully!')
+            setFormData({ email: '', group: '' })
+            router.refresh()
+        } catch (error) {
+            console.error(error)
+            toast.error('Failed to add permission')
         } finally {
             setLoading(false)
         }
     }
 
     function handleDeletePermission(formId: string, permissionId: string) {
-        deletePermission(formId, permissionId)
-            .then((result) => {
-                if (!result || 'error' in result) {
-                    toast.error('Failed to delete permission')
-                } else {
-                    toast.success('Permission deleted successfully!')
-                    router.refresh()
-                }
-            })
-            .catch(() => {
-                toast.error('An unexpected error occurred')
-            })
+        try {
+            deletePermission(formId, permissionId)
+            toast.success('Permission deleted successfully!')
+            router.refresh()
+        } catch (error) {
+            console.error(error)
+            toast.error('Failed to delete permission')
+        }
     }
 
     const columns = [
