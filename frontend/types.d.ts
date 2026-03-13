@@ -119,6 +119,7 @@ declare global {
             user_name: string | null
             status: string
             scanned_at: string | null
+            expires_at: string
             submitted_at: string
             answers?: { field_id: number; value: string }[]
         }[]

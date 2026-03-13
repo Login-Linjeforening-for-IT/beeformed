@@ -96,8 +96,6 @@ export default async function Page(
                             ) : (
                                 <SubmissionsTable
                                     data={submissionsData}
-                                    orderBy={orderBy}
-                                    order={order}
                                 />
                             )}
                         </div>

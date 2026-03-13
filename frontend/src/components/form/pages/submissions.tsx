@@ -1,7 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import Table from '@components/table/table'
+import { useRouter } from 'next/navigation'
+import { Table, MenuButton } from 'uibee/components'
+import { Eye } from 'lucide-react'
 import SearchInput from '@components/search/search'
 import Pagination from '@components/pagination/pagination'
 import { formatDateTime } from '@utils/dateTime'
@@ -13,16 +15,18 @@ type SubmissionsPageProps = {
     formId?: string
 }
 
-export default function SubmissionsPage({ submissions, currentOrderBy, currentSort, formId }: SubmissionsPageProps) {
+export default function SubmissionsPage({ submissions, formId }: SubmissionsPageProps) {
+    const router = useRouter()
     const submissionsData = submissions.data.map(submission => ({
         ...submission,
         user_email: submission.user_email || 'Anonymous',
         user_name: submission.user_name || 'Anonymous',
-        submitted_at: formatDateTime(submission.submitted_at)
+        submitted_at: formatDateTime(submission.submitted_at),
+        scanned_at: submission.scanned_at ? formatDateTime(submission.scanned_at) : 'Not Scanned'
     }))
 
     return (
-        <div className='pt-20 pb-4 flex flex-col w-full h-full'>
+        <div className='pb-4 flex flex-col w-full h-full'>
             <div className='flex justify-between mb-4'>
                 <SearchInput placeholder='Search submissions...' />
                 {formId && (
@@ -44,28 +48,34 @@ export default function SubmissionsPage({ submissions, currentOrderBy, currentSo
                 <div className='flex-1 flex flex-col justify-between min-h-0'>
                     <Table
                         data={submissionsData}
+                        idKey='id'
+                        variant='minimal'
                         columns={[
                             { key: 'submitted_at', label: 'Submitted At', sortable: true },
                             { key: 'user_email', label: 'User Email' },
                             { key: 'user_name', label: 'User Name' },
-                            { key: 'status', label: 'Status', sortable: true,
-                                highlightColor: (row) => {
-                                    switch (row.status) {
-                                        case 'registered': return 'green'
-                                        case 'waitlisted': return 'yellow'
-                                        case 'cancelled': return 'gray'
-                                        case 'rejected': return 'red'
-                                        default: return 'blue'
-                                    }
+                            {
+                                key: 'status',
+                                label: 'Status',
+                                sortable: true,
+                                highlight: {
+                                    'registered': 'green',
+                                    'waitlisted': 'yellow',
+                                    'cancelled': 'gray',
+                                    'rejected': 'red'
                                 }
                             },
-                            { key: 'scanned_at', label: 'Scanned At', sortable: true, nullLabel: 'Not Scanned' }
+                            { key: 'scanned_at', label: 'Scanned At', sortable: true }
                         ]}
-                        disableEdit={true}
-                        currentOrderBy={currentOrderBy}
-                        currentSort={currentSort}
-                        viewBaseHref='/submissions/'
-                        viewHrefKey='id'
+                        redirectPath={{ path: '/submissions', key: 'id' }}
+                        menuItems={(_: object, id: string) => (
+                            <MenuButton
+                                icon={<Eye />}
+                                text='View'
+                                hotKey='V'
+                                onClick={() => router.push(`/submissions/${id}`)}
+                            />
+                        )}
                     />
                     <Pagination pageSize={14} totalRows={submissions.total} />
                 </div>

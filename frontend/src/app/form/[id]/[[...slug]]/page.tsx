@@ -120,7 +120,7 @@ export default async function Page({ params, searchParams }: PageProps) {
                 </LinkButton>
                 <ShareButton slug={formData.slug} />
             </div>
-            <div className='pt-20 pb-4 flex flex-col h-full'>
+            <div className='pt-6 pb-4 flex flex-col h-full'>
                 <div className='flex justify-between mb-4 h-full'>
                     {renderContent(data)}
                 </div>

@@ -1,13 +1,12 @@
 import { PageContainer } from '@components/container/page'
-import { deleteForm, getForms, getSharedForms } from '@utils/api'
-import Table from '@components/table/table'
-import Pagination from '@components/pagination/pagination'
+import { getForms, getSharedForms } from '@utils/api'
+import { Pagination } from 'uibee/components'
 import SearchInput from '@components/search/search'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { formatDateTime } from '@utils/dateTime'
-import { refresh } from 'next/cache'
 import { Plus } from 'lucide-react'
+import FormsTable from '@components/table/forms'
 
 type PageProps = {
     params: Promise<{ slug?: string[] | string }>
@@ -50,13 +49,6 @@ export default async function Page({ params, searchParams }: PageProps) {
     }))
     const totalItems = forms.total
 
-    async function handleDelete(row: Record<string, unknown>) {
-        'use server'
-        const id = row.id as string
-        deleteForm(id)
-        refresh()
-    }
-
     return (
         <PageContainer title='Forms'>
             <div className='flex space-x-4 mb-4'>
@@ -81,7 +73,7 @@ export default async function Page({ params, searchParams }: PageProps) {
                     Shared Forms
                 </Link>
             </div>
-            <div className='pt-20 pb-4 flex flex-col h-full'>
+            <div className='pt-6 pb-4 flex flex-col h-full'>
                 <div className='flex flex-col md:flex-row md:justify-between items-start md:items-center gap-4 mb-4'>
                     <div className='w-full md:w-auto'>
                         <SearchInput placeholder='Search forms...' />
@@ -97,17 +89,8 @@ export default async function Page({ params, searchParams }: PageProps) {
 
                 {formsData && formsData.length > 0 ? (
                     <div className='flex-1 flex flex-col justify-between min-h-0'>
-                        <Table
+                        <FormsTable
                             data={formsData}
-                            columns={[
-                                { key: 'title', label: 'Title', sortable: true },
-                                { key: 'id', label: 'Form ID', sortable: true },
-                                { key: 'created_at', label: 'Created At', sortable: true }
-                            ]}
-                            currentOrderBy={orderBy}
-                            currentSort={sort}
-                            showFormActions={true}
-                            onDelete={handleDelete}
                         />
 
                         <Pagination

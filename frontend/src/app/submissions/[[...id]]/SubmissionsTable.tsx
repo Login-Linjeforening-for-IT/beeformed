@@ -1,25 +1,21 @@
 'use client'
 
-import Table from '@components/table/table'
 import { cancelSubmission } from '@utils/api'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { toast } from 'uibee/components'
-import { QrCode } from 'lucide-react'
+import { MenuButton, Table, toast } from 'uibee/components'
+import { Eye, QrCode, Trash } from 'lucide-react'
 
 interface SubmissionsTableProps {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    data: any[]
-    orderBy: string
-    order: 'asc' | 'desc'
+    data: GetSubmissionsProps['data']
 }
 
-export default function SubmissionsTable({ data, orderBy, order }: SubmissionsTableProps) {
+
+export default function SubmissionsTable({ data }: SubmissionsTableProps) {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async function handleCancel(row: any) {
+    async function handleCancel(row: GetSubmissionsProps['data'][number]) {
         if (loading) return
 
         const isWaitlisted = row.status === 'waitlisted'
@@ -46,57 +42,63 @@ export default function SubmissionsTable({ data, orderBy, order }: SubmissionsTa
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    function canCancel(row: any) {
+    function canCancel(row: GetSubmissionsProps['data'][number]) {
         const expiresAt = row.expires_at
         if (!expiresAt) return true
         return new Date(expiresAt) >= new Date()
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    function handleShowQR(row: any, closeMenu: () => void) {
-        router.push(`/submissions/qr/${row.id}`)
-        closeMenu()
+    function handleShowQR(id: string) {
+        router.push(`/submissions/qr/${id}`)
     }
 
     return (
         <Table
             data={data}
+            idKey='id'
+            variant='minimal'
             columns={[
-                { key: 'form_title', label: 'Form Title', sortable: true },
-                { key: 'status', label: 'Status', sortable: true,
-                    highlightColor: (row) => {
-                        switch (row.status) {
-                            case 'registered': return 'green'
-                            case 'waitlisted': return 'yellow'
-                            case 'cancelled': return 'gray'
-                            case 'rejected': return 'red'
-                            default: return 'blue'
-                        }
+                { key: 'form_title' },
+                {
+                    key: 'status',
+                    highlight: {
+                        'registered': 'green',
+                        'waitlisted': 'yellow',
+                        'cancelled': 'gray',
+                        'rejected': 'red'
                     }
                 },
                 { key: 'submitted_at', label: 'Submitted At', sortable: true }
             ]}
-            disableEdit={true}
-            currentOrderBy={orderBy}
-            currentSort={order}
-            viewBaseHref='/submissions/'
-            viewHrefKey='id'
-            onCancel={handleCancel}
-            canCancel={canCancel}
-            customActions={(row, closeMenu) => (
-                <button
-                    onClick={() => handleShowQR(row, closeMenu)}
-                    className={`flex items-center justify-between w-full px-3 py-2 text-sm
-                        hover:bg-login-600 cursor-pointer`}
-                >
-                    <div className='flex items-center'>
-                        <QrCode className='w-4 h-4 mr-2' />
-                        QR Code
-                    </div>
-                    <span className='text-xs opacity-50 font-mono'>Q</span>
-                </button>
-            )}
+            redirectPath={{ path: '/submissions', key: 'id' }}
+            menuItems={(item: object, id: string) => {
+                const row = item as GetSubmissionsProps['data'][number]
+                return (
+                    <>
+                        <MenuButton
+                            icon={<Eye />}
+                            text='View'
+                            hotKey='V'
+                            onClick={() => router.push(`/submissions/${id}`)}
+                        />
+                        <MenuButton
+                            icon={<QrCode />}
+                            text='QR Code'
+                            hotKey='Q'
+                            onClick={() => handleShowQR(id)}
+                        />
+                        {canCancel(row) && (
+                            <MenuButton
+                                icon={<Trash />}
+                                text='Cancel'
+                                hotKey='C'
+                                onClick={() => handleCancel(row)}
+                                className='text-red-400'
+                            />
+                        )}
+                    </>
+                )
+            }}
         />
     )
 }
