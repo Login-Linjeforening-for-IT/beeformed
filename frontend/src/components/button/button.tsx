@@ -36,7 +36,6 @@ export default function Button({ children, onAction, errorMessage, successMessag
                     router.push(href)
                 }
             }
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             toast.error(error instanceof Error ? error.message : 'An unexpected error occurred')
         } finally {

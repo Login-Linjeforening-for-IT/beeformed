@@ -2,13 +2,8 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Alert, toast } from 'uibee/components'
+import { Alert, toast, Input, Textarea, Select, Radio, Checkbox, Switch } from 'uibee/components'
 import { postSubmission } from '@utils/api'
-import CustomInput from '@components/inputs/input'
-import CustomTextarea from '@components/inputs/textarea'
-import CustomSelect from '@components/inputs/select'
-import CustomSwitch from '@components/inputs/switch'
-import CustomChoice from '@components/inputs/choice'
 
 interface FormField {
     id: string
@@ -97,8 +92,9 @@ export default function FormRenderer({ form, submission }: { form: FormData; sub
         switch (field.field_type) {
             case 'text':
                 return (
-                    <CustomInput
+                    <Input
                         name={field.id}
+                        textSize='md'
                         type='text'
                         label={field.title}
                         description={field.description || undefined}
@@ -110,8 +106,9 @@ export default function FormRenderer({ form, submission }: { form: FormData; sub
                 )
             case 'textarea':
                 return (
-                    <CustomTextarea
+                    <Textarea
                         name={field.id}
+                        textSize='md'
                         label={field.title}
                         description={field.description || undefined}
                         value={value}
@@ -123,8 +120,9 @@ export default function FormRenderer({ form, submission }: { form: FormData; sub
                 )
             case 'number':
                 return (
-                    <CustomInput
+                    <Input
                         name={field.id}
+                        textSize='md'
                         type='number'
                         label={field.title}
                         description={field.description || undefined}
@@ -141,12 +139,15 @@ export default function FormRenderer({ form, submission }: { form: FormData; sub
                     label: choice
                 }))
                 return (
-                    <CustomSelect
+                    <Select
                         name={field.id}
+                        textSize='md'
                         label={field.title}
                         description={field.description || undefined}
                         value={value}
-                        onChange={(e) => setValue((e.target as HTMLSelectElement).value)}
+                        onChange={(value) => {
+                            if (value !== null) setValue(value)
+                        }}
                         options={selectOptions}
                         required={field.required}
                         searchable={choices.length > 5}
@@ -157,14 +158,14 @@ export default function FormRenderer({ form, submission }: { form: FormData; sub
             case 'radio': {
                 const radioOptions = Array.isArray(field.options) ? field.options : []
                 return (
-                    <CustomChoice
-                        type='radio'
+                    <Radio
                         name={field.id}
+                        textSize='md'
                         label={field.title}
                         description={field.description || undefined}
-                        options={radioOptions}
-                        currentValue={value}
-                        onChange={(e) => setValue((e.target as HTMLInputElement).value)}
+                        value={value}
+                        options={radioOptions.map(option => ({ value: option, label: option }))}
+                        onChange={(value) => setValue(value)}
                         required={field.required}
                         disabled={disabled}
                     />
@@ -175,18 +176,16 @@ export default function FormRenderer({ form, submission }: { form: FormData; sub
                     const checkboxOptions = field.options
                     const selectedValues = value ? value.split(',') : []
                     return (
-                        <CustomChoice
+                        <Checkbox
+                            name={field.id}
+                            textSize='md'
                             type='checkbox'
                             label={field.title}
                             description={field.description || undefined}
-                            options={checkboxOptions}
-                            currentValue={selectedValues}
-                            onChange={(e) => {
-                                const val = (e.target as HTMLInputElement).value
-                                const newSelected = selectedValues.includes(val)
-                                    ? selectedValues.filter(v => v !== val)
-                                    : [...selectedValues, val]
-                                setValue(newSelected.join(','))
+                            options={checkboxOptions.map(option => ({ value: option, label: option }))}
+                            value={selectedValues}
+                            onChange={(newValues) => {
+                                setValue(newValues.join(','))
                             }}
                             required={field.required}
                             disabled={disabled}
@@ -194,11 +193,12 @@ export default function FormRenderer({ form, submission }: { form: FormData; sub
                     )
                 } else {
                     return (
-                        <CustomSwitch
+                        <Switch
                             name={field.id}
+                            textSize='md'
                             label={field.title}
                             description={field.description || undefined}
-                            value={value === 'true'}
+                            checked={value === 'true'}
                             onChange={(checked) => setValue(checked ? 'true' : 'false')}
                             disabled={disabled}
                         />
@@ -207,8 +207,9 @@ export default function FormRenderer({ form, submission }: { form: FormData; sub
             }
             case 'date': {
                 return (
-                    <CustomInput
+                    <Input
                         name={field.id}
+                        textSize='md'
                         type='date'
                         label={field.title}
                         description={field.description || undefined}
@@ -221,8 +222,9 @@ export default function FormRenderer({ form, submission }: { form: FormData; sub
             }
             case 'time': {
                 return (
-                    <CustomInput
+                    <Input
                         name={field.id}
+                        textSize='md'
                         type='time'
                         label={field.title}
                         description={field.description || undefined}
@@ -235,8 +237,9 @@ export default function FormRenderer({ form, submission }: { form: FormData; sub
             }
             case 'datetime': {
                 return (
-                    <CustomInput
+                    <Input
                         name={field.id}
+                        textSize='md'
                         type='datetime-local'
                         label={field.title}
                         description={field.description || undefined}
@@ -249,8 +252,9 @@ export default function FormRenderer({ form, submission }: { form: FormData; sub
             }
             default: {
                 return (
-                    <CustomInput
+                    <Input
                         name={field.id}
+                        textSize='md'
                         type='text'
                         label={field.title}
                         description={field.description || undefined}
