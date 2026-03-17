@@ -1,37 +1,38 @@
 import QRCode from 'qrcode'
 
-export async function generateQRCodeHtml({ data }: { data: string }): Promise<string | null> {
+export type GeneratedQRCode = {
+    pngBuffer: Buffer
+    pngDataUrl: string
+    svg: string
+}
+
+export async function generateQRCodeImage({ data }: { data: string }): Promise<GeneratedQRCode | null> {
     if (!data) return null
 
     try {
-        const qr = QRCode.create(data, { errorCorrectionLevel: 'M' })
-        const modules = qr.modules
-        const size = modules.size
-        
-        const moduleSize = 4
-        const totalSize = size * moduleSize
-        
-        function isDark(r: number, c: number) {
-            if (modules.data) return !!modules.data[r * size + c]
-            return modules.get(c, r)
+        const options = {
+            errorCorrectionLevel: 'M' as const,
+            margin: 1,
+            width: 320,
+            color: {
+                dark: '#000000',
+                light: '#FFFFFF'
+            }
         }
 
-        let table = `<table role="presentation" align="center" style="border-collapse:separate;border-spacing:0;margin:0 auto;" cellspacing="0" cellpadding="0" border="0">`
-        
-        for (let r = 0; r < size; r++) {
-            table += `<tr>`
-            for (let c = 0; c < size; c++) {
-                const isDarkModule = isDark(r, c)
-                const color = isDarkModule ? '#000000' : '#ffffff'
-                
-                table += `<td style="width:0;height:0;border:${moduleSize}px solid ${color};padding:0;font-size:0;line-height:0;mso-border-alt:solid ${color} ${moduleSize}px;"></td>`
-            }
-            table += '</tr>'
+        const [pngBuffer, pngDataUrl, svg] = await Promise.all([
+            QRCode.toBuffer(data, options),
+            QRCode.toDataURL(data, options),
+            QRCode.toString(data, { ...options, type: 'svg' })
+        ])
+
+        return {
+            pngBuffer,
+            pngDataUrl,
+            svg
         }
-        table += '</table>'
-        return table
     } catch (error) {
-        console.error('QR Code HTML generation error:', error)
+        console.error('QR Code image generation error:', error)
         return null
     }
 }

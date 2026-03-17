@@ -1,10 +1,15 @@
 import { LOGO_SVG } from '#utils/logo.ts'
-import { generateQRCodeHtml } from './qr/generator.ts'
+import { generateQRCodeImage } from './qr/generator.ts'
 
 type EmailTemplate = {
     subject: string
     html: string
     text: string
+    attachments?: Array<{
+        filename: string
+        content: Buffer
+        contentType: string
+    }>
 }
 
 export type EmailContent = {
@@ -31,7 +36,7 @@ const COMPANY_INFO = {
     }
 }
 
-function generateEmailHTML(content: EmailContent, qrCodeHtml?: string | null): string {
+function generateEmailHTML(content: EmailContent, qrCodeImageDataUrl?: string | null): string {
     const { title, header, content: bodyContent, actionUrl, actionText, submissionId } = content
 
     return `
@@ -216,10 +221,10 @@ function generateEmailHTML(content: EmailContent, qrCodeHtml?: string | null): s
                 <div class="content">
                     <div style="white-space: pre-line;">${bodyContent}</div>
 
-                    ${qrCodeHtml ? `
+                    ${qrCodeImageDataUrl ? `
                     <div class="qr-code" style="text-align: center; margin: 20px 0;">
                         <div style="padding: 15px; display: inline-block; border-radius: 8px;">
-                            ${qrCodeHtml}
+                            <img src="${qrCodeImageDataUrl}" alt="QR code" style="display:block;max-width:260px;width:100%;height:auto;" />
                         </div>
                         ${submissionId ? `<p style="font-size: 12px; color: #5e5e5e; margin-top: 5px;">ID: ${submissionId}</p>` : ''}
                     </div>
@@ -283,11 +288,19 @@ function generateEmailText(content: EmailContent): string {
 }
 
 export async function createEmailTemplate(content: EmailContent): Promise<EmailTemplate> {
-    const qrCodeHtml = content.submissionId ? await generateQRCodeHtml({ data: content.submissionId }) : null
+    const qrCode = content.submissionId ? await generateQRCodeImage({ data: content.submissionId }) : null
+    const attachments = qrCode && content.submissionId
+        ? [{
+            filename: `submission-${content.submissionId}-qr.png`,
+            content: qrCode.pngBuffer,
+            contentType: 'image/png'
+        }]
+        : undefined
 
     return {
         subject: content.title,
-        html: generateEmailHTML(content, qrCodeHtml),
-        text: generateEmailText(content)
+        html: generateEmailHTML(content, qrCode?.pngDataUrl),
+        text: generateEmailText(content),
+        attachments
     }
 }

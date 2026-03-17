@@ -2,12 +2,14 @@ import config from '#constants'
 import nodemailer from 'nodemailer'
 import { createEmailTemplate, type EmailContent } from '#utils/emailTemplate.ts'
 import run from '#db'
+import type Mail from 'nodemailer/lib/mailer/index.js'
 
 type MailOptions = {
     to: string
     subject: string
     text: string
     html?: string
+    attachments?: Mail.Attachment[]
 }
 
 const retryDelays = [60 * 1000, 5 * 60 * 1000, 15 * 60 * 1000, 30 * 60 * 1000] // 1m, 5m, 15m, 30m
@@ -20,11 +22,11 @@ const transporter = config.DISABLE_SMTP ? null : nodemailer.createTransport({
     pool: true,
 })
 
-export default async function send({ to, subject, text, html }: MailOptions): Promise<string> {
+export default async function send({ to, subject, text, html, attachments }: MailOptions): Promise<string> {
     if (config.DISABLE_SMTP) {
         return 'SMTP disabled'
     }
-    const mailOptions = { to, subject, text, html }
+    const mailOptions = { to, subject, text, html, attachments }
 
     try {
         const info = await attemptSend(mailOptions)
@@ -112,6 +114,7 @@ export async function sendTemplatedMail(to: string, content: EmailContent): Prom
         to,
         subject: template.subject,
         text: template.text,
-        html: template.html
+        html: template.html,
+        attachments: template.attachments
     })
 }
