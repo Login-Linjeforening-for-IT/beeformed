@@ -1,7 +1,6 @@
 import { getSubmission, getUserSubmissions, getPublicForm } from '@utils/api'
 import { notFound } from 'next/navigation'
-import SearchInput from '@components/inputs/search'
-import { Pagination, PageContainer } from 'uibee/components'
+import { Pagination, PageContainer, SearchInput } from 'uibee/components'
 import FormRenderer from '@components/form/renderer'
 import SubmissionsTable from '@components/tables/submissions'
 import { formatDateTime } from '@utils/dateTime'
@@ -87,7 +86,10 @@ export default async function Page(
                 <div className='pt-20 pb-4 flex flex-col h-full'>
                     <div className='flex flex-1 flex-col min-h-0 overflow-hidden'>
                         <div className='flex justify-between mb-4'>
-                            <SearchInput placeholder='Search submissions...' />
+                            <SearchInput
+                                placeholder='Search submissions...'
+                                variant='minimal'
+                            />
                         </div>
                         <div className='flex-1 overflow-auto'>
                             {submissionsData.length === 0 ? (

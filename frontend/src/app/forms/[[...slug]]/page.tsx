@@ -1,6 +1,5 @@
 import { getForms, getSharedForms } from '@utils/api'
-import { Pagination, PageContainer } from 'uibee/components'
-import SearchInput from '@components/inputs/search'
+import { Pagination, PageContainer, SearchInput } from 'uibee/components'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { formatDateTime } from '@utils/dateTime'
@@ -76,7 +75,10 @@ export default async function Page({ params, searchParams }: PageProps) {
             <div className='pt-6 pb-4 flex flex-col h-full'>
                 <div className='flex flex-col md:flex-row md:justify-between items-start md:items-center gap-4 mb-4'>
                     <div className='w-full md:w-auto'>
-                        <SearchInput placeholder='Search forms...' />
+                        <SearchInput
+                            placeholder='Search forms...'
+                            variant='minimal'
+                        />
                     </div>
                     { type === 'forms' &&
                         <Link
