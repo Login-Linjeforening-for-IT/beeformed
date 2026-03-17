@@ -1,7 +1,6 @@
 import { getPublicForm } from '@utils/api'
 import FormRenderer from '@components/form/renderer'
-import { PageContainer } from '@components/container/page'
-import { Alert } from 'uibee/components'
+import { Alert, PageContainer } from 'uibee/components'
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params

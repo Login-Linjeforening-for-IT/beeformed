@@ -1,4 +1,4 @@
-import { PageContainer } from '@components/container/page'
+import { PageContainer } from 'uibee/components'
 import { getUser, getForms, getUserSubmissions } from '@utils/api'
 import { FilePlus, Files, FileText, User as UserIcon, Calendar, Mail } from 'lucide-react'
 import Link from 'next/link'

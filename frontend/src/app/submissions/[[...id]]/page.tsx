@@ -1,10 +1,9 @@
-import { PageContainer } from '@components/container/page'
 import { getSubmission, getUserSubmissions, getPublicForm } from '@utils/api'
 import { notFound } from 'next/navigation'
 import SearchInput from '@components/inputs/search'
-import { Pagination } from 'uibee/components'
+import { Pagination, PageContainer } from 'uibee/components'
 import FormRenderer from '@components/form/renderer'
-import SubmissionsTable from '../../../components/tables/submissions'
+import SubmissionsTable from '@components/tables/submissions'
 import { formatDateTime } from '@utils/dateTime'
 
 export default async function Page(

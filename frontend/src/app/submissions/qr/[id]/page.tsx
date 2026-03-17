@@ -1,5 +1,5 @@
 import QRCodeGenerator from '@components/qr/generator'
-import { PageContainer } from '@components/container/page'
+import { PageContainer } from 'uibee/components'
 
 export default async function Page({ params }: { params: Promise<{ id: string }>}) {
     const { id } = await params

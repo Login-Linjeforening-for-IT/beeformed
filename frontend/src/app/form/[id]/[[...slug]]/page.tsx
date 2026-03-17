@@ -1,4 +1,4 @@
-import { PageContainer } from '@components/container/page'
+import { PageContainer } from 'uibee/components'
 import EditFormPage from '@components/form/pages/form'
 import EditFieldsPage from '@components/form/pages/fields'
 import { getFields, getForm, getPermissions, getSubmissions } from '@utils/api'

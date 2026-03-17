@@ -1,13 +1,12 @@
 'use client'
 
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { PageContainer } from '@/components/container/page'
 import jsQR from 'jsqr'
 import { AlertCircle, Loader2, User, Clock, CheckCircle2, XCircle, RotateCcw, ScanQrCode } from 'lucide-react'
 import { scanSubmission } from '@/utils/api'
 import { useParams } from 'next/navigation'
 import { formatDateTime } from '@utils/dateTime'
-import { Button } from 'uibee/components'
+import { Button, PageContainer } from 'uibee/components'
 
 export default function Page() {
     const params = useParams()

@@ -1,6 +1,5 @@
-import { PageContainer } from '@components/container/page'
 import { getForms, getSharedForms } from '@utils/api'
-import { Pagination } from 'uibee/components'
+import { Pagination, PageContainer } from 'uibee/components'
 import SearchInput from '@components/inputs/search'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'

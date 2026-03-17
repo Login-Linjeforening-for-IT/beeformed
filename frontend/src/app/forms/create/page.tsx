@@ -1,6 +1,6 @@
 'use client'
 
-import { PageContainer } from '@components/container/page'
+import { PageContainer } from 'uibee/components'
 import FormPage from '@components/form/pages/form'
 
 export default function CreateFormPage() {
