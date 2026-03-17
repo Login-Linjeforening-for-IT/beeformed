@@ -21,5 +21,9 @@ LEFT JOIN users u ON f.user_id = u.user_id
 LEFT JOIN form_fields ff ON f.id = ff.form_id
 WHERE (f.id::text = $1 OR f.slug = $1)
 AND f.published_at < NOW()
-AND f.expires_at > NOW()
+AND (
+    f.expires_at > NOW()
+    OR f.user_id = $2
+    OR EXISTS (SELECT 1 FROM submissions s WHERE s.form_id = f.id AND s.user_id = $2)
+)
 GROUP BY f.id, u.name, u.email;
