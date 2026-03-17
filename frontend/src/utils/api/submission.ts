@@ -28,7 +28,22 @@ export async function getSubmission(submissionId: string, formId?: string): Prom
 }
 
 export async function scanSubmission(submissionId: string, formId: string): Promise<Submission> {
-    return apiRequest({ method: 'POST', path: `submissions/${submissionId}/scan`, data: { form_id: formId } })
+    const normalizedSubmissionId = submissionId.trim()
+    const normalizedFormId = formId.trim()
+
+    if (!normalizedSubmissionId) {
+        throw new Error('Missing submission ID')
+    }
+
+    if (!normalizedFormId) {
+        throw new Error('Missing form ID')
+    }
+
+    return apiRequest({
+        method: 'POST',
+        path: `submissions/${normalizedSubmissionId}/scan`,
+        data: { form_id: normalizedFormId }
+    })
 }
 
 export async function cancelSubmission(submissionId: string) {

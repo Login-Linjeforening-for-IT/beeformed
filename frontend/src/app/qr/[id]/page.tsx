@@ -10,7 +10,8 @@ import { Button, PageContainer } from 'uibee/components'
 
 export default function Page() {
     const params = useParams()
-    const formId = params.id as string
+    const formIdParam = params.id
+    const formId = Array.isArray(formIdParam) ? formIdParam[0] : formIdParam
 
     const videoRef = useRef<HTMLVideoElement>(null)
     const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -36,9 +37,15 @@ export default function Page() {
     }, [])
 
     const fetchSubmission = useCallback(async (id: string) => {
+        const submissionId = id.trim()
+        if (!formId || !submissionId) {
+            setError('Invalid QR code or form ID')
+            return
+        }
+
         setLoadingSubmission(true)
         try {
-            const result = await scanSubmission(id, formId)
+            const result = await scanSubmission(submissionId, formId)
             setSubmission(result)
         } catch (err) {
             console.error(err)
@@ -80,16 +87,16 @@ export default function Page() {
                         if (canvas.width > 0 && canvas.height > 0) {
                             ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
                             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-                            const code = jsQR(imageData.data, imageData.width, imageData.height, {
-                                inversionAttempts: 'dontInvert',
-                            })
+                            const code = jsQR(imageData.data, imageData.width, imageData.height)
 
                             if (code) {
-                                const id = code.data
-                                setScannedData(id)
-                                stopScan()
-                                fetchSubmission(id)
-                                return
+                                const submissionId = code.data?.trim()
+                                if (submissionId) {
+                                    setScannedData(submissionId)
+                                    stopScan()
+                                    fetchSubmission(submissionId)
+                                    return
+                                }
                             }
                         }
                     }
