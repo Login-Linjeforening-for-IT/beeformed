@@ -39,6 +39,7 @@ export default function FormRenderer({ form, submission }: { form: FormData; sub
     const isWaitlist = isFull && form.waitlist
     const blockMultiple = !form.multiple_submissions && form.user_has_submitted
     const canSubmit = (!isFull || form.waitlist) && !blockMultiple
+    const showFields = ( !isFull || form.waitlist ) && ( !blockMultiple || submission )
     const router = useRouter()
 
     const [formData, setFormData] = useState<Record<string, string>>(() => {
@@ -294,7 +295,7 @@ export default function FormRenderer({ form, submission }: { form: FormData; sub
                 </Alert>
             )}
 
-            {canSubmit && form.fields
+            {showFields && form.fields
                 .sort((a, b) => a.field_order - b.field_order)
                 .map(field => (
                     <div key={field.id} className='max-w-2xl'>
