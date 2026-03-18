@@ -48,7 +48,7 @@
       ]
     },
     "forceConsistentCasingInFileNames": true,
-    "allowJs": true
+    "types": ["bun"]
   },
   "include": [
     "next-env.d.ts",
