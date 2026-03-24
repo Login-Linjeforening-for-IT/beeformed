@@ -1,7 +1,7 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import run, { runInTransaction } from '#db'
 import { loadSQL } from '#utils/sql.ts'
-import { sendTemplatedMail } from '#utils/sendSMTP.ts'
+import { sendTemplatedMail } from '#utils/email/sendSMTP.ts'
 import config from '#constants'
 
 export default async function createSubmission(req: FastifyRequest, res: FastifyReply) {
@@ -69,24 +69,10 @@ export default async function createSubmission(req: FastifyRequest, res: Fastify
 
         try {
             if (req.user?.email) {
-                const isWaitlisted = status === 'waitlisted'
-                const subject = isWaitlisted 
-                    ? `Venteliste bekreftelse - ${form.title}`
-                    : `Skjema bekreftelse - ${form.title}`
-                
-                const header = isWaitlisted ? 'Du er på venteliste' : 'Skjema bekreftelse'
-                
-                const content = isWaitlisted
-                    ? `Du er satt på venteliste for "${form.title}".\n` +
-                      `Vi gir deg beskjed hvis du får plass.\n` +
-                      `\nAnsvarlig for skjemaet: <a href="mailto:${form.creator_email}">${form.creator_email}</a> \n`
-                    : `Din påmelding til "${form.title}" er registrert.\n` +
-                      `\nAnsvarlig for skjemaet: <a href="mailto:${form.creator_email}">${form.creator_email}</a> \n`
-
                 await sendTemplatedMail(req.user.email, {
-                    title: subject,
-                    header: header,
-                    content: content,
+                    title: form.title,
+                    status: status,
+                    ownerEmail: form.creator_email,
                     actionUrl: `${config.FRONTEND_URL}/submissions/${submissionId}`,
                     actionText: 'View Submission',
                     submissionId: submissionId

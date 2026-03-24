@@ -6,7 +6,7 @@ import path from 'path'
 
 import getIndex from './handlers/index/getIndex.ts'
 import getFavicon from './handlers/favicon/getFavicon.ts'
-import { processEmailQueue } from './utils/sendSMTP.ts'
+import { processEmailQueue } from './utils/email/sendSMTP.ts'
 
 const fastify = Fastify({
     logger: true

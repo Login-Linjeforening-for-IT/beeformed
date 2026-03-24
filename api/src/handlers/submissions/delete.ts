@@ -1,7 +1,7 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import run from '#db'
 import { loadSQL } from '#utils/sql.ts'
-import { sendTemplatedMail } from '#utils/sendSMTP.ts'
+import { sendTemplatedMail } from '#utils/email/sendSMTP.ts'
 import config from '#constants'
 
 export default async function deleteSubmission(req: FastifyRequest, res: FastifyReply) {
@@ -36,15 +36,12 @@ export default async function deleteSubmission(req: FastifyRequest, res: Fastify
         if (submission.user_email) {
             const isOwner = submission.user_id === user.id
             await sendTemplatedMail(submission.user_email, {
-                header: isOwner ? 'Submission Withdrawn' : 'Submission Removed',
-                title: isOwner 
-                    ? `You have withdrawn your submission for ${submission.form_title}`
-                    : `Your submission for ${submission.form_title} has been removed`,
-                content: isOwner
-                    ? `We're confirming that your submission for ${submission.form_title} has been cancelled.`
-                    : `An administrator has cancelled your submission for ${submission.form_title}.`,
+                title: submission.form_title,
+                status: isOwner ? 'cancelled' : 'rejected',
+                ownerEmail: submission.form_owner_email,
                 actionUrl: `${config.FRONTEND_URL}/f/${submission.form_slug}`,
-                actionText: 'View Form'
+                actionText: 'View Form',
+                submissionId: submission.id
             })
         }
 
@@ -65,9 +62,9 @@ export default async function deleteSubmission(req: FastifyRequest, res: Fastify
                     
                     if (nextPerson.email) {
                         await sendTemplatedMail(nextPerson.email, {
-                            header: 'Good news!',
-                            title: `You have a spot in ${submission.form_title}!`,
-                            content: `Your submission for ${submission.form_title} has been registered. A spot opened up and you have been moved from the waitlist to registered list.`,
+                            title: submission.form_title,
+                            status: 'bumped',
+                            ownerEmail: submission.form_owner_email,
                             actionUrl: `${config.FRONTEND_URL}/submissions/${nextPerson.id}`,
                             actionText: 'View Submission',
                             submissionId: nextPerson.id

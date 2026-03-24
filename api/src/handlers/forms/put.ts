@@ -1,7 +1,7 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import run from '#db'
 import { loadSQL } from '#utils/sql.ts'
-import { sendTemplatedMail } from '#utils/sendSMTP.ts'
+import { sendTemplatedMail } from '#utils/email/sendSMTP.ts'
 import config from '#constants'
 
 export default async function updateForm(req: FastifyRequest, res: FastifyReply) {
@@ -59,9 +59,10 @@ export default async function updateForm(req: FastifyRequest, res: FastifyReply)
                 await run(updateStatusSql, [submission.id, 'registered'])
                 if (submission.email) {
                     await sendTemplatedMail(submission.email, {
-                        header: 'Good news!',
-                        title: `You have a spot in ${body.title}!`,
-                        content: `Your submission for ${body.title} has been registered. A spot opened up and you have been moved from the waitlist to registered list.`,
+                        title: body.title,
+                        status: 'bumped',
+                        ownerEmail: body.owner_email,
+                        submissionId: submission.id,
                         actionUrl: `${config.FRONTEND_URL}/submissions/${submission.id}`,
                         actionText: 'View Submission'
                     })
