@@ -36,40 +36,6 @@ Docker Compose expects a root `.env` file (used by both services).
 
 The API validates the required variables at startup (`api/src/utils/sql.ts`) and the frontend reads them from `frontend/constants.ts`.
 
-Create a root `.env` including at least:
-
-- `AUTH_URL`
-- `DB`, `DB_USER`, `DB_HOST`, `DB_PASSWORD`, `DB_PORT`
-- `FRONTEND_URL`
-
-Email (SMTP) is enabled by default. Either configure:
-
-- `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_FROM`, `SMTP_NAME`, `SMTP_USER`, `SMTP_PASSWORD`
-
-Or disable all email sending/queue processing:
-
-- `DISABLE_SMTP=true`
-
-The frontend also expects:
-
-- `AUTH_CLIENT_ID`, `AUTH_CLIENT_SECRET`
-- (optional but recommended) `API_URL`
-
-```bash
-# .env (repo root)
-AUTH_URL=...
-AUTH_CLIENT_ID=...
-AUTH_CLIENT_SECRET=...
-DB=...
-DB_USER=...
-DB_HOST=beeformed_database
-DB_PASSWORD=...
-DB_PORT=5432
-FRONTEND_URL=http://localhost:8700
-API_URL=http://localhost:8701/api
-DISABLE_SMTP=true # or SMTP_* vars
-```
-
 ### 2) Start with Docker Compose
 
 From the repo root:
