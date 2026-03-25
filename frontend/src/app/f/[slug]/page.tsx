@@ -1,6 +1,6 @@
 import { getPublicForm } from '@utils/api'
 import FormRenderer from '@components/form/renderer'
-import { Alert, PageContainer } from 'uibee/components'
+import { Alert, MarkdownRender, PageContainer } from 'uibee/components'
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params
@@ -12,7 +12,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             <PageContainer title={form.title}>
                 {form.description &&
                     <div className='highlighted-section'>
-                        <p>{form.description}</p>
+                        <MarkdownRender MDstr={form.description} />
                     </div>
                 }
                 <FormRenderer form={{ ...form, id: form.id.toString() }} />

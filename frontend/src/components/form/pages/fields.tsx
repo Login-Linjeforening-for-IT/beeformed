@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { toast } from 'uibee/components'
+import { Textarea, toast } from 'uibee/components'
 import { updateFields } from '@components/form/actions/field'
 import { Input, Switch, Select } from 'uibee/components'
 import { GripVertical, X, Plus } from 'lucide-react'
@@ -209,9 +209,9 @@ export default function EditFieldsPage({ fields, formId }: { fields: GetFieldsPr
                         </div>
 
 
-                        <Input
+                        <Textarea
                             name={`field_${index}_description`}
-                            type='text'
+                            type='markdown'
                             label='Description'
                             value={field.description || ''}
                             onChange={(e) =>
