@@ -1,6 +1,6 @@
 # BeeFormed
 
-BeeFormed is a web-based form system (“skjemasystem”) with:
+BeeFormed is a form system with:
 
 - A Next.js frontend for creating/editing forms, sharing public links, and viewing submissions
 - A Fastify API for forms, fields, permissions, and submissions
@@ -24,17 +24,18 @@ BeeFormed is a web-based form system (“skjemasystem”) with:
 
 Docker Compose runs three services:
 
-- `beeformed` (frontend)
+- `beeformed` (Frontend)
 - `beeformed_api` (API)
-- `beeformed_database` (Postgres 18)
+- `beeformed_database` (Postgres)
 
 ## Local / Docker setup
 
 ### 1) Environment variables
 
-Docker Compose expects a root `.env` file (used by both services).
+Docker Compose expects a root `.env` file (used by both services).  
+Go to 1Pass to get the required variables (may need to be changed for local development).
 
-The API validates the required variables at startup (`api/src/utils/sql.ts`) and the frontend reads them from `frontend/constants.ts`.
+The API validates the required variables at startup (`api/src/constants.ts`) and the frontend reads them from `frontend/constants.ts`.
 
 ### 2) Start with Docker Compose
 
